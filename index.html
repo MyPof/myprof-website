@@ -6,6 +6,7 @@
     <title>MyProf - Marketplace Enseignants Parents</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Styles existants conservés */
         * {
             margin: 0;
             padding: 0;
@@ -16,7 +17,7 @@
         :root {
             --primary: #4a6fa5;
             --secondary: #166088;
-            --accent: #4cb5f5;
+            --accent: #8A2BE2; /* Changé en mauve */
             --light: #f8f9fa;
             --dark: #343a40;
             --success: #28a745;
@@ -129,7 +130,7 @@
         
         .btn {
             display: inline-block;
-            background-color: var(--accent);
+            background-color: var(--accent); /* Bouton mauve */
             color: white;
             padding: 1rem 2rem;
             border-radius: 50px;
@@ -143,7 +144,7 @@
         }
         
         .btn:hover {
-            background-color: var(--secondary);
+            background-color: #6a0dad; /* Mauve plus foncé au survol */
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
@@ -194,6 +195,7 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
             background: white;
+            cursor: pointer;
         }
         
         .step:hover {
@@ -269,7 +271,7 @@
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             border-color: var(--accent);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(76, 181, 245, 0.2);
+            box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
         }
         
         /* Teachers section */
@@ -491,6 +493,7 @@
         
         .footer-links {
             list-style: none;
+            padding: 0;
         }
         
         .footer-links li {
@@ -536,6 +539,44 @@
             margin-top: 3rem;
             padding-top: 1.5rem;
             border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        /* Login modal specific styles */
+        .login-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .login-tab {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .login-tab.active {
+            border-bottom: 3px solid var(--accent);
+            font-weight: bold;
+            color: var(--accent);
+        }
+        
+        .login-form {
+            display: none;
+        }
+        
+        .login-form.active {
+            display: block;
+        }
+        
+        .auth-required {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin: 2rem 0;
         }
         
         /* Responsive design */
@@ -597,10 +638,12 @@
                 <ul>
                     <li><a href="#" onclick="showSection('home')">Accueil</a></li>
                     <li><a href="#" onclick="showSection('register')">Inscription</a></li>
-                    <li><a href="#" onclick="showSection('teachers')">Enseignants</a></li>
-                    <li><a href="#" onclick="showSection('parents')">Parents</a></li>
+                    <li><a href="#" onclick="checkAuthAndShowSection('teachers')">Enseignants</a></li>
+                    <li><a href="#" onclick="checkAuthAndShowSection('parents')">Parents</a></li>
                     <li><a href="#" onclick="showSection('about')">À propos</a></li>
                     <li><a href="#" onclick="showSection('contact')">Contact</a></li>
+                    <li id="loginNavItem"><a href="#" onclick="openLoginModal()">Connexion</a></li>
+                    <li id="logoutNavItem" style="display: none;"><a href="#" onclick="logout()">Déconnexion</a></li>
                 </ul>
             </nav>
         </div>
@@ -619,21 +662,21 @@
         <div class="container">
             <h2 class="section-title">Comment ça marche</h2>
             <div class="steps">
-                <div class="step">
+                <div class="step" onclick="showSection('register')">
                     <div class="step-icon">
                         <i class="fas fa-user-plus"></i>
                     </div>
                     <h3 class="step-title">Inscription simple</h3>
                     <p>Créez votre profil en quelques minutes seulement, que vous soyez parent ou enseignant.</p>
                 </div>
-                <div class="step">
+                <div class="step" onclick="checkAuthAndShowSection('parents')">
                     <div class="step-icon">
                         <i class="fas fa-search"></i>
                     </div>
                     <h3 class="step-title">Recherche avancée</h3>
                     <p>Trouvez le professeur idéal grâce à nos filtres de recherche précis et détaillés.</p>
                 </div>
-                <div class="step">
+                <div class="step" onclick="checkAuthAndShowSection('teachers')">
                     <div class="step-icon">
                         <i class="fas fa-comments"></i>
                     </div>
@@ -663,6 +706,10 @@
                             <div class="form-group">
                                 <label for="parentEmail">Email</label>
                                 <input type="email" id="parentEmail" required placeholder="votre@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="parentPassword">Mot de passe</label>
+                                <input type="password" id="parentPassword" required placeholder="Créez un mot de passe">
                             </div>
                             <div class="form-group">
                                 <label for="parentPhone">Téléphone</label>
@@ -708,6 +755,10 @@
                             <div class="form-group">
                                 <label for="teacherEmail">Email</label>
                                 <input type="email" id="teacherEmail" required placeholder="votre@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="teacherPassword">Mot de passe</label>
+                                <input type="password" id="teacherPassword" required placeholder="Créez un mot de passe">
                             </div>
                             <div class="form-group">
                                 <label for="teacherPhone">Téléphone</label>
@@ -930,7 +981,6 @@
                     <li>Améliorer nos services et développer de nouvelles fonctionnalités</li>
                     <li>Assurer la sécurité de la plateforme et prévenir les fraudes</li>
                 </ul>
-                
                 <h3>3. Partage des informations</h3>
                 <p>Vos informations personnelles sont partagées uniquement :</p>
                 <ul>
@@ -966,7 +1016,7 @@
                 
                 <div class="faq-item">
                     <div class="faq-question">Quelle est la politique d'annulation ?</div>
-                                        <p>Les annulations doivent être effectuées au moins 24 heures à l'avance. En cas d'annulation tardive, l'enseignant peut facturer jusqu'à 50% du cours.</p>
+                    <p>Les annulations doivent être effectuées au moins 24 heures à l'avance. En cas d'annulation tardive, l'enseignant peut facturer jusqu'à 50% du cours.</p>
                 </div>
                 
                 <div class="faq-item">
@@ -990,78 +1040,88 @@
                 <h3>Derniers articles</h3>
                 
                 <div class="faq-item">
-                    <div class="faq-question">Comment aider son enfant à réussir sa année scolaire ?</div>
-                    <p>Découvrez nos conseils pour accompagner votre enfant dans sa scolarité et lui donner toutes les chances de réussite.</p>
-                    <p><small>Publié le 15 septembre 2023</small></p>
+                    <div class="faq-question">L'IA personnalisée révolutionne le soutien scolaire en 2025</div>
+                    <p>Découvrez comment les outils d'intelligence artificielle permettent désormais de créer des parcours d'apprentissage ultra-personnalisés pour chaque élève, en analysant ses forces et faiblesses en temps réel.</p>
+                    <p><small>Publié le 15 mars 2025</small></p>
                 </div>
                 
                 <div class="faq-item">
-                    <div class="faq-question">Les avantages du soutien scolaire personnalisé</div>
-                    <p>Le soutien scolaire personnalisé permet de s'adapter aux besoins spécifiques de chaque élève. Découvrez pourquoi cela fonctionne.</p>
-                    <p><small>Publié le 5 septembre 2023</small></p>
+                    <div class="faq-question">Témoignage : Comment MyProf a sauvé l'année scolaire de mon fils</div>
+                    <p>"Grâce à MyProf, j'ai trouvé en 48h un professeur exceptionnel qui a redonné confiance à mon enfant. Les résultats se sont améliorés après seulement un mois de cours particuliers." - Sophie, maman de Lucas, 14 ans</p>
+                    <p><small>Publié le 8 mars 2025</small></p>
                 </div>
                 
                 <div class="faq-item">
-                    <div class="faq-question">Comment choisir le bon professeur particulier ?</div>
-                    <p>Notre guide pour vous aider à sélectionner l'enseignant qui correspond le mieux aux besoins de votre enfant.</p>
-                    <p><small>Publié le 28 août 2023</small></p>
+                    <div class="faq-question">Les métavers éducatifs : la nouvelle frontière de l'apprentissage</div>
+                    <p>En 2025, de plus en plus d'enseignants utilisent les environnements virtuels immersifs pour captiver l'attention des élèves et rendre l'apprentissage plus interactif et engageant.</p>
+                    <p><small>Publié le 1er mars 2025</small></p>
                 </div>
                 
                 <div class="faq-item">
-                    <div class="faq-question">MyProf dépasse les 1000 utilisateurs !</div>
-                    <p>Nous sommes fiers d'annoncer que notre plateforme compte désormais plus de 1000 utilisateurs actifs.</p>
-                    <p><small>Publié le 15 août 2023</small></p>
+                    <div class="faq-question">Enseignants : comment optimiser votre profil en 2025</div>
+                    <p>Les algorithmes de recommandation de MyProf évoluent. Découvrez les 5 astuces pour augmenter votre visibilité et être recommandé en priorité aux parents.</p>
+                    <p><small>Publié le 22 février 2025</small></p>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">Témoignage enseignant : "Je multiplie par deux mon revenu grâce à MyProf"</div>
+                    <p>"Avec la plateforme, j'ai pu constitué un emploi du temps optimal sans perdre de temps en prospection. Les parents sont sérieux et motivés, ce qui rend mon travail beaucoup plus gratifiant." - Thomas, professeur de mathématiques</p>
+                    <p><small>Publié le 15 février 2025</small></p>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">Le micro-learning : la tendance 2025 qui séduit les élèves</div>
+                    <p>Des sessions de 20 minutes ultra-ciblées, des contenus interactifs et gamifiés... Découvrez pourquoi le micro-learning devient la méthode privilégiée pour la remise à niveau.</p>
+                    <p><small>Publié le 5 février 2025</small></p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Careers Section -->
-    <section id="careers" class="section" style="display: none;">
-        <div class="container">
-            <h2 class="section-title">Carrières - Rejoignez-nous</h2>
-            <div class="info-section">
-                <h3>Travailler chez MyProf</h3>
-                <p>MyProf est une startup en pleine croissance qui révolutionne le marché du soutien scolaire. Nous recherchons des talents passionnés pour nous aider à développer notre plateforme.</p>
-                
-                <h3>Postes disponibles</h3>
-                
-                <div class="faq-item">
-                    <div class="faq-question">Développeur Full-Stack</div>
-                    <p>Nous recherchons un développeur full-stack pour rejoindre notre équipe technique et participer au développement de nouvelles fonctionnalités.</p>
-                    <p><strong>Compétences requises :</strong> JavaScript, Node.js, React, Base de données</p>
-                    <button class="btn" style="margin-top: 1rem;">Postuler</button>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">Chargé de Relation Clients</div>
-                    <p>Rejoignez notre équipe commerciale pour accompagner nos utilisateurs et les aider à tirer le meilleur parti de notre plateforme.</p>
-                    <p><strong>Compétences requises :</strong> Relation client, Communication, Résolution de problèmes</p>
-                    <button class="btn" style="margin-top: 1rem;">Postuler</button>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">Community Manager</div>
-                    <p>Nous cherchons un community manager pour animer nos réseaux sociaux et créer du contenu engageant pour notre communauté.</p>
-                    <p><strong>Compétences requises :</strong> Réseaux sociaux, Création de contenu, Stratégie digitale</p>
-                    <button class="btn" style="margin-top: 1rem;">Postuler</button>
-                </div>
-                
-                <h3>Pourquoi nous rejoindre ?</h3>
-                <ul>
-                    <li>🚀 Startup en forte croissance avec un impact réel sur l'éducation</li>
-                    <li>💻 Environnement de travail flexible avec possibilité de télétravail</li>
-                    <li>📈 Opportunités d'évolution et de développement de compétences</li>
-                    <li>👥 Équipe passionnée et bienveillante</li>
-                    <li>💰 Package salarial compétitif avec participation aux bénéfices</li>
-                </ul>
-                
-                <p>Envoyez votre CV et lettre de motivation à <strong>recrutement@myprof.fr</strong></p>
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="close-modal" onclick="closeLoginModal()">
+                <i class="fas fa-times"></i>
             </div>
+            <h3 class="modal-title">Connexion à MyProf</h3>
+            
+            <div class="login-tabs">
+                <div class="login-tab active" onclick="switchLoginTab('parent')">Parent</div>
+                <div class="login-tab" onclick="switchLoginTab('teacher')">Enseignant</div>
+            </div>
+            
+            <form id="parentLoginForm" class="login-form active">
+                <div class="form-group">
+                    <label for="parentLoginEmail">Email</label>
+                    <input type="email" id="parentLoginEmail" required placeholder="votre@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="parentLoginPassword">Mot de passe</label>
+                    <input type="password" id="parentLoginPassword" required placeholder="Votre mot de passe">
+                </div>
+                <button type="submit" class="btn">Se connecter</button>
+            </form>
+            
+            <form id="teacherLoginForm" class="login-form">
+                <div class="form-group">
+                    <label for="teacherLoginEmail">Email</label>
+                    <input type="email" id="teacherLoginEmail" required placeholder="votre@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="teacherLoginPassword">Mot de passe</label>
+                    <input type="password" id="teacherLoginPassword" required placeholder="Votre mot de passe">
+                </div>
+                <button type="submit" class="btn">Se connecter</button>
+            </form>
+            
+            <p style="text-align: center; margin-top: 1.5rem;">
+                Pas encore inscrit ? <a href="#" onclick="closeLoginModal(); showSection('register');" style="color: var(--accent);">Créer un compte</a>
+            </p>
         </div>
-    </section>
+    </div>
 
-    <!-- Modal -->
+    <!-- Contact Modal -->
     <div class="modal" id="contactModal">
         <div class="modal-content">
             <div class="close-modal" onclick="closeModal()">
@@ -1089,10 +1149,9 @@
                 <h3>MyProf</h3>
                 <p>La marketplace qui connecte directement parents et enseignants pour des solutions éducatives sur mesure.</p>
                 <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://www.facebook.com/profile.php?id=61580020564168" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/myprofeduc/" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.tiktok.com/foryou?lang=fr" target="_blank"><i class="fab fa-tiktok"></i></a>
                 </div>
             </div>
             
@@ -1101,8 +1160,8 @@
                 <ul class="footer-links">
                     <li><a href="#" onclick="showSection('home')">Accueil</a></li>
                     <li><a href="#" onclick="showSection('register')">Inscription</a></li>
-                    <li><a href="#" onclick="showSection('teachers')">Enseignants</a></li>
-                    <li><a href="#" onclick="showSection('parents')">Parents</a></li>
+                    <li><a href="#" onclick="checkAuthAndShowSection('teachers')">Enseignants</a></li>
+                    <li><a href="#" onclick="checkAuthAndShowSection('parents')">Parents</a></li>
                     <li><a href="#" onclick="showSection('about')">À propos</a></li>
                     <li><a href="#" onclick="showSection('contact')">Contact</a></li>
                 </ul>
@@ -1115,13 +1174,12 @@
                     <li><a href="#" onclick="showSection('privacy')">Politique de confidentialité</a></li>
                     <li><a href="#" onclick="showSection('faq')">FAQ</a></li>
                     <li><a href="#" onclick="showSection('blog')">Blog</a></li>
-                    <li><a href="#" onclick="showSection('careers')">Carrières</a></li>
                 </ul>
             </div>
         </div>
         
         <div class="footer-bottom">
-            <p>&copy; 2023 MyProf. Tous droits réservés.</p>
+            <p>&copy; 2025 MyProf. Tous droits réservés.</p>
         </div>
     </footer>
 
@@ -1169,6 +1227,24 @@
                 description: "Enseignant bilingue, propose des cours interactifs et conversationnels."
             }
         ];
+        
+        // Données des utilisateurs (simulées)
+        let users = JSON.parse(localStorage.getItem('myprof_users')) || [];
+        let currentUser = JSON.parse(localStorage.getItem('myprof_currentUser')) || null;
+        
+        // Mettre à jour l'interface en fonction de l'état de connexion
+        function updateAuthUI() {
+            const loginNavItem = document.getElementById('loginNavItem');
+            const logoutNavItem = document.getElementById('logoutNavItem');
+            
+            if (currentUser) {
+                loginNavItem.style.display = 'none';
+                logoutNavItem.style.display = 'list-item';
+            } else {
+                loginNavItem.style.display = 'list-item';
+                logoutNavItem.style.display = 'none';
+            }
+        }
         
         // Afficher les enseignants
         function displayTeachers(teachersToShow, elementId) {
@@ -1236,6 +1312,11 @@
         
         // Ouvrir la modal de contact
         function openModal(teacherId) {
+            if (!currentUser) {
+                openLoginModal();
+                return;
+            }
+            
             document.getElementById('contactModal').style.display = 'flex';
             document.getElementById('contactModal').dataset.teacherId = teacherId;
         }
@@ -1245,6 +1326,25 @@
             document.getElementById('contactModal').style.display = 'none';
         }
         
+        // Ouvrir la modal de connexion
+        function openLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+        
+        // Fermer la modal de connexion
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+        
+        // Changer d'onglet dans la modal de connexion
+        function switchLoginTab(tab) {
+            document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.login-form').forEach(f => f.classList.remove('active'));
+            
+            document.querySelector(`.login-tab:nth-child(${tab === 'parent' ? 1 : 2})`).classList.add('active');
+            document.getElementById(`${tab}LoginForm`).classList.add('active');
+        }
+        
         // Simuler le processus de paiement
         function processPayment() {
             const teacherId = document.getElementById('contactModal').dataset.teacherId;
@@ -1252,6 +1352,16 @@
             
             alert(`Paiement de 5€ effectué avec succès ! Votre demande a été envoyée à ${teacher.name}.`);
             closeModal();
+        }
+        
+        // Vérifier l'authentification avant d'afficher une section
+        function checkAuthAndShowSection(sectionId) {
+            if (!currentUser) {
+                openLoginModal();
+                return;
+            }
+            
+            showSection(sectionId);
         }
         
         // Afficher la section sélectionnée
@@ -1277,20 +1387,131 @@
             }
         }
         
+        // Se déconnecter
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('myprof_currentUser');
+            updateAuthUI();
+            showSection('home');
+            alert('Vous avez été déconnecté avec succès.');
+        }
+        
         // Gérer l'inscription des parents
         document.getElementById('parentForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const parentName = document.getElementById('parentName').value;
-            alert(`Merci ${parentName} ! Votre inscription a été enregistrée.`);
+            const parentEmail = document.getElementById('parentEmail').value;
+            const parentPassword = document.getElementById('parentPassword').value;
+            
+            // Vérifier si l'utilisateur existe déjà
+            if (users.find(u => u.email === parentEmail)) {
+                alert('Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.');
+                return;
+            }
+            
+            // Ajouter l'utilisateur
+            const newUser = {
+                type: 'parent',
+                name: parentName,
+                email: parentEmail,
+                password: parentPassword,
+                phone: document.getElementById('parentPhone').value,
+                city: document.getElementById('parentCity').value,
+                studentLevel: document.getElementById('studentLevel').value,
+                studentAge: document.getElementById('studentAge').value,
+                difficulties: document.getElementById('difficulties').value
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('myprof_users', JSON.stringify(users));
+            
+            // Connecter automatiquement l'utilisateur
+            currentUser = newUser;
+            localStorage.setItem('myprof_currentUser', JSON.stringify(currentUser));
+            updateAuthUI();
+            
+            alert(`Merci ${parentName} ! Votre inscription a été enregistrée. Vous êtes maintenant connecté.`);
             this.reset();
+            showSection('home');
         });
         
         // Gérer l'inscription des enseignants
         document.getElementById('teacherForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const teacherName = document.getElementById('teacherName').value;
-            alert(`Merci ${teacherName} ! Votre inscription a été enregistrée.`);
+            const teacherEmail = document.getElementById('teacherEmail').value;
+            const teacherPassword = document.getElementById('teacherPassword').value;
+            
+            // Vérifier si l'utilisateur existe déjà
+            if (users.find(u => u.email === teacherEmail)) {
+                alert('Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.');
+                return;
+            }
+            
+            // Ajouter l'utilisateur
+            const newUser = {
+                type: 'teacher',
+                name: teacherName,
+                email: teacherEmail,
+                password: teacherPassword,
+                phone: document.getElementById('teacherPhone').value,
+                subject: document.getElementById('subject').value,
+                hourlyRate: document.getElementById('hourlyRate').value,
+                city: document.getElementById('city').value,
+                experience: document.getElementById('experience').value
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('myprof_users', JSON.stringify(users));
+            
+            // Connecter automatiquement l'utilisateur
+            currentUser = newUser;
+            localStorage.setItem('myprof_currentUser', JSON.stringify(currentUser));
+            updateAuthUI();
+            
+            alert(`Merci ${teacherName} ! Votre inscription a été enregistrée. Vous êtes maintenant connecté.`);
             this.reset();
+            showSection('home');
+        });
+        
+        // Gérer la connexion des parents
+        document.getElementById('parentLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('parentLoginEmail').value;
+            const password = document.getElementById('parentLoginPassword').value;
+            
+            const user = users.find(u => u.email === email && u.password === password && u.type === 'parent');
+            
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('myprof_currentUser', JSON.stringify(currentUser));
+                updateAuthUI();
+                closeLoginModal();
+                alert(`Bienvenue ${user.name} !`);
+                showSection('parents');
+            } else {
+                alert('Email ou mot de passe incorrect. Veuillez réessayer.');
+            }
+        });
+        
+        // Gérer la connexion des enseignants
+        document.getElementById('teacherLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('teacherLoginEmail').value;
+            const password = document.getElementById('teacherLoginPassword').value;
+            
+            const user = users.find(u => u.email === email && u.password === password && u.type === 'teacher');
+            
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('myprof_currentUser', JSON.stringify(currentUser));
+                updateAuthUI();
+                closeLoginModal();
+                alert(`Bienvenue ${user.name} !`);
+                showSection('teachers');
+            } else {
+                alert('Email ou mot de passe incorrect. Veuillez réessayer.');
+            }
         });
         
         // Gérer le formulaire de contact
@@ -1302,6 +1523,7 @@
         
         // Afficher les enseignants au chargement initial
         window.onload = function() {
+            updateAuthUI();
             displayTeachers(teachers, 'teacherList');
             displayTeachers(teachers, 'parentTeacherList');
         };
