@@ -6,7 +6,6 @@
     <title>MyProf - Marketplace Enseignants Parents</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Styles existants conservés */
         * {
             margin: 0;
             padding: 0;
@@ -17,7 +16,7 @@
         :root {
             --primary: #4a6fa5;
             --secondary: #166088;
-            --accent: #8A2BE2; /* Changé en mauve */
+            --accent: #8A2BE2;
             --light: #f8f9fa;
             --dark: #343a40;
             --success: #28a745;
@@ -137,7 +136,7 @@
         
         .btn {
             display: inline-block;
-            background-color: var(--accent); /* Bouton mauve */
+            background-color: var(--accent);
             color: white;
             padding: 1rem 2rem;
             border-radius: 50px;
@@ -153,7 +152,7 @@
         }
         
         .btn:hover {
-            background-color: #6a0dad; /* Mauve plus foncé au survol */
+            background-color: #6a0dad;
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
@@ -291,6 +290,28 @@
             box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
         }
         
+        /* Verification code */
+        .verification-code {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        
+        .verification-code input {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            font-size: 1.2rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        .verification-code input:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+        
         /* Teachers section */
         .search-filters {
             background: white;
@@ -374,6 +395,13 @@
             font-weight: bold;
             margin: 1.5rem 0;
             text-align: center;
+        }
+        
+        /* Profile emoji */
+        .profile-emoji {
+            font-size: 3rem;
+            text-align: center;
+            margin: 1rem 0;
         }
         
         /* Info sections */
@@ -997,9 +1025,58 @@
                                 <label for="experience">Années d'expérience</label>
                                 <input type="number" id="experience" min="0" max="50" required placeholder="5">
                             </div>
+                            <div class="form-group">
+                                <label for="profileEmoji">Emoji de profil</label>
+                                <select id="profileEmoji" required>
+                                    <option value="">Choisissez un emoji...</option>
+                                    <option value="👨‍🏫">👨‍🏫 Professeur</option>
+                                    <option value="👩‍🏫">👩‍🏫 Professeure</option>
+                                    <option value="🧑‍🔬">🧑‍🔬 Scientifique</option>
+                                    <option value="👨‍🎓">👨‍🎓 Étudiant</option>
+                                    <option value="👩‍🎓">👩‍🎓 Étudiante</option>
+                                    <option value="🧠">🧠 Cerveau</option>
+                                    <option value="📚">📚 Livres</option>
+                                    <option value="🔬">🔬 Microscope</option>
+                                </select>
+                            </div>
                             <button type="submit" class="btn">S'inscrire en tant qu'enseignant</button>
                         </form>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Verification Section -->
+    <section id="verification" class="section">
+        <div class="container">
+            <h2 class="section-title">Vérification de votre email</h2>
+            
+            <div class="card" style="max-width: 600px; margin: 0 auto;">
+                <div class="card-header">
+                    <i class="fas fa-envelope"></i> Code de vérification
+                </div>
+                <div class="card-body">
+                    <p>Nous avons envoyé un code de vérification à l'adresse <strong id="verificationEmail"></strong>.</p>
+                    <p>Veuillez saisir ce code ci-dessous pour finaliser votre inscription.</p>
+                    
+                    <div class="verification-code">
+                        <input type="text" maxlength="1" id="code1" oninput="moveToNext(1)">
+                        <input type="text" maxlength="1" id="code2" oninput="moveToNext(2)">
+                        <input type="text" maxlength="1" id="code3" oninput="moveToNext(3)">
+                        <input type="text" maxlength="1" id="code4" oninput="moveToNext(4)">
+                        <input type="text" maxlength="1" id="code5" oninput="moveToNext(5)">
+                        <input type="text" maxlength="1" id="code6" oninput="moveToNext(6)">
+                    </div>
+                    
+                    <button class="btn" onclick="verifyCode()" style="margin-top: 1.5rem;">
+                        <i class="fas fa-check-circle"></i> Vérifier le code
+                    </button>
+                    
+                    <p style="margin-top: 1.5rem; text-align: center;">
+                        Vous n'avez pas reçu le code ? 
+                        <a href="#" onclick="resendCode()" style="color: var(--accent);">Renvoyer</a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -1090,30 +1167,6 @@
                     <li>Recevez des demandes de cours de parents</li>
                     <li>Gérez votre emploi du temps directement sur la plateforme</li>
                 </ol>
-            </div>
-            
-            <div class="info-section">
-                <h3>FAQ</h3>
-                
-                <div class="faq-item">
-                    <div class="faq-question">Comment contacter un enseignant ?</div>
-                    <p>Une fois inscrit sur la plateforme, vous pouvez consulter les profils des enseignants et les contacter directement via notre messagerie interne. Les coordonnées personnelles ne sont communiquées qu'après accord mutuel.</p>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">Quels sont les frais de service ?</div>
-                    <p>L'inscription sur MyProf est gratuite pour les parents. Pour les enseignants, nous prélevons une commission de 15% sur chaque heure de cours effectuée. Aucun frais n'est demandé si aucun cours n'a lieu.</p>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">Comment sont vérifiés les enseignants ?</div>
-                    <p>Nous vérifions l'identité et les diplômes de tous les enseignants inscrits sur la plateforme. De plus, un système d'avis permet aux parents de partager leur expérience et d'aider les autres utilisateurs dans leur choix.</p>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">Puis-je annuler un cours ?</div>
-                    <p>Oui, vous pouvez annuler un cours jusqu'à 24 heures à l'avance sans frais. En cas d'annulation tardive, des frais peuvent être appliqués selon les conditions de l'enseignant.</p>
-                </div>
             </div>
         </div>
     </section>
@@ -1289,7 +1342,8 @@
                 experience: 8,
                 hourlyRate: 25,
                 description: "Professeur expérimentée en mathématiques, spécialisée dans le soutien scolaire pour collégiens et lycéens.",
-                photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80"
+                photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+                emoji: "👩‍🏫"
             },
             {
                 name: "Thomas Martin",
@@ -1298,7 +1352,8 @@
                 experience: 5,
                 hourlyRate: 22,
                 description: "Ingénieur de formation, je donne des cours de physique-chimie depuis 5 ans avec une approche pratique.",
-                photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80"
+                photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+                emoji: "👨‍🏫"
             },
             {
                 name: "Sophie Leroy",
@@ -1307,7 +1362,8 @@
                 experience: 12,
                 hourlyRate: 28,
                 description: "Diplômée en lettres modernes, j'accompagne les élèves dans la maîtrise de la langue française.",
-                photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80"
+                photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+                emoji: "📚"
             },
             {
                 name: "Julien Petit",
@@ -1316,7 +1372,8 @@
                 experience: 6,
                 hourlyRate: 20,
                 description: "Bilingue anglais-français, je propose des cours interactifs pour progresser rapidement à l'oral.",
-                photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80"
+                photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+                emoji: "👨‍🎓"
             },
             {
                 name: "Élodie Blanc",
@@ -1325,7 +1382,8 @@
                 experience: 7,
                 hourlyRate: 23,
                 description: "Docteure en biologie, j'enseigne les SVT avec passion en m'adaptant au niveau de chaque élève.",
-                photo: "https://images.unsplash.com/photo-1551836026-d5c8ca5c4b87?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80"
+                photo: "https://images.unsplash.com/photo-1551836026-d5c8ca5c4b87?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+                emoji: "🔬"
             },
             {
                 name: "Michel Bernard",
@@ -1334,12 +1392,15 @@
                 experience: 15,
                 hourlyRate: 30,
                 description: "Ancien professeur en lycée, je me consacre désormais au soutien scolaire individualisé.",
-                photo: "https://images.unsplash.com/photo-1557862921-37829c790f19?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80"
+                photo: "https://images.unsplash.com/photo-1557862921-37829c790f19?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+                emoji: "🧠"
             }
         ];
 
         // Current user state
         let currentUser = null;
+        let verificationCode = '';
+        let pendingUser = null;
 
         // DOM Ready
         document.addEventListener('DOMContentLoaded', function() {
@@ -1394,7 +1455,10 @@
                 const teacherCard = document.createElement('div');
                 teacherCard.className = 'teacher-card';
                 teacherCard.innerHTML = `
-                    <img src="${teacher.photo}" alt="${teacher.name}" class="teacher-photo">
+                    ${teacher.photo ? 
+                        `<img src="${teacher.photo}" alt="${teacher.name}" class="teacher-photo">` : 
+                        `<div class="profile-emoji">${teacher.emoji || '👨‍🏫'}</div>`
+                    }
                     <div class="teacher-info">
                         <h3 class="teacher-name">${teacher.name}</h3>
                         <p class="teacher-subject">${teacher.subject}</p>
@@ -1425,7 +1489,10 @@
                 const teacherCard = document.createElement('div');
                 teacherCard.className = 'teacher-card';
                 teacherCard.innerHTML = `
-                    <img src="${teacher.photo}" alt="${teacher.name}" class="teacher-photo">
+                    ${teacher.photo ? 
+                        `<img src="${teacher.photo}" alt="${teacher.name}" class="teacher-photo">` : 
+                        `<div class="profile-emoji">${teacher.emoji || '👨‍🏫'}</div>`
+                    }
                     <div class="teacher-info">
                         <h3 class="teacher-name">${teacher.name}</h3>
                         <p class="teacher-subject">${teacher.subject}</p>
@@ -1472,7 +1539,10 @@
                 const teacherCard = document.createElement('div');
                 teacherCard.className = 'teacher-card';
                 teacherCard.innerHTML = `
-                    <img src="${teacher.photo}" alt="${teacher.name}" class="teacher-photo">
+                    ${teacher.photo ? 
+                        `<img src="${teacher.photo}" alt="${teacher.name}" class="teacher-photo">` : 
+                        `<div class="profile-emoji">${teacher.emoji || '👨‍🏫'}</div>`
+                    }
                     <div class="teacher-info">
                         <h3 class="teacher-name">${teacher.name}</h3>
                         <p class="teacher-subject">${teacher.subject}</p>
@@ -1549,70 +1619,142 @@
 
         // Register a new user
         function registerUser(type) {
+            let name, email, password;
+            
             if (type === 'parent') {
-                const name = document.getElementById('parentName').value;
-                const email = document.getElementById('parentEmail').value;
+                name = document.getElementById('parentName').value;
+                email = document.getElementById('parentEmail').value;
+                password = document.getElementById('parentPassword').value;
                 
-                currentUser = {
+                pendingUser = {
                     type: 'parent',
                     name: name,
-                    email: email
+                    email: email,
+                    password: password,
+                    phone: document.getElementById('parentPhone').value,
+                    city: document.getElementById('parentCity').value,
+                    studentLevel: document.getElementById('studentLevel').value,
+                    studentAge: document.getElementById('studentAge').value,
+                    difficulties: document.getElementById('difficulties').value
                 };
-                
-                alert(`Bienvenue ${name} ! Votre compte parent a été créé avec succès.`);
             } else {
-                const name = document.getElementById('teacherName').value;
-                const email = document.getElementById('teacherEmail').value;
-                const subject = document.getElementById('subject').value;
+                name = document.getElementById('teacherName').value;
+                email = document.getElementById('teacherEmail').value;
+                password = document.getElementById('teacherPassword').value;
                 
-                currentUser = {
+                pendingUser = {
                     type: 'teacher',
                     name: name,
                     email: email,
-                    subject: subject
+                    password: password,
+                    phone: document.getElementById('teacherPhone').value,
+                    subject: document.getElementById('subject').value,
+                    hourlyRate: document.getElementById('hourlyRate').value,
+                    city: document.getElementById('city').value,
+                    experience: document.getElementById('experience').value,
+                    emoji: document.getElementById('profileEmoji').value
                 };
                 
-                alert(`Bienvenue ${name} ! Votre compte enseignant a été créé avec succès.`);
+                // Add teacher to the list if it's a new teacher
+                const isNewTeacher = !teachers.some(t => t.email === email);
+                if (isNewTeacher) {
+                    teachers.push({
+                        name: name,
+                        subject: document.getElementById('subject').value,
+                        city: document.getElementById('city').value,
+                        experience: parseInt(document.getElementById('experience').value),
+                        hourlyRate: parseInt(document.getElementById('hourlyRate').value),
+                        description: `Nouveau professeur de ${document.getElementById('subject').value} avec ${document.getElementById('experience').value} ans d'expérience.`,
+                        emoji: document.getElementById('profileEmoji').value
+                    });
+                }
             }
             
-            // Update UI based on login state
-            updateLoginState();
+            // Generate and send verification code
+            verificationCode = generateVerificationCode();
+            document.getElementById('verificationEmail').textContent = email;
+            showSection('verification');
             
-            // Show home section
-            showSection('home');
+            // In a real application, you would send this code to the user's email
+            console.log(`Code de vérification pour ${email}: ${verificationCode}`);
+            alert(`Un code de vérification a été envoyé à ${email}. Utilisez le code: ${verificationCode} (en mode développement)`);
+        }
+
+        // Generate a 6-digit verification code
+        function generateVerificationCode() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        // Move to next input field in verification code
+        function moveToNext(current) {
+            const currentInput = document.getElementById(`code${current}`);
+            if (currentInput.value.length === 1) {
+                if (current < 6) {
+                    document.getElementById(`code${current + 1}`).focus();
+                }
+            }
+        }
+
+        // Verify the code entered by the user
+        function verifyCode() {
+            const enteredCode = 
+                document.getElementById('code1').value +
+                document.getElementById('code2').value +
+                document.getElementById('code3').value +
+                document.getElementById('code4').value +
+                document.getElementById('code5').value +
+                document.getElementById('code6').value;
+            
+            if (enteredCode === verificationCode) {
+                currentUser = pendingUser;
+                pendingUser = null;
+                
+                // Update UI based on login state
+                updateLoginState();
+                
+                // Show home section
+                showSection('home');
+                
+                alert(`Bienvenue ${currentUser.name} ! Votre compte a été vérifié avec succès.`);
+            } else {
+                alert('Code de vérification incorrect. Veuillez réessayer.');
+            }
+        }
+
+        // Resend verification code
+        function resendCode() {
+            verificationCode = generateVerificationCode();
+            
+            // In a real application, you would resend the code to the user's email
+            console.log(`Nouveau code de vérification: ${verificationCode}`);
+            alert(`Un nouveau code a été envoyé à ${pendingUser.email}. Utilisez le code: ${verificationCode} (en mode développement)`);
         }
 
         // Login user
         function loginUser(type) {
+            let email, password;
+            
             if (type === 'parent') {
-                const email = document.getElementById('parentLoginEmail').value;
-                const password = document.getElementById('parentLoginPassword').value;
-                
-                // Simple validation
-                if (!email || !password) {
-                    alert('Veuillez remplir tous les champs.');
-                    return;
-                }
-                
-                currentUser = {
-                    type: 'parent',
-                    email: email
-                };
+                email = document.getElementById('parentLoginEmail').value;
+                password = document.getElementById('parentLoginPassword').value;
             } else {
-                const email = document.getElementById('teacherLoginEmail').value;
-                const password = document.getElementById('teacherLoginPassword').value;
-                
-                // Simple validation
-                if (!email || !password) {
-                    alert('Veuillez remplir tous les champs.');
-                    return;
-                }
-                
-                currentUser = {
-                    type: 'teacher',
-                    email: email
-                };
+                email = document.getElementById('teacherLoginEmail').value;
+                password = document.getElementById('teacherLoginPassword').value;
             }
+            
+            // Simple validation
+            if (!email || !password) {
+                alert('Veuillez remplir tous les champs.');
+                return;
+            }
+            
+            // In a real application, you would verify credentials against a database
+            // For demo purposes, we'll just set a current user
+            currentUser = {
+                type: type,
+                email: email,
+                name: type === 'parent' ? 'Parent Utilisateur' : 'Enseignant Utilisateur'
+            };
             
             // Update UI based on login state
             updateLoginState();
