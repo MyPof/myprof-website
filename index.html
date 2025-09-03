@@ -1184,49 +1184,49 @@
     </footer>
 
     <script>
-        // Données des enseignants (simulées)
-        const teachers = [
-            {
-                id: 1,
-                name: "Sophie Martin",
-                subject: "Mathématiques",
-                price: 20,
-                city: "Paris",
-                experience: "5 ans d'expérience",
-                photo: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
-                description: "Professeure expérimentée en mathématiques, spécialisée dans le programme de collège et lycée."
-            },
-            {
-                id: 2,
-                name: "Thomas Bernard",
-                subject: "Français",
-                price: 18,
-                city: "Lyon",
-                experience: "3 ans d'expérience",
-                photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
-                description: "Enseignant passionné par la littérature française et la grammaire."
-            },
-            {
-                id: 3,
-                name: "Samira Haddad",
-                subject: "Physique-Chimie",
-                price: 22,
-                city: "Marseille",
-                experience: "7 ans d'expérience",
-                photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
-                description: "Docteure en physique, propose des cours ludiques et adaptés à chaque élève."
-            },
-            {
-                id: 4,
-                name: "Michel Dupont",
-                subject: "Anglais",
-                price: 19,
-                city: "Toulouse",
-                experience: "10 ans d'expérience",
-                photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
-                description: "Enseignant bilingue, propose des cours interactifs et conversationnels."
-            }
-        ];
+        // Charger les enseignants depuis le localStorage ou utiliser les données par défaut
+let teachers = JSON.parse(localStorage.getItem('myprof_teachers')) || [
+    {
+        id: 1,
+        name: "Sophie Martin",
+        subject: "Mathématiques",
+        price: 20,
+        city: "Paris",
+        experience: "5 ans d'expérience",
+        photo: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+        description: "Professeure expérimentée en mathématiques, spécialisée dans le programme de collège et lycée."
+    },
+    {
+        id: 2,
+        name: "Thomas Bernard",
+        subject: "Français",
+        price: 18,
+        city: "Lyon",
+        experience: "3 ans d'expérience",
+        photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+        description: "Enseignant passionné par la littérature française et la grammaire."
+    },
+    {
+        id: 3,
+        name: "Samira Haddad",
+        subject: "Physique-Chimie",
+        price: 22,
+        city: "Marseille",
+        experience: "7 ans d'expérience",
+        photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+        description: "Docteure en physique, propose des cours ludiques et adaptés à chaque élève."
+    },
+    {
+        id: 4,
+        name: "Michel Dupont",
+        subject: "Anglais",
+        price: 19,
+        city: "Toulouse",
+        experience: "10 ans d'expérience",
+        photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+        description: "Enseignant bilingue, propose des cours interactifs et conversationnels."
+    }
+];
         
         // Données des utilisateurs (simulées)
         let users = JSON.parse(localStorage.getItem('myprof_users')) || [];
@@ -1436,30 +1436,51 @@
         });
         
         // Gérer l'inscription des enseignants
-        document.getElementById('teacherForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const teacherName = document.getElementById('teacherName').value;
-            const teacherEmail = document.getElementById('teacherEmail').value;
-            const teacherPassword = document.getElementById('teacherPassword').value;
-            
-            // Vérifier si l'utilisateur existe déjà
-            if (users.find(u => u.email === teacherEmail)) {
-                alert('Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.');
-                return;
-            }
-            
-            // Ajouter l'utilisateur
-            const newUser = {
-                type: 'teacher',
-                name: teacherName,
-                email: teacherEmail,
-                password: teacherPassword,
-                phone: document.getElementById('teacherPhone').value,
-                subject: document.getElementById('subject').value,
-                hourlyRate: document.getElementById('hourlyRate').value,
-                city: document.getElementById('city').value,
-                experience: document.getElementById('experience').value
-            };
+       document.getElementById('teacherForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const teacherName = document.getElementById('teacherName').value;
+    const teacherEmail = document.getElementById('teacherEmail').value;
+    const teacherPassword = document.getElementById('teacherPassword').value;
+    
+    // Vérifier si l'utilisateur existe déjà
+    if (users.find(u => u.email === teacherEmail)) {
+        alert('Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.');
+        return;
+    }
+    
+    // Créer le nouvel enseignant
+    const newTeacher = {
+        id: Math.max(...teachers.map(t => t.id), 0) + 1, // Nouvel ID
+        type: 'teacher',
+        name: teacherName,
+        email: teacherEmail,
+        password: teacherPassword,
+        phone: document.getElementById('teacherPhone').value,
+        subject: document.getElementById('subject').value,
+        price: parseInt(document.getElementById('hourlyRate').value),
+        city: document.getElementById('city').value,
+        experience: document.getElementById('experience').value + ' ans d\'expérience',
+        photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+        description: `Professeur de ${document.getElementById('subject').value} avec ${document.getElementById('experience').value} ans d'expérience à ${document.getElementById('city').value}.`
+    };
+    
+    // Ajouter à la fois aux users et aux teachers
+    users.push(newTeacher);
+    teachers.push(newTeacher);
+    
+    // Mettre à jour le stockage local
+    localStorage.setItem('myprof_users', JSON.stringify(users));
+    localStorage.setItem('myprof_teachers', JSON.stringify(teachers));
+    
+    // Connecter automatiquement l'utilisateur
+    currentUser = newTeacher;
+    localStorage.setItem('myprof_currentUser', JSON.stringify(currentUser));
+    updateAuthUI();
+    
+    alert(`Merci ${teacherName} ! Votre inscription a été enregistrée. Vous êtes maintenant connecté.`);
+    this.reset();
+    showSection('teachers'); // Rediriger vers la liste des enseignants
+});
             
             users.push(newUser);
             localStorage.setItem('myprof_users', JSON.stringify(users));
@@ -1522,11 +1543,13 @@
         });
         
         // Afficher les enseignants au chargement initial
-        window.onload = function() {
-            updateAuthUI();
-            displayTeachers(teachers, 'teacherList');
-            displayTeachers(teachers, 'parentTeacherList');
-        };
+        // Au chargement de la page
+window.onload = function() {
+    updateAuthUI();
+    displayTeachers(teachers, 'teacherList');
+    displayTeachers(teachers, 'parentTeacherList');
+};
     </script>
 </body>
 </html>
+
