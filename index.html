@@ -6,6 +6,7 @@
     <title>MyProf - Marketplace Enseignants Parents</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Styles existants conservés */
         * {
             margin: 0;
             padding: 0;
@@ -16,7 +17,7 @@
         :root {
             --primary: #4a6fa5;
             --secondary: #166088;
-            --accent: #8A2BE2;
+            --accent: #8A2BE2; /* Changé en mauve */
             --light: #f8f9fa;
             --dark: #343a40;
             --success: #28a745;
@@ -64,6 +65,7 @@
             align-items: center;
             justify-content: center;
             margin-right: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
         nav ul {
@@ -90,13 +92,26 @@
         
         /* Hero section */
         .hero {
-            background: linear-gradient(to right, rgba(106, 17, 203, 0.8), rgba(37, 117, 252, 0.8)), url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80') center/cover no-repeat;
+            background: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80') center/cover no-repeat;
             padding: 100px 0;
             text-align: center;
             color: white;
+            position: relative;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(106, 17, 203, 0.8), rgba(37, 117, 252, 0.8));
         }
         
         .hero-content {
+            position: relative;
+            z-index: 1;
             max-width: 800px;
             margin: 0 auto;
             padding: 0 1rem;
@@ -105,6 +120,7 @@
         .hero h1 {
             font-size: 3rem;
             margin-bottom: 1.5rem;
+            font-weight: 700;
         }
         
         .hero p {
@@ -114,7 +130,7 @@
         
         .btn {
             display: inline-block;
-            background-color: var(--accent);
+            background-color: var(--accent); /* Bouton mauve */
             color: white;
             padding: 1rem 2rem;
             border-radius: 50px;
@@ -124,21 +140,26 @@
             border: none;
             cursor: pointer;
             font-size: 1.1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
         
         .btn:hover {
-            background-color: #6a0dad;
+            background-color: #6a0dad; /* Mauve plus foncé au survol */
             transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #0d4b6e;
         }
         
         /* Sections */
         .section {
             padding: 5rem 1rem;
-            display: none;
-        }
-        
-        #home {
-            display: block;
         }
         
         .section-title {
@@ -146,6 +167,17 @@
             margin-bottom: 3rem;
             color: var(--secondary);
             font-size: 2.5rem;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            margin: 1rem auto;
+            border-radius: 2px;
         }
         
         .container {
@@ -169,7 +201,13 @@
             padding: 2rem;
             border-radius: 12px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
             background: white;
+            cursor: pointer;
+        }
+        
+        .step:hover {
+            transform: translateY(-10px);
         }
         
         .step-icon {
@@ -197,8 +235,13 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
             width: 100%;
             max-width: 500px;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
         }
         
         .card-header {
@@ -221,6 +264,7 @@
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
+            color: var(--dark);
         }
         
         .form-group input, .form-group select, .form-group textarea {
@@ -229,9 +273,71 @@
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
+        }
+        
+        /* Photo upload */
+        .photo-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .photo-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            margin-bottom: 1rem;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+        }
+        
+        .photo-upload-btn {
+            background-color: var(--secondary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .photo-upload-btn:hover {
+            background-color: var(--primary);
         }
         
         /* Teachers section */
+        .search-filters {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .filter-item {
+            flex: 1;
+            min-width: 200px;
+        }
+        
         .teacher-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -243,12 +349,18 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .teacher-card:hover {
+            transform: translateY(-5px);
         }
         
         .teacher-photo {
             width: 100%;
             height: 250px;
             object-fit: cover;
+            border-bottom: 3px solid var(--accent);
         }
         
         .teacher-info {
@@ -257,14 +369,15 @@
         
         .teacher-name {
             font-size: 1.4rem;
-            margin-bottom: 0.5rem;
+            margin: 0 0 0.5rem 0;
             color: var(--secondary);
         }
         
         .teacher-subject {
             font-weight: bold;
             color: var(--primary);
-            margin-bottom: 1rem;
+            margin: 0 0 1rem 0;
+            font-size: 1.1rem;
         }
         
         .teacher-details {
@@ -277,6 +390,7 @@
         .teacher-details i {
             margin-right: 10px;
             color: var(--primary);
+            width: 20px;
         }
         
         .price {
@@ -285,6 +399,148 @@
             font-weight: bold;
             margin: 1.5rem 0;
             text-align: center;
+        }
+        
+        /* Profile section */
+        .profile-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 2rem;
+            border: 3px solid var(--primary);
+        }
+        
+        .profile-info h2 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .profile-info p {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Info sections */
+        .info-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .info-section h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+        
+        .info-section h4 {
+            color: var(--secondary);
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.4rem;
+        }
+        
+        .info-section ul, .info-section ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .info-section li {
+            margin-bottom: 0.8rem;
+            line-height: 1.6;
+        }
+        
+        .faq-item {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1.5rem;
+        }
+        
+        .faq-question {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #f1f1f1;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .close-modal:hover {
+            background: #e2e2e2;
+        }
+        
+        .modal-title {
+            margin-top: 0;
+            color: var(--secondary);
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .commission-info {
+            background: #e8f4ff;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            text-align: center;
+            border-left: 4px solid var(--accent);
         }
         
         /* Footer */
@@ -327,6 +583,7 @@
         .footer-links a {
             color: #ccc;
             text-decoration: none;
+            transition: color 0.3s;
         }
         
         .footer-links a:hover {
@@ -350,10 +607,12 @@
             color: white;
             border-radius: 50%;
             text-decoration: none;
+            transition: all 0.3s ease;
         }
         
         .social-icons a:hover {
             background-color: var(--accent);
+            transform: translateY(-3px);
         }
         
         .footer-bottom {
@@ -362,10 +621,76 @@
             border-top: 1px solid rgba(255,255,255,0.1);
         }
         
+        /* Login modal specific styles */
+        .login-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .login-tab {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .login-tab.active {
+            border-bottom: 3px solid var(--accent);
+            font-weight: bold;
+            color: var(--accent);
+        }
+        
+        .login-form {
+            display: none;
+        }
+        
+        .login-form.active {
+            display: block;
+        }
+        
+        .auth-required {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin: 2rem 0;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            color: white;
+            z-index: 1001;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        
+        .notification.success {
+            background-color: var(--success);
+        }
+        
+        .notification.error {
+            background-color: var(--danger);
+        }
+        
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
         /* Responsive design */
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
+                text-align: center;
             }
             
             nav ul {
@@ -393,10 +718,25 @@
             
             .footer-content {
                 flex-direction: column;
+                text-align: center;
+            }
+            
+            .filter-row {
+                flex-direction: column;
             }
             
             .teacher-list {
                 grid-template-columns: 1fr;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-photo {
+                margin-right: 0;
+                margin-bottom: 1rem;
             }
         }
     </style>
@@ -415,13 +755,20 @@
                 <ul>
                     <li><a href="#" onclick="showSection('home')">Accueil</a></li>
                     <li><a href="#" onclick="showSection('register')">Inscription</a></li>
-                    <li><a href="#" onclick="showSection('teachers')">Enseignants</a></li>
+                    <li><a href="#" onclick="checkAuthAndShowSection('teachers')">Enseignants</a></li>
+                    <li><a href="#" onclick="checkAuthAndShowSection('parents')">Parents</a></li>
                     <li><a href="#" onclick="showSection('about')">À propos</a></li>
                     <li><a href="#" onclick="showSection('contact')">Contact</a></li>
+                    <li id="profileNavItem" style="display: none;"><a href="#" onclick="checkAuthAndShowSection('profile')">Mon Profil</a></li>
+                    <li id="loginNavItem"><a href="#" onclick="openLoginModal()">Connexion</a></li>
+                    <li id="logoutNavItem" style="display: none;"><a href="#" onclick="logout()">Déconnexion</a></li>
                 </ul>
             </nav>
         </div>
     </header>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
 
     <!-- Home Section -->
     <section id="home" class="section">
@@ -436,21 +783,21 @@
         <div class="container">
             <h2 class="section-title">Comment ça marche</h2>
             <div class="steps">
-                <div class="step">
+                <div class="step" onclick="showSection('register')">
                     <div class="step-icon">
                         <i class="fas fa-user-plus"></i>
                     </div>
                     <h3 class="step-title">Inscription simple</h3>
                     <p>Créez votre profil en quelques minutes seulement, que vous soyez parent ou enseignant.</p>
                 </div>
-                <div class="step">
+                <div class="step" onclick="checkAuthAndShowSection('parents')">
                     <div class="step-icon">
                         <i class="fas fa-search"></i>
                     </div>
                     <h3 class="step-title">Recherche avancée</h3>
                     <p>Trouvez le professeur idéal grâce à nos filtres de recherche précis et détaillés.</p>
                 </div>
-                <div class="step">
+                <div class="step" onclick="checkAuthAndShowSection('teachers')">
                     <div class="step-icon">
                         <i class="fas fa-comments"></i>
                     </div>
@@ -462,7 +809,7 @@
     </section>
 
     <!-- Registration Section -->
-    <section id="register" class="section">
+    <section id="register" class="section" style="display: none; background-color: #f8f9fa;">
         <div class="container">
             <h2 class="section-title">Rejoignez la communauté MyProf</h2>
             
@@ -489,6 +836,28 @@
                                 <label for="parentPhone">Téléphone</label>
                                 <input type="tel" id="parentPhone" required placeholder="06 12 34 56 78">
                             </div>
+                            <div class="form-group">
+                                <label for="parentCity">Ville</label>
+                                <input type="text" id="parentCity" required placeholder="Paris">
+                            </div>
+                            <div class="form-group">
+                                <label for="studentLevel">Niveau de l'élève</label>
+                                <select id="studentLevel" required>
+                                    <option value="">Sélectionnez...</option>
+                                    <option value="Primaire">Primaire</option>
+                                    <option value="Collège">Collège</option>
+                                    <option value="Lycée">Lycée</option>
+                                    <option value="Supérieur">Supérieur</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="studentAge">Âge de l'élève</label>
+                                <input type="number" id="studentAge" min="5" max="25" required placeholder="12">
+                            </div>
+                            <div class="form-group">
+                                <label for="difficulties">Difficultés rencontrées</label>
+                                <textarea id="difficulties" rows="3" required placeholder="Mathématiques, concentration..."></textarea>
+                            </div>
                             <button type="submit" class="btn">S'inscrire en tant que parent</button>
                         </form>
                     </div>
@@ -500,6 +869,13 @@
                     </div>
                     <div class="card-body">
                         <form id="teacherForm">
+                            <div class="photo-upload">
+                                <img id="teacherPhotoPreview" src="https://via.placeholder.com/150" class="photo-preview" alt="Aperçu photo">
+                                <input type="file" id="teacherPhotoUpload" accept="image/*" style="display: none;">
+                                <label for="teacherPhotoUpload" class="photo-upload-btn">
+                                    <i class="fas fa-camera"></i> Choisir une photo
+                                </label>
+                            </div>
                             <div class="form-group">
                                 <label for="teacherName">Nom complet</label>
                                 <input type="text" id="teacherName" required placeholder="Votre nom et prénom">
@@ -513,6 +889,10 @@
                                 <input type="password" id="teacherPassword" required placeholder="Créez un mot de passe">
                             </div>
                             <div class="form-group">
+                                <label for="teacherPhone">Téléphone</label>
+                                <input type="tel" id="teacherPhone" required placeholder="06 12 34 56 78">
+                            </div>
+                            <div class="form-group">
                                 <label for="subject">Matière enseignée</label>
                                 <select id="subject" required>
                                     <option value="">Sélectionnez...</option>
@@ -521,7 +901,25 @@
                                     <option value="Physique-Chimie">Physique-Chimie</option>
                                     <option value="SVT">SVT</option>
                                     <option value="Anglais">Anglais</option>
+                                    <option value="Histoire-Géographie">Histoire-Géographie</option>
+                                    <option value="Philosophie">Philosophie</option>
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="hourlyRate">Tarif horaire (€)</label>
+                                <input type="number" id="hourlyRate" min="15" max="50" required placeholder="20">
+                            </div>
+                            <div class="form-group">
+                                <label for="city">Ville</label>
+                                <input type="text" id="city" required placeholder="Paris">
+                            </div>
+                            <div class="form-group">
+                                <label for="experience">Années d'expérience</label>
+                                <input type="number" id="experience" min="0" max="50" required placeholder="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="bio">Présentation</label>
+                                <textarea id="bio" rows="3" required placeholder="Présentez-vous en quelques mots..."></textarea>
                             </div>
                             <button type="submit" class="btn">S'inscrire en tant qu'enseignant</button>
                         </form>
@@ -532,179 +930,133 @@
     </section>
 
     <!-- Teachers Section -->
-    <section id="teachers" class="section">
+    <section id="teachers" class="section" style="display: none; background-color: #f8f9fa;">
         <div class="container">
             <h2 class="section-title">Nos enseignants disponibles</h2>
-            <div class="teacher-list">
-                <div class="teacher-card">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80" alt="Sophie Martin" class="teacher-photo">
-                    <div class="teacher-info">
-                        <h3 class="teacher-name">Sophie Martin</h3>
-                        <p class="teacher-subject">Mathématiques</p>
-                        <div class="teacher-details">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Paris</span>
-                        </div>
-                        <div class="teacher-details">
-                            <i class="fas fa-briefcase"></i>
-                            <span>5 ans d'expérience</span>
-                        </div>
-                        <p>Professeure expérimentée en mathématiques, spécialisée dans le programme de collège et lycée.</p>
-                        <div class="price">20€/h</div>
-                        <button class="btn">Contacter</button>
+            <div class="teacher-list" id="teacherList">
+                <!-- Teachers will be displayed here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Parents Section -->
+    <section id="parents" class="section" style="display: none; background-color: #f8f9fa;">
+        <div class="container">
+            <h2 class="section-title">Espace Parents</h2>
+            
+            <div class="search-filters">
+                <h3 style="margin-bottom: 1.5rem; color: var(--primary); text-align: center;">Rechercher un enseignant</h3>
+                <div class="filter-row">
+                    <div class="filter-item">
+                        <label for="searchSubject">Matière</label>
+                        <select id="searchSubject">
+                            <option value="">Toutes les matières</option>
+                            <option value="Mathématiques">Mathématiques</option>
+                            <option value="Français">Français</option>
+                            <option value="Physique-Chimie">Physique-Chimie</option>
+                            <option value="SVT">SVT</option>
+                            <option value="Anglais">Anglais</option>
+                            <option value="Histoire-Géographie">Histoire-Géographie</option>
+                            <option value="Philosophie">Philosophie</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label for="searchCity">Ville</label>
+                        <input type="text" id="searchCity" placeholder="Ex: Paris">
+                    </div>
+                    <div class="filter-item">
+                        <label for="maxPrice">Tarif maximum (€/h)</label>
+                        <input type="number" id="maxPrice" min="15" max="50" placeholder="Ex: 25">
                     </div>
                 </div>
-                
-                <div class="teacher-card">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80" alt="Thomas Bernard" class="teacher-photo">
-                    <div class="teacher-info">
-                        <h3 class="teacher-name">Thomas Bernard</h3>
-                        <p class="teacher-subject">Français</p>
-                        <div class="teacher-details">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Lyon</span>
-                        </div>
-                        <div class="teacher-details">
-                            <i class="fas fa-briefcase"></i>
-                            <span>3 ans d'expérience</span>
-                        </div>
-                        <p>Enseignant passionné par la littérature française et la grammaire.</p>
-                        <div class="price">18€/h</div>
-                        <button class="btn">Contacter</button>
-                    </div>
-                </div>
-                
-                <div class="teacher-card">
-                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80" alt="Samira Haddad" class="teacher-photo">
-                    <div class="teacher-info">
-                        <h3 class="teacher-name">Samira Haddad</h3>
-                        <p class="teacher-subject">Physique-Chimie</p>
-                        <div class="teacher-details">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Marseille</span>
-                        </div>
-                        <div class="teacher-details">
-                            <i class="fas fa-briefcase"></i>
-                            <span>7 ans d'expérience</span>
-                        </div>
-                        <p>Docteure en physique, propose des cours ludiques et adaptés à chaque élève.</p>
-                        <div class="price">22€/h</div>
-                        <button class="btn">Contacter</button>
-                    </div>
-                </div>
+                <button class="btn" onclick="filterTeachers()">
+                    <i class="fas fa-search"></i> Rechercher
+                </button>
+            </div>
+            
+            <h3 class="section-title" style="font-size: 1.8rem; margin-top: 2rem;">Résultats de votre recherche</h3>
+            <div class="teacher-list" id="parentTeacherList">
+                <!-- Filtered teachers will be displayed here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Profile Section -->
+    <section id="profile" class="section" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">Mon Profil</h2>
+            <div class="profile-container" id="profileContainer">
+                <!-- Profile content will be displayed here -->
             </div>
         </div>
     </section>
 
     <!-- About Section -->
-    <section id="about" class="section">
+    <section id="about" class="section" style="display: none;">
         <div class="container">
             <h2 class="section-title">À propos de MyProf</h2>
-            <div class="card">
-                <div class="card-body">
-                    <p>MyProf est une plateforme innovante qui révolutionne le marché du soutien scolaire en connectant directement les parents et les enseignants, sans intermédiaire coûteux.</p>
-                    <h3>Notre mission</h3>
-                    <p>Nous croyons que chaque élève mérite un accompagnement personnalisé de qualité, et que chaque enseignant devrait être rémunéré à sa juste valeur pour son expertise.</p>
-                </div>
+            <div class="info-section">
+                <p>MyProf est une plateforme innovante qui révolutionne le marché du soutien scolaire en connectant directement les parents et les enseignants, sans intermédiaire coûteux.</p>
+                
+                <h3>Notre mission</h3>
+                <p>Nous croyons que chaque élève mérite un accompagnement personnalisé de qualité, et que chaque enseignant devrait être rémunéré à sa juste valeur pour son expertise.</p>
+                
+                <h3>Notre modèle économique transparent</h3>
+                <p>Contrairement aux agences traditionnelles qui prennent jusqu'à 50% de commission sur le tarif des cours, MyProf applique un forfait unique de 10€ par mise en relation réussie :</p>
+                <ul>
+                    <li>5€ payés par les parents pour contacter un enseignant</li>
+                    <li>5€ payés par l'enseignant pour accepter la relation</li>
+                </ul>
             </div>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="section">
+    <section id="contact" class="section" style="display: none;">
         <div class="container">
             <h2 class="section-title">Contactez-nous</h2>
-            <div class="card">
-                <div class="card-body">
-                    <form id="contactForm">
-                        <div class="form-group">
-                            <label for="contactName">Votre nom</label>
-                            <input type="text" id="contactName" required placeholder="Votre nom complet">
-                        </div>
-                        <div class="form-group">
-                            <label for="contactEmail">Votre email</label>
-                            <input type="email" id="contactEmail" required placeholder="votre@email.com">
-                        </div>
-                        <div class="form-group">
-                            <label for="contactMessage">Votre message</label>
-                            <textarea id="contactMessage" rows="5" required placeholder="Décrivez votre demande en détail..."></textarea>
-                        </div>
-                        <button type="submit" class="btn">Envoyer le message</button>
-                    </form>
+            <div class="info-section">
+                <p>Nous sommes à votre disposition pour répondre à toutes vos questions.</p>
+                
+                <div style="display: flex; align-items: center; justify-content: center; margin: 2rem 0; padding: 1.5rem; background: #e8f4ff; border-radius: 12px;">
+                    <i class="fas fa-envelope" style="font-size: 2rem; margin-right: 1rem; color: var(--primary);"></i>
+                    <div style="font-size: 1.2rem;">
+                        <strong>Email :</strong> myprofeduc@gmail.com
+                    </div>
                 </div>
+                
+                <h3>Formulaire de contact</h3>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="contactName">Votre nom</label>
+                        <input type="text" id="contactName" required placeholder="Votre nom complet">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">Votre email</label>
+                        <input type="email" id="contactEmail" required placeholder="votre@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactSubject">Sujet</label>
+                        <select id="contactSubject" required>
+                            <option value="">Sélectionnez...</option>
+                            <option value="question">Question générale</option>
+                            <option value="technical">Problème technique</option>
+                            <option value="payment">Question de paiement</option>
+                            <option value="partnership">Partenariat</option>
+                            <option value="other">Autre</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactMessage">Votre message</label>
+                        <textarea id="contactMessage" rows="5" required placeholder="Décrivez votre demande en détail..."></textarea>
+                    </div>
+                    <button type="submit" class="btn">Envoyer le message</button>
+                </form>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>MyProf</h3>
-                <p>La marketplace qui connecte directement parents et enseignants pour des solutions éducatives sur mesure.</p>
-            </div>
-            
-            <div class="footer-section">
-                <h3>Liens rapides</h3>
-                <ul class="footer-links">
-                    <li><a href="#" onclick="showSection('home')">Accueil</a></li>
-                    <li><a href="#" onclick="showSection('register')">Inscription</a></li>
-                    <li><a href="#" onclick="showSection('teachers')">Enseignants</a></li>
-                    <li><a href="#" onclick="showSection('about')">À propos</a></li>
-                    <li><a href="#" onclick="showSection('contact')">Contact</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-section">
-                <h3>Contact</h3>
-                <ul class="footer-links">
-                    <li><i class="fas fa-envelope"></i> contact@myprof.fr</li>
-                    <li><i class="fas fa-phone"></i> 01 23 45 67 89</li>
-                    <li><i class="fas fa-map-marker-alt"></i> 123 Avenue de l'Éducation, Paris</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>&copy; 2023 MyProf. Tous droits réservés.</p>
-        </div>
-    </footer>
-
-    <script>
-        // Function to show sections
-        function showSection(sectionId) {
-            // Hide all sections
-            document.querySelectorAll('.section').forEach(section => {
-                section.style.display = 'none';
-            });
-            
-            // Show the requested section
-            document.getElementById(sectionId).style.display = 'block';
-            
-            // Scroll to top
-            window.scrollTo(0, 0);
-        }
-
-        // Form submissions
-        document.getElementById('parentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Inscription parent réussie ! Un email de confirmation a été envoyé.');
-            this.reset();
-            showSection('home');
-        });
-        
-        document.getElementById('teacherForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Inscription enseignant réussie ! Un email de confirmation a été envoyé.');
-            this.reset();
-            showSection('home');
-        });
-        
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Votre message a été envoyé. Nous vous répondrons dans les plus brefs délais.');
-            this.reset();
-        });
-    </script>
-</body>
-</html>
+    <!-- Terms Section -->
+    <section id="terms" class="section" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">Conditions d'utilisation</h2>
