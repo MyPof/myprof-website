@@ -1000,8 +1000,9 @@
                                 <label for="bio">Présentation</label>
                                 <textarea id="bio" rows="3" required placeholder="Présentez-vous en quelques mots..."></textarea>
                             </div>
-                            <button type="submit" class
-							                            <button type="submit" class="btn">S'inscrire en tant qu'enseignant</button>
+                           <button type="button" class="btn" onclick="registerTeacher()">
+    S'inscrire en tant qu'enseignant
+</button>
                         </form>
                     </div>
                 </div>
@@ -1825,16 +1826,19 @@
         
         // Simuler l'envoi d'email de vérification
         function simulateEmailVerification(email) {
-            console.log(`Email de vérification envoyé à: ${email}`);
-            // Générer un code de vérification aléatoire
-            const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-            localStorage.setItem('myprof_verificationCode', verificationCode);
-            
-            // Dans une application réelle, on enverrait un vrai email ici
-            showNotification(`Un code de vérification a été envoyé à ${email}.`, 'success');
-            
-            // Ouvrir la modal de vérification
-            openVerificationModal();
+        console.log(`Email de vérification envoyé à: ${email}`);
+        // Générer un code de vérification aléatoire
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+    localStorage.setItem('myprof_verificationCode', verificationCode);
+    
+    // Afficher une notification
+    showNotification(`Un code de vérification a été envoyé à ${email}.`, 'success');
+    
+    // Ouvrir la modal de vérification
+    openVerificationModal();
+    
+    // Masquer la section d'inscription
+       document.getElementById('register').style.display = 'none';
         }
         
         // Simuler l'envoi d'email de réinitialisation de mot de passe
@@ -2002,48 +2006,45 @@
             }
         });
         
-        // Gérer la vérification du code
-        document.getElementById('verificationForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Récupérer le code saisi
-            const code = 
-                document.getElementById('verificationCode1').value +
-                document.getElementById('verificationCode2').value +
-                document.getElementById('verificationCode3').value +
-                document.getElementById('verificationCode4').value +
-                document.getElementById('verificationCode5').value +
-                document.getElementById('verificationCode6').value;
-            
-            // Récupérer le code stocké
-            const storedCode = localStorage.getItem('myprof_verificationCode');
-            
-            if (code === storedCode) {
-                // Vérification réussie
-                pendingUser.verified = true;
-                users.push(pendingUser);
-                localStorage.setItem('myprof_users', JSON.stringify(users));
-                
-                currentUser = pendingUser;
-                localStorage.setItem('myprof_currentUser', JSON.stringify(currentUser));
-                
-                localStorage.removeItem('myprof_pendingUser');
-                localStorage.removeItem('myprof_verificationCode');
-                
-                updateAuthUI();
-                closeVerificationModal();
-                showNotification('Votre compte a été vérifié avec succès !', 'success');
-                
-                // Rediriger vers la section appropriée
-                if (currentUser.type === 'parent') {
-                    showSection('parents');
-                } else {
-                    showSection('teachers');
-                }
-            } else {
-                showNotification('Code de vérification incorrect. Veuillez réessayer.', 'error');
-            }
-        });
+       // Gérer la vérification du code
+document.getElementById('verificationForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Récupérer le code saisi
+    const code = 
+        document.getElementById('verificationCode1').value +
+        document.getElementById('verificationCode2').value +
+        document.getElementById('verificationCode3').value +
+        document.getElementById('verificationCode4').value +
+        document.getElementById('verificationCode5').value +
+        document.getElementById('verificationCode6').value;
+    
+    // Récupérer le code stocké
+    const storedCode = localStorage.getItem('myprof_verificationCode');
+    
+    if (code === storedCode) {
+        // Vérification réussie
+        pendingUser.verified = true;
+        users.push(pendingUser);
+        localStorage.setItem('myprof_users', JSON.stringify(users));
+        
+        currentUser = pendingUser;
+        localStorage.setItem('myprof_currentUser', JSON.stringify(currentUser));
+        
+        localStorage.removeItem('myprof_pendingUser');
+        localStorage.removeItem('myprof_verificationCode');
+        
+        updateAuthUI();
+        closeVerificationModal();
+        showNotification('Votre compte a été vérifié avec succès !', 'success');
+        
+        // Rediriger vers le profil
+        showSection('profile');
+        loadProfileData();
+    } else {
+        showNotification('Code de vérification incorrect. Veuillez réessayer.', 'error');
+    }
+});
         
         // Gérer le formulaire de contact
         document.getElementById('contactForm').addEventListener('submit', function(e) {
@@ -2091,8 +2092,202 @@
             if (pendingUser) {
                 openVerificationModal();
             }
+            // Fonction pour gérer l'inscription des enseignants
+function registerTeacher() {
+    const teacherName = document.getElementById('teacherName').value;
+    const teacherEmail = document.getElementById('teacherEmail').value;
+    const teacherPassword = document.getElementById('teacherPassword').value;
+    
+    // Validation des champs requis
+    if (!teacherName || !teacherEmail || !teacherPassword) {
+        showNotification('Veuillez remplir tous les champs obligatoires.', 'error');
+        return;
+    }
+    
+    // Vérifier si l'utilisateur existe déjà
+    if (users.find(u => u.email === teacherEmail)) {
+        showNotification('Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.', 'error');
+        return;
+    }
+    
+    // Récupérer les diplômes uploadés
+    const diplomaFiles = document.getElementById('diplomaFiles').querySelectorAll('.uploaded-file');
+    const diplomas = Array.from(diplomaFiles).map(file => {
+        return {
+            name: file.querySelector('span').textContent,
+            url: '#'
+        };
+    });
+    
+    // Créer l'objet utilisateur
+    const newUser = {
+        type: 'teacher',
+        name: teacherName,
+        email: teacherEmail,
+        password: teacherPassword,
+        phone: document.getElementById('teacherPhone').value,
+        subject: document.getElementById('subject').value,
+        hourlyRate: document.getElementById('hourlyRate').value,
+        city: document.getElementById('city').value,
+        experience: document.getElementById('experience').value,
+        bio: document.getElementById('bio').value,
+        photo: document.getElementById('teacherPhotoPreview').src,
+        diplomas: diplomas,
+        verified: false
+    };
+    
+    // Stocker temporairement l'utilisateur en attente de vérification
+    pendingUser = newUser;
+    localStorage.setItem('myprof_pendingUser', JSON.stringify(pendingUser));
+    
+    // Simuler l'envoi d'email de vérification
+    simulateEmailVerification(teacherEmail);
+    
+    // Réinitialiser le formulaire
+    document.getElementById('teacherForm').reset();
+    document.getElementById('teacherPhotoPreview').src = 'https://via.placeholder.com/150';
+    document.getElementById('diplomaFiles').innerHTML = '';
+}
+    
+    // Vérifier si l'utilisateur existe déjà
+    if (users.find(u => u.email === teacherEmail)) {
+        showNotification('Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.', 'error');
+        return;
+    }
+    
+    // Récupérer les diplômes uploadés
+    const diplomaFiles = document.getElementById('diplomaFiles').querySelectorAll('.uploaded-file');
+    const diplomas = Array.from(diplomaFiles).map(file => {
+        return {
+            name: file.querySelector('span').textContent,
+            url: '#'
+        };
+    });
+    
+    // Créer l'objet utilisateur
+    const newUser = {
+        type: 'teacher',
+        name: teacherName,
+        email: teacherEmail,
+        password: teacherPassword,
+        phone: document.getElementById('teacherPhone').value,
+        subject: document.getElementById('subject').value,
+        hourlyRate: document.getElementById('hourlyRate').value,
+        city: document.getElementById('city').value,
+        experience: document.getElementById('experience').value,
+        bio: document.getElementById('bio').value,
+        photo: document.getElementById('teacherPhotoPreview').src,
+        diplomas: diplomas,
+        verified: false
+    };
+			// Modifier le profil
+function editProfile() {
+    if (!currentUser) return;
+    
+    // Créer le formulaire d'édition
+    const profileContainer = document.getElementById('profileContainer');
+    
+    let editFormHTML = `
+        <h3 style="color: var(--primary); margin-bottom: 1.5rem;">Modifier votre profil</h3>
+        <form id="editProfileForm">
+    `;
+    
+    if (currentUser.type === 'teacher') {
+        editFormHTML += `
+            <div class="form-group">
+                <label for="editName">Nom complet</label>
+                <input type="text" id="editName" value="${currentUser.name}" required>
+            </div>
+            <div class="form-group">
+                <label for="editPhone">Téléphone</label>
+                <input type="tel" id="editPhone" value="${currentUser.phone}" required>
+            </div>
+            <div class="form-group">
+                <label for="editSubject">Matière enseignée</label>
+                <select id="editSubject" required>
+                    <option value="Mathématiques" ${currentUser.subject === 'Mathématiques' ? 'selected' : ''}>Mathématiques</option>
+                    <option value="Français" ${currentUser.subject === 'Français' ? 'selected' : ''}>Français</option>
+                    <option value="Physique-Chimie" ${currentUser.subject === 'Physique-Chimie' ? 'selected' : ''}>Physique-Chimie</option>
+                    <option value="SVT" ${currentUser.subject === 'SVT' ? 'selected' : ''}>SVT</option>
+                    <option value="Anglais" ${currentUser.subject === 'Anglais' ? 'selected' : ''}>Anglais</option>
+                    <option value="Histoire-Géographie" ${currentUser.subject === 'Histoire-Géographie' ? 'selected' : ''}>Histoire-Géographie</option>
+                    <option value="Philosophie" ${currentUser.subject === 'Philosophie' ? 'selected' : ''}>Philosophie</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="editHourlyRate">Tarif horaire (€)</label>
+                <input type="number" id="editHourlyRate" value="${currentUser.hourlyRate}" min="15" max="50" required>
+            </div>
+            <div class="form-group">
+                <label for="editCity">Ville</label>
+                <input type="text" id="editCity" value="${currentUser.city}" required>
+            </div>
+            <div class="form-group">
+                <label for="editExperience">Années d'expérience</label>
+                <input type="number" id="editExperience" value="${currentUser.experience}" min="0" max="50" required>
+            </div>
+            <div class="form-group">
+                <label for="editBio">Présentation</label>
+                <textarea id="editBio" rows="3" required>${currentUser.bio || ''}</textarea>
+            </div>
+        `;
+    }
+    
+    editFormHTML += `
+            <div class="form-group" style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn">Enregistrer les modifications</button>
+                <button type="button" class="btn" style="background: #6c757d;" onclick="loadProfileData()">Annuler</button>
+            </div>
+        </form>
+    `;
+    
+    profileContainer.innerHTML = editFormHTML;
+    
+    // Ajouter le gestionnaire d'événement pour le formulaire
+    document.getElementById('editProfileForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        if (currentUser.type === 'teacher') {
+            // Mettre à jour les informations
+            currentUser.name = document.getElementById('editName').value;
+            currentUser.phone = document.getElementById('editPhone').value;
+            currentUser.subject = document.getElementById('editSubject').value;
+            currentUser.hourlyRate = document.getElementById('editHourlyRate').value;
+            currentUser.city = document.getElementById('editCity').value;
+            currentUser.experience = document.getElementById('editExperience').value;
+            currentUser.bio = document.getElementById('editBio').value;
+            
+            // Mettre à jour le stockage local
+            const userIndex = users.findIndex(u => u.email === currentUser.email);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('myprof_users', JSON.stringify(users));
+                localStorage.setItem('myprof_currentUser', JSON.stringify(currentUser));
+            }
+            
+            showNotification('Profil mis à jour avec succès !', 'success');
+        }
+        
+        // Recharger les données du profil
+        loadProfileData();
+    });
+}
+    
+    // Stocker temporairement l'utilisateur en attente de vérification
+    pendingUser = newUser;
+    localStorage.setItem('myprof_pendingUser', JSON.stringify(pendingUser));
+    
+    // Simuler l'envoi d'email de vérification
+    simulateEmailVerification(teacherEmail);
+    
+    // Réinitialiser le formulaire
+    document.getElementById('teacherForm').reset();
+    document.getElementById('teacherPhotoPreview').src = 'https://via.placeholder.com/150';
+    document.getElementById('diplomaFiles').innerHTML = '';
+    }
         };
     </script>
 </body>
 </html>
+
 
