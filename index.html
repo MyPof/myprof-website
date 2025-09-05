@@ -6,7 +6,6 @@
     <title>MyProf - Marketplace Enseignants Parents</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Styles existants conservés */
         * {
             margin: 0;
             padding: 0;
@@ -17,7 +16,7 @@
         :root {
             --primary: #4a6fa5;
             --secondary: #166088;
-            --accent: #8A2BE2; /* Changé en mauve */
+            --accent: #8A2BE2;
             --light: #f8f9fa;
             --dark: #343a40;
             --success: #28a745;
@@ -31,7 +30,6 @@
             line-height: 1.6;
         }
         
-        /* Header styles */
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
@@ -90,7 +88,6 @@
             background-color: rgba(255, 255, 255, 0.2);
         }
         
-        /* Hero section */
         .hero {
             background: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80') center/cover no-repeat;
             padding: 100px 0;
@@ -130,7 +127,7 @@
         
         .btn {
             display: inline-block;
-            background-color: var(--accent); /* Bouton mauve */
+            background-color: var(--accent);
             color: white;
             padding: 1rem 2rem;
             border-radius: 50px;
@@ -144,12 +141,11 @@
         }
         
         .btn:hover {
-            background-color: #6a0dad; /* Mauve plus foncé au survol */
+            background-color: #6a0dad;
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
         
-        /* Sections */
         .section {
             padding: 5rem 1rem;
         }
@@ -177,7 +173,6 @@
             margin: 0 auto;
         }
         
-        /* How it works section */
         .steps {
             display: flex;
             flex-wrap: wrap;
@@ -214,7 +209,6 @@
             color: var(--secondary);
         }
         
-        /* Registration section */
         .cards-container {
             display: flex;
             flex-wrap: wrap;
@@ -274,7 +268,20 @@
             box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
         }
         
-        /* Teachers section */
+        .password-strength {
+            height: 5px;
+            margin-top: 5px;
+            border-radius: 5px;
+            background: #eee;
+        }
+        
+        .password-strength-bar {
+            height: 100%;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s, background 0.3s;
+        }
+        
         .search-filters {
             background: white;
             padding: 2rem;
@@ -358,7 +365,6 @@
             text-align: center;
         }
         
-        /* Info sections */
         .info-section {
             background: white;
             padding: 2rem;
@@ -402,7 +408,6 @@
             font-size: 1.2rem;
         }
         
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -463,7 +468,6 @@
             border-left: 4px solid var(--accent);
         }
         
-        /* Footer */
         footer {
             background-color: var(--dark);
             color: white;
@@ -483,7 +487,6 @@
         .footer-section {
             flex: 1;
             min-width: 250px;
-            text-align: left;
         }
         
         .footer-section h3 {
@@ -514,6 +517,7 @@
         .social-icons {
             display: flex;
             gap: 1rem;
+            justify-content: center;
             margin-top: 1.5rem;
         }
         
@@ -541,7 +545,6 @@
             border-top: 1px solid rgba(255,255,255,0.1);
         }
         
-        /* Login modal specific styles */
         .login-tabs {
             display: flex;
             margin-bottom: 1.5rem;
@@ -579,7 +582,63 @@
             margin: 2rem 0;
         }
         
-        /* Responsive design */
+        .verification-step {
+            display: none;
+        }
+        
+        .verification-step.active {
+            display: block;
+        }
+        
+        .photo-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .photo-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .photo-placeholder {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: #f1f1f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            border: 3px dashed #ccc;
+        }
+        
+        .verification-code {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 1.5rem 0;
+        }
+        
+        .verification-code input {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            font-size: 1.2rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .verification-code input:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+        
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
@@ -614,16 +673,21 @@
                 text-align: center;
             }
             
-            .footer-section {
-                text-align: center;
-            }
-            
             .filter-row {
                 flex-direction: column;
             }
             
             .teacher-list {
                 grid-template-columns: 1fr;
+            }
+            
+            .verification-code {
+                gap: 5px;
+            }
+            
+            .verification-code input {
+                width: 35px;
+                height: 35px;
             }
         }
     </style>
@@ -713,7 +777,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="parentPassword">Mot de passe</label>
-                                <input type="password" id="parentPassword" required placeholder="Créez un mot de passe">
+                                <input type="password" id="parentPassword" required placeholder="Créez un mot de passe robuste" onkeyup="checkPasswordStrength(this.value, 'parentStrength')">
+                                <div class="password-strength">
+                                    <div id="parentStrength" class="password-strength-bar"></div>
+                                </div>
+                                <small>Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.</small>
                             </div>
                             <div class="form-group">
                                 <label for="parentPhone">Téléphone</label>
@@ -752,6 +820,16 @@
                     </div>
                     <div class="card-body">
                         <form id="teacherForm">
+                            <div class="photo-upload">
+                                <img id="teacherPhotoPreview" class="photo-preview" style="display:none;">
+                                <div id="teacherPhotoPlaceholder" class="photo-placeholder">
+                                    <i class="fas fa-camera fa-2x"></i>
+                                </div>
+                                <input type="file" id="teacherPhoto" accept="image/*" style="display:none;">
+                                <button type="button" class="btn" onclick="document.getElementById('teacherPhoto').click()" style="padding: 0.5rem 1rem;">
+                                    <i class="fas fa-upload"></i> Ajouter une photo
+                                </button>
+                            </div>
                             <div class="form-group">
                                 <label for="teacherName">Nom complet</label>
                                 <input type="text" id="teacherName" required placeholder="Votre nom et prénom">
@@ -762,7 +840,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="teacherPassword">Mot de passe</label>
-                                <input type="password" id="teacherPassword" required placeholder="Créez un mot de passe">
+                                <input type="password" id="teacherPassword" required placeholder="Créez un mot de passe robuste" onkeyup="checkPasswordStrength(this.value, 'teacherStrength')">
+                                <div class="password-strength">
+                                    <div id="teacherStrength" class="password-strength-bar"></div>
+                                </div>
+                                <small>Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.</small>
                             </div>
                             <div class="form-group">
                                 <label for="teacherPhone">Téléphone</label>
@@ -800,6 +882,44 @@
             </div>
         </div>
     </section>
+
+    <!-- Verification Modal -->
+    <div class="modal" id="verificationModal">
+        <div class="modal-content">
+            <div class="close-modal" onclick="closeVerificationModal()">
+                <i class="fas fa-times"></i>
+            </div>
+            <h3 class="modal-title">Vérification de votre email</h3>
+            
+            <div id="verificationStep1" class="verification-step active">
+                <p>Un code de vérification a été envoyé à <span id="verificationEmail"></span></p>
+                <p>Veuillez saisir ce code ci-dessous pour finaliser votre inscription.</p>
+                
+                <div class="verification-code">
+                    <input type="text" maxlength="1" oninput="moveToNext(this, 1)">
+                    <input type="text" maxlength="1" oninput="moveToNext(this, 2)">
+                    <input type="text" maxlength="1" oninput="moveToNext(this, 3)">
+                    <input type="text" maxlength="1" oninput="moveToNext(this, 4)">
+                    <input type="text" maxlength="1" oninput="moveToNext(this, 5)">
+                    <input type="text" maxlength="1" oninput="moveToNext(this, 6)">
+                </div>
+                
+                <button class="btn" onclick="verifyCode()">Vérifier le code</button>
+                <button class="btn" style="background: #6c757d; margin-top: 10px;" onclick="resendCode()">
+                    <i class="fas fa-redo"></i> Renvoyer le code
+                </button>
+            </div>
+            
+            <div id="verificationStep2" class="verification-step">
+                <div style="text-align: center; color: var(--success); font-size: 4rem; margin-bottom: 1rem;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <p style="text-align: center; font-size: 1.2rem;">Votre email a été vérifié avec succès !</p>
+                <p style="text-align: center;">Vous pouvez maintenant vous connecter à votre compte.</p>
+                <button class="btn" style="width: 100%; margin-top: 1.5rem;" onclick="closeVerificationModal(); openLoginModal()">Se connecter</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Teachers Section -->
     <section id="teachers" class="section" style="display: none; background-color: #f8f9fa;">
@@ -949,7 +1069,7 @@
                 <ul>
                     <li>Respecter les horaires convenus avec l'enseignant</li>
                     <li>Fournir un environnement approprié pour le déroulement des cours</li>
-                    <li>Communicate clairement les besoins et objectifs pédagogiques</li>
+                    <li>Communiquer clairement les besoins et objectifs pédagogiques</li>
                     <li>Signaler tout problème ou préoccupation via les canaux appropriés</li>
                     <li>Payer les cours selon les modalités convenues avec l'enseignant</li>
                 </ul>
@@ -985,7 +1105,6 @@
                     <li>Améliorer nos services et développer de nouvelles fonctionnalités</li>
                     <li>Assurer la sécurité de la plateforme et prévenir les fraudes</li>
                 </ul>
-                
                 <h3>3. Partage des informations</h3>
                 <p>Vos informations personnelles sont partagées uniquement :</p>
                 <ul>
@@ -994,21 +1113,7 @@
                     <li>Lorsque requis par la loi ou pour répondre à une procédure légale</li>
                 </ul>
                 
-                <h3>4. Sécurité des données</h3>
-                <p>Nous mettons en œuvre des mesures de sécurité techniques et organisationnelles appropriées pour protéger vos données contre tout accès non autorisé, modification, divulgation ou destruction.</p>
-                
-                <h3>5. Vos droits</h3>
-                <p>Conformément au RGPD, vous disposez des droits suivants :</p>
-                <ul>
-                    <li>Droit d'accès à vos données personnelles</li>
-                    <li>Droit de rectification des données inexactes</li>
-                    <li>Droit à l'effacement de vos données</li>
-                    <li>Droit à la limitation du traitement</li>
-                    <li>Droit à la portabilité des données</li>
-                    <li>Droit d'opposition au traitement</li>
-                </ul>
-                
-                <p>Pour exercer ces droits, contactez-nous à myprofeduc@gmail.com</p>
+                <p>Dernière mise à jour : 01/01/2023</p>
             </div>
         </div>
     </section>
@@ -1016,41 +1121,48 @@
     <!-- FAQ Section -->
     <section id="faq" class="section" style="display: none;">
         <div class="container">
-            <h2 class="section-title">Foire aux questions</h2>
+            <h2 class="section-title">FAQ - Questions fréquentes</h2>
             <div class="info-section">
                 <div class="faq-item">
-                    <div class="faq-question">Comment fonctionne le système de paiement sur MyProf ?</div>
-                    <p>MyProf n'intervient pas dans les transactions financières entre parents et enseignants. Les modalités de paiement (espèces, virement, chèque) sont directement convenues entre les parties. Notre plateforme ne prélève aucune commission sur les cours, seulement un forfait de mise en relation de 10€ (5€ par partie).</p>
-                </div>
-                
-                <div class="faq-item">
                     <div class="faq-question">Comment contacter un enseignant ?</div>
-                    <p>Après avoir créé votre compte parent, vous pouvez rechercher des enseignants selon différents critères (matière, ville, tarif, etc.). Pour contacter un enseignant, vous devrez payer un forfait de mise en relation de 5€. Une fois le paiement effectué, vous pourrez échanger directement avec l'enseignant via la messagerie sécurisée de notre plateforme.</p>
+                    <p>Recherchez un enseignant via l'onglet "Parents", puis cliquez sur "Contacter cet enseignant". Une commission de 5€ sera demandée pour établir la mise en relation.</p>
                 </div>
                 
                 <div class="faq-item">
-                    <div class="faq-question">Comment être sûr de la qualité des enseignants ?</div>
-                    <p>Tous les enseignants sont vérifiés par notre équipe lors de leur inscription. Nous vérifions leur identité et leurs qualifications. De plus, après chaque cours, les parents peuvent évaluer l'enseignant et laisser un commentaire public. Ce système d'évaluation permet de maintenir un haut niveau de qualité sur notre plateforme.</p>
+                    <div class="faq-question">Comment être visible en tant qu'enseignant ?</div>
+                    <p>Complétez votre profil avec soin : ajoutez une photo professionnelle, détaillez votre expérience et vos spécialités. Plus votre profil est complet, plus vous serez visible.</p>
                 </div>
                 
                 <div class="faq-item">
-                    <div class="faq-question">Que se passe-t-il si je ne suis pas satisfait d'un cours ?</div>
-                    <p>Nous vous encourageons d'abord à discuter directement avec l'enseignant pour résoudre le problème. Si la situation persiste, vous pouvez nous contacter à myprofeduc@gmail.com et notre équice vous aidera à trouver une solution. Dans certains cas, nous pouvons vous offrir un crédit pour contacter un autre enseignant.</p>
+                    <div class="faq-question">Comment se passe le paiement des cours ?</div>
+                    <p>MyProf ne prend pas de commission sur les cours. Le paiement s'effectue directement entre parents et enseignants, selon les modalités que vous convenez ensemble.</p>
                 </div>
                 
                 <div class="faq-item">
-                    <div class="faq-question">Comment annuler ou reporter un cours ?</div>
-                    <p>Les annulations et reports se font directement entre parents et enseignants. Nous recommandons de prévenir au moins 24h à l'avance. Chaque enseignant peut avoir sa propre politique d'annulation, alors assurez-vous de bien vous mettre d'accord avant le premier cours.</p>
+                    <div class="faq-question">Quelle est la politique d'annulation ?</div>
+                    <p>Les annulations doivent être effectuées au moins 24 heures à l'avance. En cas d'annulation tardive, l'enseignant peut facturer jusqu'à 50% du cours.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">Comment fonctionne le système de commission ?</div>
+                    <p>MyProf applique un forfait unique de 10€ par mise en relation réussie : 5€ payés par les parents pour contacter un enseignant + 5€ payés par l'enseignant pour accepter la relation.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">Puis-je changer d'enseignant si je ne suis pas satisfait ?</div>
+                    <p>Oui, vous pouvez changer d'enseignant à tout moment. Cependant, une nouvelle commission de 5€ sera applicable pour contacter un nouvel enseignant.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Login Modal -->
-    <div id="loginModal" class="modal">
+    <div class="modal" id="loginModal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeLoginModal()">&times;</span>
-            <h2 class="modal-title">Connexion à MyProf</h2>
+            <div class="close-modal" onclick="closeLoginModal()">
+                <i class="fas fa-times"></i>
+            </div>
+            <h3 class="modal-title">Connexion à MyProf</h3>
             
             <div class="login-tabs">
                 <div class="login-tab active" onclick="switchLoginTab('parent')">Parent</div>
@@ -1081,9 +1193,30 @@
                 <button type="submit" class="btn">Se connecter</button>
             </form>
             
-            <div style="text-align: center; margin-top: 1.5rem;">
-                <p>Pas encore inscrit ? <a href="#" onclick="closeLoginModal(); showSection('register');" style="color: var(--accent);">Créer un compte</a></p>
+            <p style="text-align: center; margin-top: 1.5rem;">
+                Pas encore inscrit ? <a href="#" onclick="closeLoginModal(); showSection('register');" style="color: var(--accent);">Créer un compte</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div class="modal" id="contactModal">
+        <div class="modal-content">
+            <div class="close-modal" onclick="closeModal()">
+                <i class="fas fa-times"></i>
             </div>
+            <h3 class="modal-title">Contacter l'enseignant</h3>
+            <p>Pour contacter cet enseignant, vous devez payer une commission de <strong>5€</strong>.</p>
+            <p>Si l'enseignant accepte votre demande, il paiera également 5€. En cas de refus, vous serez remboursé.</p>
+            <div class="commission-info">
+                <p><i class="fas fa-info-circle"></i> Commission totale : 10€ (5€ parent + 5€ enseignant)</p>
+            </div>
+            <button class="btn" onclick="processPayment()">
+                <i class="fas fa-credit-card"></i> Payer 5€ et contacter
+            </button>
+            <button class="btn" style="background: #6c757d; margin-top: 10px;" onclick="closeModal()">
+                <i class="fas fa-times"></i> Annuler
+            </button>
         </div>
     </div>
 
@@ -1092,12 +1225,11 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h3>MyProf</h3>
-                <p>La plateforme qui connecte directement parents et enseignants pour des cours particuliers de qualité.</p>
+                <p>La marketplace qui connecte directement parents et enseignants pour des solutions éducatives sur mesure.</p>
                 <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://www.facebook.com/profile.php?id=61580020564168" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/myprofeduc/" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.tiktok.com/foryou?lang=fr" target="_blank"><i class="fab fa-tiktok"></i></a>
                 </div>
             </div>
             
@@ -1114,7 +1246,7 @@
             </div>
             
             <div class="footer-section">
-                <h3>Informations légales</h3>
+                <h3>Informations</h3>
                 <ul class="footer-links">
                     <li><a href="#" onclick="showSection('terms')">Conditions d'utilisation</a></li>
                     <li><a href="#" onclick="showSection('privacy')">Politique de confidentialité</a></li>
@@ -1124,320 +1256,530 @@
         </div>
         
         <div class="footer-bottom">
-            <p>&copy; 2023 MyProf. Tous droits réservés.</p>
+            <p>&copy; 2025 MyProf. Tous droits réservés.</p>
         </div>
     </footer>
 
     <script>
-        // Sample teachers data
+        // Données des enseignants (simulées)
         const teachers = [
             {
-                name: "Marie Dupont",
+                id: 1,
+                name: "Sophie Martin",
                 subject: "Mathématiques",
+                price: 20,
                 city: "Paris",
-                experience: 8,
-                hourlyRate: 25,
-                photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400",
-                description: "Enseignante expérimentée spécialisée en mathématiques pour collège et lycée.",
-                email: "marie.dupont@example.com",
-                phone: "06 12 34 56 78"
+                experience: "5 ans d'expérience",
+                photo: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+                description: "Professeure expérimentée en mathématiques, spécialisée dans le programme de collège et lycée."
             },
             {
-                name: "Pierre Martin",
-                subject: "Physique-Chimie",
-                city: "Lyon",
-                experience: 5,
-                hourlyRate: 22,
-                photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400",
-                description: "Professeur de physique-chimie passionné par les sciences et la pédagogie.",
-                email: "pierre.martin@example.com",
-                phone: "06 98 76 54 32"
-            },
-            {
-                name: "Sophie Leroy",
-                subject: "Anglais",
-                city: "Marseille",
-                experience: 10,
-                hourlyRate: 28,
-                photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400",
-                description: "Formatrice en anglais bilingue avec expérience internationale.",
-                email: "sophie.leroy@example.com",
-                phone: "06 45 67 89 01"
-            },
-            {
+                id: 2,
                 name: "Thomas Bernard",
                 subject: "Français",
+                price: 18,
+                city: "Lyon",
+                experience: "3 ans d'expérience",
+                photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+                description: "Enseignant passionné par la littérature française et la grammaire."
+            },
+            {
+                id: 3,
+                name: "Samira Haddad",
+                subject: "Physique-Chimie",
+                price: 22,
+                city: "Marseille",
+                experience: "7 ans d'expérience",
+                photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+                description: "Docteure en physique, propose des cours ludiques et adaptés à chaque élève."
+            },
+            {
+                id: 4,
+                name: "Michel Dupont",
+                subject: "Anglais",
+                price: 19,
                 city: "Toulouse",
-                experience: 7,
-                hourlyRate: 23,
-                photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400",
-                description: "Professeur de français et littérature pour tous niveaux.",
-                email: "thomas.bernard@example.com",
-                phone: "06 23 45 67 89"
-            },
-            {
-                name: "Julie Petit",
-                subject: "SVT",
-                city: "Bordeaux",
-                experience: 4,
-                hourlyRate: 20,
-                photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400",
-                description: "Enseignante en SVT passionnée par les sciences de la vie.",
-                email: "julie.petit@example.com",
-                phone: "06 34 56 78 90"
-            },
-            {
-                name: "Michel Durand",
-                subject: "Histoire-Géographie",
-                city: "Lille",
-                experience: 12,
-                hourlyRate: 26,
-                photo: "https://images.unsplash.com/photo-1552058544-f2b08422138a?auto=format&fit=crop&q=80&w=400",
-                description: "Professeur d'histoire-géographie expérimenté et passionné.",
-                email: "michel.durand@example.com",
-                phone: "06 56 78 90 12"
+                experience: "10 ans d'expérience",
+                photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+                description: "Enseignant bilingue, propose des cours interactifs et conversationnels."
             }
         ];
-
-        // User authentication state
-        let currentUser = null;
-        let isLoggedIn = false;
-
-        // DOM Content Loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // Display teachers in the teachers section
-            displayTeachers(teachers);
+        
+        // Données des utilisateurs (simulées)
+        let users = JSON.parse(localStorage.getItem('myprof_users')) || [];
+        let currentUser = JSON.parse(localStorage.getItem('myprof_currentUser')) || null;
+        let verificationCodes = JSON.parse(localStorage.getItem('myprof_verificationCodes')) || {};
+        
+        // Mettre à jour l'interface en fonction de l'état de connexion
+        function updateAuthUI() {
+            const loginNavItem = document.getElementById('loginNavItem');
+            const logoutNavItem = document.getElementById('logoutNavItem');
             
-            // Display teachers in the parents section
-            displayTeachersForParents(teachers);
+            if (currentUser) {
+                loginNavItem.style.display = 'none';
+                logoutNavItem.style.display = 'list-item';
+            } else {
+                loginNavItem.style.display = 'list-item';
+                logoutNavItem.style.display = 'none';
+            }
+        }
+        
+        // Vérifier la robustesse du mot de passe
+        function checkPasswordStrength(password, strengthBarId) {
+            const strengthBar = document.getElementById(strengthBarId);
+            let strength = 0;
             
-            // Setup form submissions
-            setupFormSubmissions();
-        });
-
-        // Display teachers in the teachers section
-        function displayTeachers(teachersArray) {
-            const teacherList = document.getElementById('teacherList');
+            // Si le mot de passe n'est pas vide
+            if (password.length > 0) {
+                // Vérifier la longueur
+                if (password.length >= 8) strength += 20;
+                
+                // Vérifier la présence de minuscules et majuscules
+                if (password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) strength += 20;
+                
+                // Vérifier la présence de chiffres
+                if (password.match(/([0-9])/)) strength += 20;
+                
+                // Vérifier la présence de caractères spéciaux
+                if (password.match(/([!,@,#,$,%,^,&,*,?,_,~])/)) strength += 20;
+                
+                // Vérifier la présence de plusieurs caractères spéciaux
+                if (password.match(/(.*[!,@,#,$,%,^,&,*,?,_,~].*[!,@,#,$,%,^,&,*,?,_,~])/)) strength += 20;
+            }
+            
+            // Mettre à jour la barre de force
+            strengthBar.style.width = strength + '%';
+            
+            // Changer la couleur en fonction de la force
+            if (strength < 40) {
+                strengthBar.style.background = '#dc3545'; // Rouge
+            } else if (strength < 80) {
+                strengthBar.style.background = '#ffc107'; // Orange
+            } else {
+                strengthBar.style.background = '#28a745'; // Vert
+            }
+            
+            return strength >= 80; // Retourne true si le mot de passe est robuste
+        }
+        
+        // Valider le format du mot de passe
+        function validatePassword(password) {
+            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            return regex.test(password);
+        }
+        
+        // Générer un code de vérification
+        function generateVerificationCode() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+        
+        // Envoyer un code de vérification par email (simulé)
+        function sendVerificationCode(email, code) {
+            // Enregistrer le code de vérification
+            verificationCodes[email] = {
+                code: code,
+                expires: Date.now() + 15 * 60 * 1000 // Expire dans 15 minutes
+            };
+            localStorage.setItem('myprof_verificationCodes', JSON.stringify(verificationCodes));
+            
+            // Simuler l'envoi d'email (en production, utiliser un service d'email)
+            console.log(`Code de vérification envoyé à ${email}: ${code}`);
+            alert(`Un code de vérification a été envoyé à ${email}. Utilisez le code: ${code} (simulation)`);
+        }
+        
+        // Vérifier le code de vérification
+        function verifyCode() {
+            const inputs = document.querySelectorAll('.verification-code input');
+            const enteredCode = Array.from(inputs).map(input => input.value).join('');
+            const email = document.getElementById('verificationEmail').textContent;
+            
+            if (verificationCodes[email] && verificationCodes[email].code === enteredCode) {
+                if (Date.now() < verificationCodes[email].expires) {
+                    // Code valide
+                    document.getElementById('verificationStep1').classList.remove('active');
+                    document.getElementById('verificationStep2').classList.add('active');
+                    
+                    // Finaliser l'inscription
+                    finalizeRegistration(email);
+                } else {
+                    alert('Le code de vérification a expiré. Veuillez en demander un nouveau.');
+                }
+            } else {
+                alert('Code de vérification incorrect. Veuillez réessayer.');
+            }
+        }
+        
+        // Renvoyer le code de vérification
+        function resendCode() {
+            const email = document.getElementById('verificationEmail').textContent;
+            const newCode = generateVerificationCode();
+            sendVerificationCode(email, newCode);
+            alert('Un nouveau code a été envoyé à votre adresse email.');
+        }
+        
+        // Finaliser l'inscription après vérification
+        function finalizeRegistration(email) {
+            // Récupérer les données d'inscription temporaires
+            const tempUserData = JSON.parse(localStorage.getItem('myprof_tempUser'));
+            
+            if (tempUserData && tempUserData.email === email) {
+                // Ajouter l'utilisateur à la base de données
+                users.push(tempUserData);
+                localStorage.setItem('myprof_users', JSON.stringify(users));
+                
+                // Supprimer les données temporaires
+                localStorage.removeItem('myprof_tempUser');
+                
+                // Supprimer le code de vérification
+                delete verificationCodes[email];
+                localStorage.setItem('myprof_verificationCodes', JSON.stringify(verificationCodes));
+            }
+        }
+        
+        // Ouvrir la modal de vérification
+        function openVerificationModal(email) {
+            document.getElementById('verificationEmail').textContent = email;
+            const code = generateVerificationCode();
+            sendVerificationCode(email, code);
+            document.getElementById('verificationModal').style.display = 'flex';
+            document.getElementById('verificationStep1').classList.add('active');
+            document.getElementById('verificationStep2').classList.remove('active');
+            
+            // Vider les champs de code
+            document.querySelectorAll('.verification-code input').forEach(input => {
+                input.value = '';
+            });
+        }
+        
+        // Fermer la modal de vérification
+        function closeVerificationModal() {
+            document.getElementById('verificationModal').style.display = 'none';
+        }
+        
+        // Passer au champ suivant lors de la saisie du code
+        function moveToNext(field, next) {
+            if (field.value.length >= field.maxLength) {
+                const nextField = document.querySelector(`.verification-code input:nth-child(${next + 1})`);
+                if (nextField) nextField.focus();
+            }
+        }
+        
+        // Afficher les enseignants
+        function displayTeachers(teachersToShow, elementId) {
+            const teacherList = document.getElementById(elementId);
             teacherList.innerHTML = '';
             
-            teachersArray.forEach(teacher => {
-                const teacherCard = document.createElement('div');
-                teacherCard.className = 'teacher-card';
-                teacherCard.innerHTML = `
-                    <img src="${teacher.photo}" alt="${teacher.name}" class="teacher-photo">
-                    <div class="teacher-info">
-                        <h3 class="teacher-name">${teacher.name}</h3>
-                        <p class="teacher-subject">${teacher.subject}</p>
-                        <p class="teacher-details"><i class="fas fa-map-marker-alt"></i> ${teacher.city}</p>
-                        <p class="teacher-details"><i class="fas fa-briefcase"></i> ${teacher.experience} ans d'expérience</p>
-                        <p class="teacher-details"><i class="fas fa-graduation-cap"></i> ${teacher.description}</p>
-                        <p class="teacher-details"><i class="fas fa-envelope"></i> ${teacher.email}</p>
-                        <p class="teacher-details"><i class="fas fa-phone"></i> ${teacher.phone}</p>
-                        <p class="price">${teacher.hourlyRate}€/h</p>
-                    </div>
-                `;
-                teacherList.appendChild(teacherCard);
-            });
-        }
-
-        // Display teachers in the parents section
-        function displayTeachersForParents(teachersArray) {
-            const parentTeacherList = document.getElementById('parentTeacherList');
-            parentTeacherList.innerHTML = '';
+            if (teachersToShow.length === 0) {
+                teacherList.innerHTML = '<p style="text-align: center; width: 100%; padding: 2rem;">Aucun enseignant ne correspond à vos critères.</p>';
+                return;
+            }
             
-            teachersArray.forEach(teacher => {
-                const teacherCard = document.createElement('div');
-                teacherCard.className = 'teacher-card';
-                teacherCard.innerHTML = `
+            teachersToShow.forEach(teacher => {
+                const card = document.createElement('div');
+                card.className = 'teacher-card';
+                card.innerHTML = `
                     <img src="${teacher.photo}" alt="${teacher.name}" class="teacher-photo">
                     <div class="teacher-info">
                         <h3 class="teacher-name">${teacher.name}</h3>
                         <p class="teacher-subject">${teacher.subject}</p>
-                        <p class="teacher-details"><i class="fas fa-map-marker-alt"></i> ${teacher.city}</p>
-                        <p class="teacher-details"><i class="fas fa-briefcase"></i> ${teacher.experience} ans d'expérience</p>
-                        <p class="teacher-details"><i class="fas fa-graduation-cap"></i> ${teacher.description}</p>
-                        <p class="price">${teacher.hourlyRate}€/h</p>
-                        ${isLoggedIn ? `
-                            <button class="btn" style="width: 100%; margin-top: 1rem;" onclick="contactTeacher('${teacher.name}')">
-                                <i class="fas fa-envelope"></i> Contacter
-                            </button>
-                        ` : `
-                            <div class="auth-required">
-                                <p>Vous devez être connecté pour contacter cet enseignant</p>
-                                <button class="btn" onclick="openLoginModal()">Se connecter</button>
-                            </div>
-                        `}
+                        <div class="teacher-details">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${teacher.city}</span>
+                        </div>
+                        <div class="teacher-details">
+                            <i class="fas fa-briefcase"></i>
+                            <span>${teacher.experience}</span>
+                        </div>
+                        <div class="price">${teacher.price}€/h</div>
+                        <p>${teacher.description}</p>
+                        <button class="btn" onclick="openModal(${teacher.id})">
+                            <i class="fas fa-envelope"></i> Contacter cet enseignant
+                        </button>
                     </div>
                 `;
-                parentTeacherList.appendChild(teacherCard);
+                teacherList.appendChild(card);
             });
         }
-
-        // Filter teachers based on search criteria
+        
+        // Filtrer les enseignants
         function filterTeachers() {
             const subject = document.getElementById('searchSubject').value;
             const city = document.getElementById('searchCity').value.toLowerCase();
             const maxPrice = document.getElementById('maxPrice').value;
             
             const filteredTeachers = teachers.filter(teacher => {
-                const matchesSubject = !subject || teacher.subject === subject;
-                const matchesCity = !city || teacher.city.toLowerCase().includes(city);
-                const matchesPrice = !maxPrice || teacher.hourlyRate <= parseInt(maxPrice);
+                let match = true;
                 
-                return matchesSubject && matchesCity && matchesPrice;
-            });
-            
-            displayTeachersForParents(filteredTeachers);
-        }
-
-        // Contact teacher function
-        function contactTeacher(teacherName) {
-            alert(`Vous allez contacter ${teacherName}. Cette action déclencherait normalement un paiement de 5€ pour la mise en relation.`);
-            // In a real application, this would open a payment modal and then a chat interface
-        }
-
-        // Setup form submissions
-        function setupFormSubmissions() {
-            // Parent registration form
-            document.getElementById('parentForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                alert('Inscription parent réussie ! Vous pouvez maintenant vous connecter.');
-                closeLoginModal();
-                showSection('home');
-            });
-            
-            // Teacher registration form
-            document.getElementById('teacherForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                alert('Inscription enseignant réussie ! Vous pouvez maintenant vous connecter.');
-                closeLoginModal();
-                showSection('home');
-            });
-            
-            // Contact form
-            document.getElementById('contactForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                alert('Votre message a été envoyé ! Nous vous répondrons dans les plus brefs délais.');
-                showSection('home');
-            });
-            
-            // Parent login form
-            document.getElementById('parentLoginForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                const email = document.getElementById('parentLoginEmail').value;
-                const password = document.getElementById('parentLoginPassword').value;
-                
-                // Simple validation
-                if (email && password) {
-                    currentUser = { type: 'parent', email: email };
-                    isLoggedIn = true;
-                    updateAuthUI();
-                    closeLoginModal();
-                    alert('Connexion réussie ! Bienvenue parent.');
+                if (subject && teacher.subject !== subject) {
+                    match = false;
                 }
+                
+                if (city && !teacher.city.toLowerCase().includes(city)) {
+                    match = false;
+                }
+                
+                if (maxPrice && teacher.price > parseInt(maxPrice)) {
+                    match = false;
+                }
+                
+                return match;
             });
             
-            // Teacher login form
-            document.getElementById('teacherLoginForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                const email = document.getElementById('teacherLoginEmail').value;
-                const password = document.getElementById('teacherLoginPassword').value;
-                
-                // Simple validation
-                if (email && password) {
-                    currentUser = { type: 'teacher', email: email };
-                    isLoggedIn = true;
-                    updateAuthUI();
-                    closeLoginModal();
-                    alert('Connexion réussie ! Bienvenue enseignant.');
-                }
-            });
+            displayTeachers(filteredTeachers, 'parentTeacherList');
         }
-
-        // Show a specific section and hide others
+        
+        // Ouvrir la modal de contact
+        function openModal(teacherId) {
+            if (!currentUser) {
+                openLoginModal();
+                return;
+            }
+            
+            document.getElementById('contactModal').style.display = 'flex';
+            document.getElementById('contactModal').dataset.teacherId = teacherId;
+        }
+        
+        // Fermer la modal
+        function closeModal() {
+            document.getElementById('contactModal').style.display = 'none';
+        }
+        
+        // Ouvrir la modal de connexion
+        function openLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+        
+        // Fermer la modal de connexion
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+        
+        // Changer d'onglet dans la modal de connexion
+        function switchLoginTab(tab) {
+            document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.login-form').forEach(f => f.classList.remove('active'));
+            
+            document.querySelector(`.login-tab:nth-child(${tab === 'parent' ? 1 : 2})`).classList.add('active');
+            document.getElementById(`${tab}LoginForm`).classList.add('active');
+        }
+        
+        // Simuler le processus de paiement
+        function processPayment() {
+            const teacherId = document.getElementById('contactModal').dataset.teacherId;
+            const teacher = teachers.find(t => t.id == teacherId);
+            
+            alert(`Paiement de 5€ effectué avec succès ! Votre demande a été envoyée à ${teacher.name}.`);
+            closeModal();
+        }
+        
+        // Vérifier l'authentification avant d'afficher une section
+        function checkAuthAndShowSection(sectionId) {
+            if (!currentUser) {
+                openLoginModal();
+                return;
+            }
+            
+            showSection(sectionId);
+        }
+        
+        // Afficher la section sélectionnée
         function showSection(sectionId) {
-            // Hide all sections
-            const sections = document.querySelectorAll('.section');
-            sections.forEach(section => {
+            // Masquer toutes les sections
+            document.querySelectorAll('.section').forEach(section => {
                 section.style.display = 'none';
             });
             
-            // Show the requested section
+            // Afficher la section sélectionnée
             document.getElementById(sectionId).style.display = 'block';
             
             // Scroll to top
             window.scrollTo(0, 0);
-        }
-
-        // Check if user is authenticated before showing a section
-        function checkAuthAndShowSection(sectionId) {
-            if (isLoggedIn) {
-                showSection(sectionId);
-            } else {
-                alert('Vous devez vous connecter pour accéder à cette section.');
-                openLoginModal();
-            }
-        }
-
-        // Open login modal
-        function openLoginModal() {
-            document.getElementById('loginModal').style.display = 'flex';
-        }
-
-        // Close login modal
-        function closeLoginModal() {
-            document.getElementById('loginModal').style.display = 'none';
-        }
-
-        // Switch between parent and teacher login tabs
-        function switchLoginTab(userType) {
-            // Update active tab
-            const tabs = document.querySelectorAll('.login-tab');
-            tabs.forEach(tab => tab.classList.remove('active'));
             
-            if (userType === 'parent') {
-                document.querySelector('.login-tab:first-child').classList.add('active');
-                document.getElementById('parentLoginForm').classList.add('active');
-                document.getElementById('teacherLoginForm').classList.remove('active');
-            } else {
-                document.querySelector('.login-tab:last-child').classList.add('active');
-                document.getElementById('teacherLoginForm').classList.add('active');
-                document.getElementById('parentLoginForm').classList.remove('active');
+            // Charger les données si nécessaire
+            if (sectionId === 'teachers') {
+                displayTeachers(teachers, 'teacherList');
+            }
+            
+            if (sectionId === 'parents') {
+                filterTeachers();
             }
         }
-
-        // Update UI based on authentication state
-        function updateAuthUI() {
-            if (isLoggedIn) {
-                document.getElementById('loginNavItem').style.display = 'none';
-                document.getElementById('logoutNavItem').style.display = 'list-item';
-                
-                // Update teachers display to show contact buttons
-                displayTeachersForParents(teachers);
-            } else {
-                document.getElementById('loginNavItem').style.display = 'list-item';
-                document.getElementById('logoutNavItem').style.display = 'none';
-                
-                // Update teachers display to show auth required messages
-                displayTeachersForParents(teachers);
-            }
-        }
-
-        // Logout function
+        
+        // Se déconnecter
         function logout() {
             currentUser = null;
-            isLoggedIn = false;
+            localStorage.removeItem('myprof_currentUser');
             updateAuthUI();
             showSection('home');
             alert('Vous avez été déconnecté avec succès.');
         }
-
-        // Close modal if clicked outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('loginModal');
-            if (event.target === modal) {
-                closeLoginModal();
+        
+        // Gérer l'inscription des parents
+        document.getElementById('parentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const parentName = document.getElementById('parentName').value;
+            const parentEmail = document.getElementById('parentEmail').value;
+            const parentPassword = document.getElementById('parentPassword').value;
+            
+            // Vérifier la robustesse du mot de passe
+            if (!validatePassword(parentPassword)) {
+                alert('Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.');
+                return;
             }
+            
+            // Vérifier si l'utilisateur existe déjà
+            if (users.find(u => u.email === parentEmail)) {
+                alert('Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.');
+                return;
+            }
+            
+            // Préparer les données utilisateur
+            const newUser = {
+                type: 'parent',
+                name: parentName,
+                email: parentEmail,
+                password: parentPassword,
+                phone: document.getElementById('parentPhone').value,
+                city: document.getElementById('parentCity').value,
+                studentLevel: document.getElementById('studentLevel').value,
+                studentAge: document.getElementById('studentAge').value,
+                difficulties: document.getElementById('difficulties').value,
+                verified: false
+            };
+            
+            // Stocker temporairement les données en attendant la vérification
+            localStorage.setItem('myprof_tempUser', JSON.stringify(newUser));
+            
+            // Ouvrir la modal de vérification
+            openVerificationModal(parentEmail);
+            
+            // Réinitialiser le formulaire
+            this.reset();
+        });
+        
+        // Gérer l'inscription des enseignants
+        document.getElementById('teacherForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const teacherName = document.getElementById('teacherName').value;
+            const teacherEmail = document.getElementById('teacherEmail').value;
+            const teacherPassword = document.getElementById('teacherPassword').value;
+            
+            // Vérifier la robustesse du mot de passe
+            if (!validatePassword(teacherPassword)) {
+                alert('Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.');
+                return;
+            }
+            
+            // Vérifier si l'utilisateur existe déjà
+            if (users.find(u => u.email === teacherEmail)) {
+                alert('Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.');
+                return;
+            }
+            
+            // Préparer les données utilisateur
+            const newUser = {
+                type: 'teacher',
+                name: teacherName,
+                email: teacherEmail,
+                password: teacherPassword,
+                phone: document.getElementById('teacherPhone').value,
+                subject: document.getElementById('subject').value,
+                hourlyRate: document.getElementById('hourlyRate').value,
+                city: document.getElementById('city').value,
+                experience: document.getElementById('experience').value,
+                photo: document.getElementById('teacherPhotoPreview').src || '',
+                verified: false
+            };
+            
+            // Stocker temporairement les données en attendant la vérification
+            localStorage.setItem('myprof_tempUser', JSON.stringify(newUser));
+            
+            // Ouvrir la modal de vérification
+            openVerificationModal(teacherEmail);
+            
+            // Réinitialiser le formulaire
+            this.reset();
+            document.getElementById('teacherPhotoPreview').style.display = 'none';
+            document.getElementById('teacherPhotoPlaceholder').style.display = 'flex';
+        });
+        
+        // Gérer la connexion des parents
+        document.getElementById('parentLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('parentLoginEmail').value;
+            const password = document.getElementById('parentLoginPassword').value;
+            
+            const user = users.find(u => u.email === email && u.password === password && u.type === 'parent');
+            
+            if (user) {
+                if (!user.verified) {
+                    alert('Votre compte n\'est pas encore vérifié. Veuillez vérifier votre email.');
+                    return;
+                }
+                
+                currentUser = user;
+                localStorage.setItem('myprof_currentUser', JSON.stringify(currentUser));
+                updateAuthUI();
+                closeLoginModal();
+                alert(`Bienvenue ${user.name} !`);
+                showSection('parents');
+            } else {
+                alert('Email ou mot de passe incorrect. Veuillez réessayer.');
+            }
+        });
+        
+        // Gérer la connexion des enseignants
+        document.getElementById('teacherLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('teacherLoginEmail').value;
+            const password = document.getElementById('teacherLoginPassword').value;
+            
+            const user = users.find(u => u.email === email && u.password === password && u.type === 'teacher');
+            
+            if (user) {
+                if (!user.verified) {
+                    alert('Votre compte n\'est pas encore vérifié. Veuillez vérifier votre email.');
+                    return;
+                }
+                
+                currentUser = user;
+                localStorage.setItem('myprof_currentUser', JSON.stringify(currentUser));
+                updateAuthUI();
+                closeLoginModal();
+                alert(`Bienvenue ${user.name} !`);
+                showSection('teachers');
+            } else {
+                alert('Email ou mot de passe incorrect. Veuillez réessayer.');
+            }
+        });
+        
+        // Gérer le formulaire de contact
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Votre message a été envoyé. Nous vous répondrons dans les plus brefs délais.');
+            this.reset();
+        });
+        
+        // Gérer l'upload de photo pour les enseignants
+        document.getElementById('teacherPhoto').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const preview = document.getElementById('teacherPhotoPreview');
+                    preview.src = event.target.result;
+                    preview.style.display = 'block';
+                    document.getElementById('teacherPhotoPlaceholder').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Afficher les enseignants au chargement initial
+        window.onload = function() {
+            updateAuthUI();
+            displayTeachers(teachers, 'teacherList');
+            displayTeachers(teachers, 'parentTeacherList');
         };
     </script>
 </body>
