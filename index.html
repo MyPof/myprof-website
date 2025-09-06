@@ -1450,234 +1450,280 @@
     </footer>
 
     <script>
-        // Données des enseignants (simulées)
-        const teachers = [
-            {
-                id: 1,
-                name: "Sophie Martin",
-                subject: "Mathématiques",
-                price: 20,
-                city: "Paris",
-                experience: "5 ans d'expérience",
-                photo: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
-                description: "Professeure expérimentée en mathématiques, spécialisée dans le programme de collège et lycée."
-            },
-            {
-                id: 2,
-                name: "Thomas Bernard",
-                subject: "Français",
-                price: 18,
-                city: "Lyon",
-                experience: "3 ans d'expérience",
-                photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
-                description: "Enseignant passionné par la littérature française et la grammaire."
-            },
-            {
-                id: 3,
-                name: "Samira Haddad",
-                subject: "Physique-Chimie",
-                price: 22,
-                city: "Marseille",
-                experience: "7 ans d'expérience",
-                photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
-                description: "Docteure en physique, propose des cours ludiques et adaptés à chaque élève."
-            },
-            {
-                id: 4,
-                name: "Michel Dupont",
-                subject: "Anglais",
-                price: 19,
-                city: "Toulouse",
-                experience: "10 ans d'expérience",
-                photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
-                description: "Enseignant bilingue, propose des cours interactifs et conversationnels."
-            }
-        ];
+    // Données des enseignants (simulées de base + chargés depuis le localStorage)
+    let teachers = [
+        {
+            id: 1,
+            name: "Sophie Martin",
+            subject: "Mathématiques",
+            price: 20,
+            city: "Paris",
+            experience: "5 ans d'expérience",
+            photo: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+            description: "Professeure expérimentée en mathématiques, spécialisée dans le programme de collège et lycée."
+        },
+        {
+            id: 2,
+            name: "Thomas Bernard",
+            subject: "Français",
+            price: 18,
+            city: "Lyon",
+            experience: "3 ans d'expérience",
+            photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+            description: "Enseignant passionné par la littérature française et la grammaire."
+        },
+        {
+            id: 3,
+            name: "Samira Haddad",
+            subject: "Physique-Chimie",
+            price: 22,
+            city: "Marseille",
+            experience: "7 ans d'expérience",
+            photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+            description: "Docteure en physique, propose des cours ludiques et adaptés à chaque élève."
+        },
+        {
+            id: 4,
+            name: "Michel Dupont",
+            subject: "Anglais",
+            price: 19,
+            city: "Toulouse",
+            experience: "10 ans d'expérience",
+            photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+            description: "Enseignant bilingue, propose des cours interactifs et conversationnels."
+        }
+    ];
+
+    // Données des utilisateurs (simulées)
+    let users = JSON.parse(localStorage.getItem('myprof_users')) || [];
+    let currentUser = JSON.parse(localStorage.getItem('myprof_currentUser')) || null;
+    let verificationCodes = JSON.parse(localStorage.getItem('myprof_verificationCodes')) || {};
+    let tempUserData = JSON.parse(localStorage.getItem('myprof_tempUser')) || null;
+    
+    // Charger les enseignants depuis les utilisateurs enregistrés
+    function loadTeachersFromUsers() {
+        const teacherUsers = users.filter(user => user.type === 'teacher' && user.verified);
         
-        // Données des utilisateurs (simulées)
-        let users = JSON.parse(localStorage.getItem('myprof_users')) || [];
-        let currentUser = JSON.parse(localStorage.getItem('myprof_currentUser')) || null;
-        let verificationCodes = JSON.parse(localStorage.getItem('myprof_verificationCodes')) || {};
-        let tempUserData = JSON.parse(localStorage.getItem('myprof_tempUser')) || null;
-        
-        // Mettre à jour l'interface en fonction de l'état de connexion
-        function updateAuthUI() {
-            const loginNavItem = document.getElementById('loginNavItem');
-            const logoutNavItem = document.getElementById('logoutNavItem');
+        teacherUsers.forEach(user => {
+            // Vérifier si l'enseignant n'existe pas déjà dans la liste
+            const existingTeacher = teachers.find(t => t.email === user.email);
             
-            if (currentUser) {
-                loginNavItem.style.display = 'none';
-                logoutNavItem.style.display = 'list-item';
+            if (!existingTeacher) {
+                // Créer un nouvel objet enseignant à partir des données utilisateur
+                const newTeacher = {
+                    id: teachers.length + 1,
+                    name: user.name,
+                    subject: user.subject,
+                    price: parseInt(user.hourlyRate),
+                    city: user.city,
+                    experience: user.experience + " ans d'expérience",
+                    photo: user.photo || "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+                    description: `Enseignant${user.gender === 'F' ? 'e' : ''} de ${user.subject} avec ${user.experience} ans d'expérience.`,
+                    email: user.email,
+                    phone: user.phone
+                };
+                
+                teachers.push(newTeacher);
+            }
+        });
+    }
+    
+    // Mettre à jour l'interface en fonction de l'état de connexion
+    function updateAuthUI() {
+        const loginNavItem = document.getElementById('loginNavItem');
+        const logoutNavItem = document.getElementById('logoutNavItem');
+        
+        if (currentUser) {
+            loginNavItem.style.display = 'none';
+            logoutNavItem.style.display = 'list-item';
+        } else {
+            loginNavItem.style.display = 'list-item';
+            logoutNavItem.style.display = 'none';
+        }
+    }
+    
+    // Vérifier la robustesse du mot de passe
+    function checkPasswordStrength(password, strengthBarId) {
+        const strengthBar = document.getElementById(strengthBarId);
+        let strength = 0;
+        
+        // Si le mot de passe n'est pas vide
+        if (password.length > 0) {
+            // Vérifier la longueur
+            if (password.length >= 8) strength += 20;
+            
+            // Vérifier la présence de minuscules et majuscules
+            if (password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) strength += 20;
+            
+            // Vérifier la présence de chiffres
+            if (password.match(/([0-9])/)) strength += 20;
+            
+            // Vérifier la présence de caractères spéciaux
+            if (password.match(/([!,@,#,$,%,^,&,*,?,_,~])/)) strength += 20;
+            
+            // Vérifier la présence de plusieurs caractères spéciaux
+            if (password.match(/(.*[!,@,#,$,%,^,&,*,?,_,~].*[!,@,#,$,%,^,&,*,?,_,~])/)) strength += 20;
+        }
+        
+        // Mettre à jour la barre de force
+        strengthBar.style.width = strength + '%';
+        
+        // Changer la couleur en fonction de la force
+        if (strength < 40) {
+            strengthBar.style.background = '#dc3545'; // Rouge
+        } else if (strength < 80) {
+            strengthBar.style.background = '#ffc107'; // Orange
+        } else {
+            strengthBar.style.background = '#28a745'; // Vert
+        }
+        
+        return strength >= 80; // Retourne true si le mot de passe est robuste
+    }
+    
+    // Valider le format du mot de passe
+    function validatePassword(password) {
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        return regex.test(password);
+    }
+    
+    // Générer un code de vérification
+    function generateVerificationCode() {
+        return Math.floor(100000 + Math.random() * 900000).toString();
+    }
+    
+    // Envoyer un code de vérification par email (simulé)
+    function sendVerificationCode(email, code) {
+        // Enregistrer le code de vérification
+        verificationCodes[email] = {
+            code: code,
+            expires: Date.now() + 15 * 60 * 1000 // Expire dans 15 minutes
+        };
+        localStorage.setItem('myprof_verificationCodes', JSON.stringify(verificationCodes));
+        
+        // Simuler l'envoi d'email (en production, utiliser un service d'email)
+        console.log(`Code de vérification envoyé à ${email}: ${code}`);
+        alert(`CODE DE VÉRIFICATION envoyé à ${email}: ${code} (simulation)`);
+    }
+    
+    // Vérifier le code de vérification
+    function verifyCode() {
+        const inputs = document.querySelectorAll('.verification-code input');
+        const enteredCode = Array.from(inputs).map(input => input.value).join('');
+        const email = document.getElementById('verificationEmail').textContent;
+        
+        if (verificationCodes[email] && verificationCodes[email].code === enteredCode) {
+            if (Date.now() < verificationCodes[email].expires) {
+                // Code valide
+                document.getElementById('verificationStep1').classList.remove('active');
+                document.getElementById('verificationStep2').classList.add('active');
+                
+                // Finaliser l'inscription
+                finalizeRegistration(email);
             } else {
-                loginNavItem.style.display = 'list-item';
-                logoutNavItem.style.display = 'none';
+                alert('Le code de vérification a expiré. Veuillez en demander un nouveau.');
             }
+        } else {
+            alert('Code de vérification incorrect. Veuillez réessayer.');
         }
+    }
+    
+    // Renvoyer le code de vérification
+    function resendCode() {
+        const email = document.getElementById('verificationEmail').textContent;
+        const newCode = generateVerificationCode();
+        sendVerificationCode(email, newCode);
+        alert('Un nouveau code a été envoyé à votre adresse email.');
+    }
+    
+    // Finaliser l'inscription après vérification
+    function finalizeRegistration(email) {
+        // Récupérer les données d'inscription temporaires
+        const tempUserData = JSON.parse(localStorage.getItem('myprof_tempUser'));
         
-        // Vérifier la robustesse du mot de passe
-        function checkPasswordStrength(password, strengthBarId) {
-            const strengthBar = document.getElementById(strengthBarId);
-            let strength = 0;
+        if (tempUserData && tempUserData.email === email) {
+            // Marquer l'utilisateur comme vérifié
+            tempUserData.verified = true;
             
-            // Si le mot de passe n'est pas vide
-            if (password.length > 0) {
-                // Vérifier la longueur
-                if (password.length >= 8) strength += 20;
+            // Ajouter l'utilisateur à la base de données
+            users.push(tempUserData);
+            localStorage.setItem('myprof_users', JSON.stringify(users));
+            
+            // Si c'est un enseignant, l'ajouter à la liste des enseignants
+            if (tempUserData.type === 'teacher') {
+                const newTeacher = {
+                    id: teachers.length + 1,
+                    name: tempUserData.name,
+                    subject: tempUserData.subject,
+                    price: parseInt(tempUserData.hourlyRate),
+                    city: tempUserData.city,
+                    experience: tempUserData.experience + " ans d'expérience",
+                    photo: tempUserData.photo || "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80",
+                    description: `Enseignant de ${tempUserData.subject} avec ${tempUserData.experience} ans d'expérience.`,
+                    email: tempUserData.email,
+                    phone: tempUserData.phone
+                };
                 
-                // Vérifier la présence de minuscules et majuscules
-                if (password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) strength += 20;
-                
-                // Vérifier la présence de chiffres
-                if (password.match(/([0-9])/)) strength += 20;
-                
-                // Vérifier la présence de caractères spéciaux
-                if (password.match(/([!,@,#,$,%,^,&,*,?,_,~])/)) strength += 20;
-                
-                // Vérifier la présence de plusieurs caractères spéciaux
-                if (password.match(/(.*[!,@,#,$,%,^,&,*,?,_,~].*[!,@,#,$,%,^,&,*,?,_,~])/)) strength += 20;
+                teachers.push(newTeacher);
             }
             
-            // Mettre à jour la barre de force
-            strengthBar.style.width = strength + '%';
+            // Supprimer les données temporaires
+            localStorage.removeItem('myprof_tempUser');
             
-            // Changer la couleur en fonction de la force
-            if (strength < 40) {
-                strengthBar.style.background = '#dc3545'; // Rouge
-            } else if (strength < 80) {
-                strengthBar.style.background = '#ffc107'; // Orange
-            } else {
-                strengthBar.style.background = '#28a745'; // Vert
-            }
-            
-            return strength >= 80; // Retourne true si le mot de passe est robuste
-        }
-        
-        // Valider le format du mot de passe
-        function validatePassword(password) {
-            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-            return regex.test(password);
-        }
-        
-        // Générer un code de vérification
-        function generateVerificationCode() {
-            return Math.floor(100000 + Math.random() * 900000).toString();
-        }
-        
-        // Envoyer un code de vérification par email (simulé)
-        function sendVerificationCode(email, code) {
-            // Enregistrer le code de vérification
-            verificationCodes[email] = {
-                code: code,
-                expires: Date.now() + 15 * 60 * 1000 // Expire dans 15 minutes
-            };
+            // Supprimer le code de vérification
+            delete verificationCodes[email];
             localStorage.setItem('myprof_verificationCodes', JSON.stringify(verificationCodes));
             
-            // Simuler l'envoi d'email (en production, utiliser un service d'email)
-            console.log(`Code de vérification envoyé à ${email}: ${code}`);
-            alert(`CODE DE VÉRIFICATION envoyé à ${email}: ${code} (simulation)`);
+            alert('Votre compte a été vérifié avec succès ! Vous pouvez maintenant vous connecter.');
+        }
+    }
+    
+    // Ouvrir la modal de vérification
+    function openVerificationModal(email) {
+        document.getElementById('verificationEmail').textContent = email;
+        const code = generateVerificationCode();
+        sendVerificationCode(email, code);
+        document.getElementById('verificationModal').style.display = 'flex';
+        document.getElementById('verificationStep1').classList.add('active');
+        document.getElementById('verificationStep2').classList.remove('active');
+        
+        // Vider les champs de code
+        document.querySelectorAll('.verification-code input').forEach(input => {
+            input.value = '';
+        });
+    }
+    
+    // Fermer la modal de vérification
+    function closeVerificationModal() {
+        document.getElementById('verificationModal').style.display = 'none';
+    }
+    
+    // Passer au champ suivant lors de la saisie du code
+    function moveToNext(field, next) {
+        if (field.value.length >= field.maxLength) {
+            const nextField = document.querySelector(`.verification-code input:nth-child(${next + 1})`);
+            if (nextField) nextField.focus();
+        }
+    }
+    
+    // Afficher les enseignants
+    function displayTeachers(teachersToShow, elementId) {
+        const teacherList = document.getElementById(elementId);
+        teacherList.innerHTML = '';
+        
+        if (teachersToShow.length === 0) {
+            teacherList.innerHTML = '<p style="text-align: center; width: 100%; padding: 2rem;">Aucun enseignant ne correspond à vos critères.</p>';
+            return;
         }
         
-        // Vérifier le code de vérification
-        function verifyCode() {
-            const inputs = document.querySelectorAll('.verification-code input');
-            const enteredCode = Array.from(inputs).map(input => input.value).join('');
-            const email = document.getElementById('verificationEmail').textContent;
-            
-            if (verificationCodes[email] && verificationCodes[email].code === enteredCode) {
-                if (Date.now() < verificationCodes[email].expires) {
-                    // Code valide
-                    document.getElementById('verificationStep1').classList.remove('active');
-                    document.getElementById('verificationStep2').classList.add('active');
-                    
-                    // Finaliser l'inscription
-                    finalizeRegistration(email);
-                } else {
-                    alert('Le code de vérification a expiré. Veuillez en demander un nouveau.');
-                }
-            } else {
-                alert('Code de vérification incorrect. Veuillez réessayer.');
-            }
-        }
-        
-        // Renvoyer le code de vérification
-        function resendCode() {
-            const email = document.getElementById('verificationEmail').textContent;
-            const newCode = generateVerificationCode();
-            sendVerificationCode(email, newCode);
-            alert('Un nouveau code a été envoyé à votre adresse email.');
-        }
-        
-        // Finaliser l'inscription après vérification
-        function finalizeRegistration(email) {
-            // Récupérer les données d'inscription temporaires
-            const tempUserData = JSON.parse(localStorage.getItem('myprof_tempUser'));
-            
-            if (tempUserData && tempUserData.email === email) {
-                // Marquer l'utilisateur comme vérifié
-                tempUserData.verified = true;
-                
-                // Ajouter l'utilisateur à la base de données
-                users.push(tempUserData);
-                localStorage.setItem('myprof_users', JSON.stringify(users));
-                
-                // Supprimer les données temporaires
-                localStorage.removeItem('myprof_tempUser');
-                
-                // Supprimer le code de vérification
-                delete verificationCodes[email];
-                localStorage.setItem('myprof_verificationCodes', JSON.stringify(verificationCodes));
-                
-                alert('Votre compte a été vérifié avec succès ! Vous pouvez maintenant vous connecter.');
-            }
-        }
-        
-        // Ouvrir la modal de vérification
-        function openVerificationModal(email) {
-            document.getElementById('verificationEmail').textContent = email;
-            const code = generateVerificationCode();
-            sendVerificationCode(email, code);
-            document.getElementById('verificationModal').style.display = 'flex';
-            document.getElementById('verificationStep1').classList.add('active');
-            document.getElementById('verificationStep2').classList.remove('active');
-            
-            // Vider les champs de code
-            document.querySelectorAll('.verification-code input').forEach(input => {
-                input.value = '';
-            });
-        }
-        
-        // Fermer la modal de vérification
-        function closeVerificationModal() {
-            document.getElementById('verificationModal').style.display = 'none';
-        }
-        
-        // Passer au champ suivant lors de la saisie du code
-        function moveToNext(field, next) {
-            if (field.value.length >= field.maxLength) {
-                const nextField = document.querySelector(`.verification-code input:nth-child(${next + 1})`);
-                if (nextField) nextField.focus();
-            }
-        }
-        
-        // Afficher les enseignants
-        function displayTeachers(teachersToShow, elementId) {
-            const teacherList = document.getElementById(elementId);
-            teacherList.innerHTML = '';
-            
-            if (teachersToShow.length === 0) {
-                teacherList.innerHTML = '<p style="text-align: center; width: 100%; padding: 2rem;">Aucun enseignant ne correspond à vos critères.</p>';
-                return;
-            }
-            
-            teachersToShow.forEach(teacher => {
-                const card = document.createElement('div');
-                card.className = 'teacher-card';
-                card.innerHTML = `
-                    <img src="${teacher.photo}" alt="${teacher.name}" class="teacher-photo">
-                    <div class="teacher-info">
-                        <h3 class="teacher-name">${teacher.name}</h3>
-                        <p class="teacher-subject">${teacher.subject}</p>
-                                            <div class="teacher-details">
+        teachersToShow.forEach(teacher => {
+            const card = document.createElement('div');
+            card.className = 'teacher-card';
+            card.innerHTML = `
+                <img src="${teacher.photo}" alt="${teacher.name}" class="teacher-photo">
+                <div class="teacher-info">
+                    <h3 class="teacher-name">${teacher.name}</h3>
+                    <p class="teacher-subject">${teacher.subject}</p>
+                    <div class="teacher-details">
                         <i class="fas fa-map-marker-alt"></i>
                         <span>${teacher.city}</span>
                     </div>
@@ -1807,10 +1853,14 @@
         
         // Charger les données si nécessaire
         if (sectionId === 'teachers') {
+            // Recharger les enseignants depuis les utilisateurs à chaque affichage
+            loadTeachersFromUsers();
             displayTeachers(teachers, 'teacherList');
         }
         
         if (sectionId === 'parents') {
+            // Recharger les enseignants depuis les utilisateurs à chaque affichage
+            loadTeachersFromUsers();
             filterTeachers();
         }
     }
@@ -1989,6 +2039,9 @@
     
     // Afficher les enseignants au chargement initial
     window.onload = function() {
+        // Charger les enseignants depuis les utilisateurs enregistrés
+        loadTeachersFromUsers();
+        
         updateAuthUI();
         displayTeachers(teachers, 'teacherList');
         displayTeachers(teachers, 'parentTeacherList');
