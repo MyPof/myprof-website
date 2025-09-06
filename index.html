@@ -1028,6 +1028,194 @@
                             <option value="other">Autre</option>
                         </select>
                     </div>
+                                       <div class="form-group">
+                        <label for="teacherPassword">Mot de passe</label>
+                        <input type="password" id="teacherPassword" required placeholder="Créez un mot de passe robuste" onkeyup="checkPasswordStrength(this.value, 'teacherStrength')">
+                        <div class="password-strength">
+                            <div id="teacherStrength" class="password-strength-bar"></div>
+                        </div>
+                        <small>Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="teacherPhone">Téléphone</label>
+                        <input type="tel" id="teacherPhone" required placeholder="06 12 34 56 78">
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Matière enseignée</label>
+                        <select id="subject" required>
+                            <option value="">Sélectionnez...</option>
+                            <option value="Mathématiques">Mathématiques</option>
+                            <option value="Français">Français</option>
+                            <option value="Physique-Chimie">Physique-Chimie</option>
+                            <option value="SVT">SVT</option>
+                            <option value="Anglais">Anglais</option>
+                            <option value="Histoire-Géographie">Histoire-Géographie</option>
+                            <option value="Philosophie">Philosophie</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="hourlyRate">Tarif horaire (€)</label>
+                        <input type="number" id="hourlyRate" min="15" max="50" required placeholder="20">
+                    </div>
+                    <div class="form-group">
+                        <label for="city">Ville</label>
+                        <input type="text" id="city" required placeholder="Paris">
+                    </div>
+                    <div class="form-group">
+                        <label for="experience">Années d'expérience</label>
+                        <input type="number" id="experience" min="0" max="50" required placeholder="5">
+                    </div>
+                    <button type="submit" class="btn">S'inscrire en tant qu'enseignant</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Verification Modal -->
+    <div class="modal" id="verificationModal">
+        <div class="modal-content">
+            <div class="close-modal" onclick="closeVerificationModal()">
+                <i class="fas fa-times"></i>
+            </div>
+            <h3 class="modal-title">Vérification de votre email</h3>
+            
+            <div id="verificationStep1" class="verification-step active">
+                <p>Un code de vérification a été envoyé à <span id="verificationEmail"></span></p>
+                <p>Veuillez saisir ce code ci-dessous pour finaliser votre inscription.</p>
+                
+                <div class="verification-code">
+                    <input type="text" maxlength="1" oninput="moveToNext(this, 1)">
+                    <input type="text" maxlength="1" oninput="moveToNext(this, 2)">
+                    <input type="text" maxlength="1" oninput="moveToNext(this, 3)">
+                    <input type="text" maxlength="1" oninput="moveToNext(this, 4)">
+                    <input type="text" maxlength="1" oninput="moveToNext(this, 5)">
+                    <input type="text" maxlength="1" oninput="moveToNext(this, 6)">
+                </div>
+                
+                <button class="btn" onclick="verifyCode()">Vérifier le code</button>
+                <button class="btn" style="background: #6c757d; margin-top: 10px;" onclick="resendCode()">
+                    <i class="fas fa-redo"></i> Renvoyer le code
+                </button>
+            </div>
+            
+            <div id="verificationStep2" class="verification-step">
+                <div style="text-align: center; color: var(--success); font-size: 4rem; margin-bottom: 1rem;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <p style="text-align: center; font-size: 1.2rem;">Votre email a été vérifié avec succès !</p>
+                <p style="text-align: center;">Vous pouvez maintenant vous connecter à votre compte.</p>
+                <button class="btn" style="width: 100%; margin-top: 1.5rem;" onclick="closeVerificationModal(); openLoginModal()">Se connecter</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Teachers Section -->
+    <section id="teachers" class="section" style="display: none; background-color: #f8f9fa;">
+        <div class="container">
+            <h2 class="section-title">Nos enseignants disponibles</h2>
+            <div class="teacher-list" id="teacherList">
+                <!-- Teachers will be displayed here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Parents Section -->
+    <section id="parents" class="section" style="display: none; background-color: #f8f9fa;">
+        <div class="container">
+            <h2 class="section-title">Espace Parents</h2>
+            
+            <div class="search-filters">
+                <h3 style="margin-bottom: 1.5rem; color: var(--primary); text-align: center;">Rechercher un enseignant</h3>
+                <div class="filter-row">
+                    <div class="filter-item">
+                        <label for="searchSubject">Matière</label>
+                        <select id="searchSubject">
+                            <option value="">Toutes les matières</option>
+                            <option value="Mathématiques">Mathématiques</option>
+                            <option value="Français">Français</option>
+                            <option value="Physique-Chimie">Physique-Chimie</option>
+                            <option value="SVT">SVT</option>
+                            <option value="Anglais">Anglais</option>
+                            <option value="Histoire-Géographie">Histoire-Géographie</option>
+                            <option value="Philosophie">Philosophie</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label for="searchCity">Ville</label>
+                        <input type="text" id="searchCity" placeholder="Ex: Paris">
+                    </div>
+                    <div class="filter-item">
+                        <label for="maxPrice">Tarif maximum (€/h)</label>
+                        <input type="number" id="maxPrice" min="15" max="50" placeholder="Ex: 25">
+                    </div>
+                </div>
+                <button class="btn" onclick="filterTeachers()">
+                    <i class="fas fa-search"></i> Rechercher
+                </button>
+            </div>
+            
+            <h3 class="section-title" style="font-size: 1.8rem; margin-top: 2rem;">Résultats de votre recherche</h3>
+            <div class="teacher-list" id="parentTeacherList">
+                <!-- Filtered teachers will be displayed here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">À propos de MyProf</h2>
+            <div class="info-section">
+                <p>MyProf est une plateforme innovante qui révolutionne le marché du soutien scolaire en connectant directement les parents et les enseignants, sans intermédiaire coûteux.</p>
+                
+                <h3>Notre mission</h3>
+                <p>Nous croyons que chaque élève mérite un accompagnement personnalisé de qualité, et que chaque enseignant devrait être rémunéré à sa juste valeur pour son expertise.</p>
+                
+                <h3>Notre modèle économique transparent</h3>
+                <p>Contrairement aux agences traditionnelles qui prennent jusqu'à 50% de commission sur le tarif des cours, MyProf applique un forfait unique de 10€ par mise en relation réussie :</p>
+                <ul>
+                    <li>5€ payés par les parents pour contacter un enseignant</li>
+                    <li>5€ payés par l'enseignant pour accepter la relation</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section" style="display: none;">
+        <div class="container">
+            <h2 class="section-title">Contactez-nous</h2>
+            <div class="info-section">
+                <p>Nous sommes à votre disposition pour répondre à toutes vos questions.</p>
+                
+                <div style="display: flex; align-items: center; justify-content: center; margin: 2rem 0; padding: 1.5rem; background: #e8f4ff; border-radius: 12px;">
+                    <i class="fas fa-envelope" style="font-size: 2rem; margin-right: 1rem; color: var(--primary);"></i>
+                    <div style="font-size: 1.2rem;">
+                        <strong>Email :</strong> myprofeduc@gmail.com
+                    </div>
+                </div>
+                
+                <h3>Formulaire de contact</h3>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="contactName">Votre nom</label>
+                        <input type="text" id="contactName" required placeholder="Votre nom complet">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">Votre email</label>
+                        <input type="email" id="contactEmail" required placeholder="votre@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactSubject">Sujet</label>
+                        <select id="contactSubject" required>
+                            <option value="">Sélectionnez...</option>
+                            <option value="question">Question générale</option>
+                            <option value="technical">Problème technique</option>
+                            <option value="payment">Question de paiement</option>
+                            <option value="partnership">Partenariat</option>
+                            <option value="other">Autre</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label for="contactMessage">Votre message</label>
                         <textarea id="contactMessage" rows="5" required placeholder="Décrivez votre demande en détail..."></textarea>
@@ -1055,7 +1243,7 @@
                 </ul>
                 
                 <h3>2. Engagements des enseignants</h3>
-                <p>Les enseignants s'engagent à :</p>
+                <p>Les enseignants s'engament à :</p>
                 <ul>
                     <li>Déclarer leur véritable identité et qualifications</li>
                     <li>Proposer des services conformes à leurs compétences</li>
@@ -1105,6 +1293,7 @@
                     <li>Améliorer nos services et développer de nouvelles fonctionnalités</li>
                     <li>Assurer la sécurité de la plateforme et prévenir les fraudes</li>
                 </ul>
+                
                 <h3>3. Partage des informations</h3>
                 <p>Vos informations personnelles sont partagées uniquement :</p>
                 <ul>
@@ -1309,6 +1498,7 @@
         let users = JSON.parse(localStorage.getItem('myprof_users')) || [];
         let currentUser = JSON.parse(localStorage.getItem('myprof_currentUser')) || null;
         let verificationCodes = JSON.parse(localStorage.getItem('myprof_verificationCodes')) || {};
+        let tempUserData = JSON.parse(localStorage.getItem('myprof_tempUser')) || null;
         
         // Mettre à jour l'interface en fonction de l'état de connexion
         function updateAuthUI() {
@@ -1384,7 +1574,7 @@
             
             // Simuler l'envoi d'email (en production, utiliser un service d'email)
             console.log(`Code de vérification envoyé à ${email}: ${code}`);
-            alert(`Un code de vérification a été envoyé à ${email}. Utilisez le code: ${code} (simulation)`);
+            alert(`CODE DE VÉRIFICATION envoyé à ${email}: ${code} (simulation)`);
         }
         
         // Vérifier le code de vérification
@@ -1423,6 +1613,9 @@
             const tempUserData = JSON.parse(localStorage.getItem('myprof_tempUser'));
             
             if (tempUserData && tempUserData.email === email) {
+                // Marquer l'utilisateur comme vérifié
+                tempUserData.verified = true;
+                
                 // Ajouter l'utilisateur à la base de données
                 users.push(tempUserData);
                 localStorage.setItem('myprof_users', JSON.stringify(users));
@@ -1433,6 +1626,8 @@
                 // Supprimer le code de vérification
                 delete verificationCodes[email];
                 localStorage.setItem('myprof_verificationCodes', JSON.stringify(verificationCodes));
+                
+                alert('Votre compte a été vérifié avec succès ! Vous pouvez maintenant vous connecter.');
             }
         }
         
@@ -1482,305 +1677,328 @@
                     <div class="teacher-info">
                         <h3 class="teacher-name">${teacher.name}</h3>
                         <p class="teacher-subject">${teacher.subject}</p>
-                        <div class="teacher-details">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>${teacher.city}</span>
-                        </div>
-                        <div class="teacher-details">
-                            <i class="fas fa-briefcase"></i>
-                            <span>${teacher.experience}</span>
-                        </div>
-                        <div class="price">${teacher.price}€/h</div>
-                        <p>${teacher.description}</p>
-                        <button class="btn" onclick="openModal(${teacher.id})">
-                            <i class="fas fa-envelope"></i> Contacter cet enseignant
-                        </button>
+                                            <div class="teacher-details">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>${teacher.city}</span>
                     </div>
-                `;
-                teacherList.appendChild(card);
-            });
-        }
+                    <div class="teacher-details">
+                        <i class="fas fa-briefcase"></i>
+                        <span>${teacher.experience}</span>
+                    </div>
+                    <div class="price">${teacher.price}€/h</div>
+                    <p>${teacher.description}</p>
+                    <button class="btn" onclick="openModal(${teacher.id})">
+                        <i class="fas fa-envelope"></i> Contacter cet enseignant
+                    </button>
+                </div>
+            `;
+            teacherList.appendChild(card);
+        });
+    }
+    
+    // Filtrer les enseignants
+    function filterTeachers() {
+        const subject = document.getElementById('searchSubject').value;
+        const city = document.getElementById('searchCity').value.toLowerCase();
+        const maxPrice = document.getElementById('maxPrice').value;
         
-        // Filtrer les enseignants
-        function filterTeachers() {
-            const subject = document.getElementById('searchSubject').value;
-            const city = document.getElementById('searchCity').value.toLowerCase();
-            const maxPrice = document.getElementById('maxPrice').value;
+        const filteredTeachers = teachers.filter(teacher => {
+            let match = true;
             
-            const filteredTeachers = teachers.filter(teacher => {
-                let match = true;
-                
-                if (subject && teacher.subject !== subject) {
-                    match = false;
-                }
-                
-                if (city && !teacher.city.toLowerCase().includes(city)) {
-                    match = false;
-                }
-                
-                if (maxPrice && teacher.price > parseInt(maxPrice)) {
-                    match = false;
-                }
-                
-                return match;
-            });
-            
-            displayTeachers(filteredTeachers, 'parentTeacherList');
-        }
-        
-        // Ouvrir la modal de contact
-        function openModal(teacherId) {
-            if (!currentUser) {
-                openLoginModal();
-                return;
+            if (subject && teacher.subject !== subject) {
+                match = false;
             }
             
-            document.getElementById('contactModal').style.display = 'flex';
-            document.getElementById('contactModal').dataset.teacherId = teacherId;
-        }
-        
-        // Fermer la modal
-        function closeModal() {
-            document.getElementById('contactModal').style.display = 'none';
-        }
-        
-        // Ouvrir la modal de connexion
-        function openLoginModal() {
-            document.getElementById('loginModal').style.display = 'flex';
-        }
-        
-        // Fermer la modal de connexion
-        function closeLoginModal() {
-            document.getElementById('loginModal').style.display = 'none';
-        }
-        
-        // Changer d'onglet dans la modal de connexion
-        function switchLoginTab(tab) {
-            document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.login-form').forEach(f => f.classList.remove('active'));
-            
-            document.querySelector(`.login-tab:nth-child(${tab === 'parent' ? 1 : 2})`).classList.add('active');
-            document.getElementById(`${tab}LoginForm`).classList.add('active');
-        }
-        
-        // Simuler le processus de paiement
-        function processPayment() {
-            const teacherId = document.getElementById('contactModal').dataset.teacherId;
-            const teacher = teachers.find(t => t.id == teacherId);
-            
-            alert(`Paiement de 5€ effectué avec succès ! Votre demande a été envoyée à ${teacher.name}.`);
-            closeModal();
-        }
-        
-        // Vérifier l'authentification avant d'afficher une section
-        function checkAuthAndShowSection(sectionId) {
-            if (!currentUser) {
-                openLoginModal();
-                return;
+            if (city && !teacher.city.toLowerCase().includes(city)) {
+                match = false;
             }
             
-            showSection(sectionId);
+            if (maxPrice && teacher.price > parseInt(maxPrice)) {
+                match = false;
+            }
+            
+            return match;
+        });
+        
+        displayTeachers(filteredTeachers, 'parentTeacherList');
+    }
+    
+    // Ouvrir la modal de contact
+    function openModal(teacherId) {
+        if (!currentUser) {
+            openLoginModal();
+            return;
         }
+        
+        // Vérifier si l'utilisateur est vérifié
+        const user = users.find(u => u.email === currentUser.email);
+        if (!user || !user.verified) {
+            alert('Vous devez vérifier votre email avant de pouvoir contacter un enseignant.');
+            return;
+        }
+        
+        document.getElementById('contactModal').style.display = 'flex';
+        document.getElementById('contactModal').dataset.teacherId = teacherId;
+    }
+    
+    // Fermer la modal
+    function closeModal() {
+        document.getElementById('contactModal').style.display = 'none';
+    }
+    
+    // Ouvrir la modal de connexion
+    function openLoginModal() {
+        document.getElementById('loginModal').style.display = 'flex';
+    }
+    
+    // Fermer la modal de connexion
+    function closeLoginModal() {
+        document.getElementById('loginModal').style.display = 'none';
+    }
+    
+    // Changer d'onglet dans la modal de connexion
+    function switchLoginTab(tab) {
+        document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.login-form').forEach(f => f.classList.remove('active'));
+        
+        document.querySelector(`.login-tab:nth-child(${tab === 'parent' ? 1 : 2})`).classList.add('active');
+        document.getElementById(`${tab}LoginForm`).classList.add('active');
+    }
+    
+    // Simuler le processus de paiement
+    function processPayment() {
+        const teacherId = document.getElementById('contactModal').dataset.teacherId;
+        const teacher = teachers.find(t => t.id == teacherId);
+        
+        alert(`Paiement de 5€ effectué avec succès ! Votre demande a été envoyée à ${teacher.name}.`);
+        closeModal();
+    }
+    
+    // Vérifier l'authentification avant d'afficher une section
+    function checkAuthAndShowSection(sectionId) {
+        if (!currentUser) {
+            openLoginModal();
+            return;
+        }
+        
+        // Vérifier si l'utilisateur est vérifié
+        const user = users.find(u => u.email === currentUser.email);
+        if (!user || !user.verified) {
+            alert('Vous devez vérifier votre email avant d\'accéder à cette section.');
+            openVerificationModal(user.email);
+            return;
+        }
+        
+        showSection(sectionId);
+    }
+    
+    // Afficher la section sélectionnée
+    function showSection(sectionId) {
+        // Masquer toutes les sections
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.display = 'none';
+        });
         
         // Afficher la section sélectionnée
-        function showSection(sectionId) {
-            // Masquer toutes les sections
-            document.querySelectorAll('.section').forEach(section => {
-                section.style.display = 'none';
-            });
-            
-            // Afficher la section sélectionnée
-            document.getElementById(sectionId).style.display = 'block';
-            
-            // Scroll to top
-            window.scrollTo(0, 0);
-            
-            // Charger les données si nécessaire
-            if (sectionId === 'teachers') {
-                displayTeachers(teachers, 'teacherList');
-            }
-            
-            if (sectionId === 'parents') {
-                filterTeachers();
-            }
-        }
+        document.getElementById(sectionId).style.display = 'block';
         
-        // Se déconnecter
-        function logout() {
-            currentUser = null;
-            localStorage.removeItem('myprof_currentUser');
-            updateAuthUI();
-            showSection('home');
-            alert('Vous avez été déconnecté avec succès.');
-        }
+        // Scroll to top
+        window.scrollTo(0, 0);
         
-        // Gérer l'inscription des parents
-        document.getElementById('parentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const parentName = document.getElementById('parentName').value;
-            const parentEmail = document.getElementById('parentEmail').value;
-            const parentPassword = document.getElementById('parentPassword').value;
-            
-            // Vérifier la robustesse du mot de passe
-            if (!validatePassword(parentPassword)) {
-                alert('Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.');
-                return;
-            }
-            
-            // Vérifier si l'utilisateur existe déjà
-            if (users.find(u => u.email === parentEmail)) {
-                alert('Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.');
-                return;
-            }
-            
-            // Préparer les données utilisateur
-            const newUser = {
-                type: 'parent',
-                name: parentName,
-                email: parentEmail,
-                password: parentPassword,
-                phone: document.getElementById('parentPhone').value,
-                city: document.getElementById('parentCity').value,
-                studentLevel: document.getElementById('studentLevel').value,
-                studentAge: document.getElementById('studentAge').value,
-                difficulties: document.getElementById('difficulties').value,
-                verified: false
-            };
-            
-            // Stocker temporairement les données en attendant la vérification
-            localStorage.setItem('myprof_tempUser', JSON.stringify(newUser));
-            
-            // Ouvrir la modal de vérification
-            openVerificationModal(parentEmail);
-            
-            // Réinitialiser le formulaire
-            this.reset();
-        });
-        
-        // Gérer l'inscription des enseignants
-        document.getElementById('teacherForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const teacherName = document.getElementById('teacherName').value;
-            const teacherEmail = document.getElementById('teacherEmail').value;
-            const teacherPassword = document.getElementById('teacherPassword').value;
-            
-            // Vérifier la robustesse du mot de passe
-            if (!validatePassword(teacherPassword)) {
-                alert('Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.');
-                return;
-            }
-            
-            // Vérifier si l'utilisateur existe déjà
-            if (users.find(u => u.email === teacherEmail)) {
-                alert('Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.');
-                return;
-            }
-            
-            // Préparer les données utilisateur
-            const newUser = {
-                type: 'teacher',
-                name: teacherName,
-                email: teacherEmail,
-                password: teacherPassword,
-                phone: document.getElementById('teacherPhone').value,
-                subject: document.getElementById('subject').value,
-                hourlyRate: document.getElementById('hourlyRate').value,
-                city: document.getElementById('city').value,
-                experience: document.getElementById('experience').value,
-                photo: document.getElementById('teacherPhotoPreview').src || '',
-                verified: false
-            };
-            
-            // Stocker temporairement les données en attendant la vérification
-            localStorage.setItem('myprof_tempUser', JSON.stringify(newUser));
-            
-            // Ouvrir la modal de vérification
-            openVerificationModal(teacherEmail);
-            
-            // Réinitialiser le formulaire
-            this.reset();
-            document.getElementById('teacherPhotoPreview').style.display = 'none';
-            document.getElementById('teacherPhotoPlaceholder').style.display = 'flex';
-        });
-        
-        // Gérer la connexion des parents
-        document.getElementById('parentLoginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('parentLoginEmail').value;
-            const password = document.getElementById('parentLoginPassword').value;
-            
-            const user = users.find(u => u.email === email && u.password === password && u.type === 'parent');
-            
-            if (user) {
-                if (!user.verified) {
-                    alert('Votre compte n\'est pas encore vérifié. Veuillez vérifier votre email.');
-                    return;
-                }
-                
-                currentUser = user;
-                localStorage.setItem('myprof_currentUser', JSON.stringify(currentUser));
-                updateAuthUI();
-                closeLoginModal();
-                alert(`Bienvenue ${user.name} !`);
-                showSection('parents');
-            } else {
-                alert('Email ou mot de passe incorrect. Veuillez réessayer.');
-            }
-        });
-        
-        // Gérer la connexion des enseignants
-        document.getElementById('teacherLoginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('teacherLoginEmail').value;
-            const password = document.getElementById('teacherLoginPassword').value;
-            
-            const user = users.find(u => u.email === email && u.password === password && u.type === 'teacher');
-            
-            if (user) {
-                if (!user.verified) {
-                    alert('Votre compte n\'est pas encore vérifié. Veuillez vérifier votre email.');
-                    return;
-                }
-                
-                currentUser = user;
-                localStorage.setItem('myprof_currentUser', JSON.stringify(currentUser));
-                updateAuthUI();
-                closeLoginModal();
-                alert(`Bienvenue ${user.name} !`);
-                showSection('teachers');
-            } else {
-                alert('Email ou mot de passe incorrect. Veuillez réessayer.');
-            }
-        });
-        
-        // Gérer le formulaire de contact
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Votre message a été envoyé. Nous vous répondrons dans les plus brefs délais.');
-            this.reset();
-        });
-        
-        // Gérer l'upload de photo pour les enseignants
-        document.getElementById('teacherPhoto').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const preview = document.getElementById('teacherPhotoPreview');
-                    preview.src = event.target.result;
-                    preview.style.display = 'block';
-                    document.getElementById('teacherPhotoPlaceholder').style.display = 'none';
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-        
-        // Afficher les enseignants au chargement initial
-        window.onload = function() {
-            updateAuthUI();
+        // Charger les données si nécessaire
+        if (sectionId === 'teachers') {
             displayTeachers(teachers, 'teacherList');
-            displayTeachers(teachers, 'parentTeacherList');
+        }
+        
+        if (sectionId === 'parents') {
+            filterTeachers();
+        }
+    }
+    
+    // Se déconnecter
+    function logout() {
+        currentUser = null;
+        localStorage.removeItem('myprof_currentUser');
+        updateAuthUI();
+        showSection('home');
+        alert('Vous avez été déconnecté avec succès.');
+    }
+    
+    // Gérer l'inscription des parents
+    document.getElementById('parentForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const parentName = document.getElementById('parentName').value;
+        const parentEmail = document.getElementById('parentEmail').value;
+        const parentPassword = document.getElementById('parentPassword').value;
+        
+        // Vérifier la robustesse du mot de passe
+        if (!validatePassword(parentPassword)) {
+            alert('Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.');
+            return;
+        }
+        
+        // Vérifier si l'utilisateur existe déjà
+        if (users.find(u => u.email === parentEmail)) {
+            alert('Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.');
+            return;
+        }
+        
+        // Préparer les données utilisateur
+        const newUser = {
+            type: 'parent',
+            name: parentName,
+            email: parentEmail,
+            password: parentPassword,
+            phone: document.getElementById('parentPhone').value,
+            city: document.getElementById('parentCity').value,
+            studentLevel: document.getElementById('studentLevel').value,
+            studentAge: document.getElementById('studentAge').value,
+            difficulties: document.getElementById('difficulties').value,
+            verified: false
         };
-    </script>
+        
+        // Stocker temporairement les données en attendant la vérification
+        localStorage.setItem('myprof_tempUser', JSON.stringify(newUser));
+        
+        // Ouvrir la modal de vérification
+        openVerificationModal(parentEmail);
+        
+        // Réinitialiser le formulaire
+        this.reset();
+    });
+    
+    // Gérer l'inscription des enseignants
+    document.getElementById('teacherForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const teacherName = document.getElementById('teacherName').value;
+        const teacherEmail = document.getElementById('teacherEmail').value;
+        const teacherPassword = document.getElementById('teacherPassword').value;
+        
+        // Vérifier la robustesse du mot de passe
+        if (!validatePassword(teacherPassword)) {
+            alert('Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.');
+            return;
+        }
+        
+        // Vérifier si l'utilisateur existe déjà
+        if (users.find(u => u.email === teacherEmail)) {
+            alert('Cet email est déjà utilisé. Veuillez vous connecter ou utiliser un autre email.');
+            return;
+        }
+        
+        // Préparer les données utilisateur
+        const newUser = {
+            type: 'teacher',
+            name: teacherName,
+            email: teacherEmail,
+            password: teacherPassword,
+            phone: document.getElementById('teacherPhone').value,
+            subject: document.getElementById('subject').value,
+            hourlyRate: document.getElementById('hourlyRate').value,
+            city: document.getElementById('city').value,
+            experience: document.getElementById('experience').value,
+            photo: document.getElementById('teacherPhotoPreview').src || '',
+            verified: false
+        };
+        
+        // Stocker temporairement les données en attendant la vérification
+        localStorage.setItem('myprof_tempUser', JSON.stringify(newUser));
+        
+        // Ouvrir la modal de vérification
+        openVerificationModal(teacherEmail);
+        
+        // Réinitialiser le formulaire
+        this.reset();
+        document.getElementById('teacherPhotoPreview').style.display = 'none';
+        document.getElementById('teacherPhotoPlaceholder').style.display = 'flex';
+    });
+    
+    // Gérer la connexion des parents
+    document.getElementById('parentLoginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('parentLoginEmail').value;
+        const password = document.getElementById('parentLoginPassword').value;
+        
+        const user = users.find(u => u.email === email && u.password === password && u.type === 'parent');
+        
+        if (user) {
+            if (!user.verified) {
+                alert('Votre compte n\'est pas encore vérifié. Veuillez vérifier votre email.');
+                openVerificationModal(user.email);
+                return;
+            }
+            
+            currentUser = user;
+            localStorage.setItem('myprof_currentUser', JSON.stringify(currentUser));
+            updateAuthUI();
+            closeLoginModal();
+            alert(`Bienvenue ${user.name} !`);
+            showSection('parents');
+        } else {
+            alert('Email ou mot de passe incorrect. Veuillez réessayer.');
+        }
+    });
+    
+    // Gérer la connexion des enseignants
+    document.getElementById('teacherLoginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('teacherLoginEmail').value;
+        const password = document.getElementById('teacherLoginPassword').value;
+        
+        const user = users.find(u => u.email === email && u.password === password && u.type === 'teacher');
+        
+        if (user) {
+            if (!user.verified) {
+                alert('Votre compte n\'est pas encore vérifié. Veuillez vérifier votre email.');
+                openVerificationModal(user.email);
+                return;
+            }
+            
+            currentUser = user;
+            localStorage.setItem('myprof_currentUser', JSON.stringify(currentUser));
+            updateAuthUI();
+            closeLoginModal();
+            alert(`Bienvenue ${user.name} !`);
+            showSection('teachers');
+        } else {
+            alert('Email ou mot de passe incorrect. Veuillez réessayer.');
+        }
+    });
+    
+    // Gérer le formulaire de contact
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Votre message a été envoyé. Nous vous répondrons dans les plus brefs délais.');
+        this.reset();
+    });
+    
+    // Gérer l'upload de photo pour les enseignants
+    document.getElementById('teacherPhoto').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const preview = document.getElementById('teacherPhotoPreview');
+                preview.src = event.target.result;
+                preview.style.display = 'block';
+                document.getElementById('teacherPhotoPlaceholder').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // Afficher les enseignants au chargement initial
+    window.onload = function() {
+        updateAuthUI();
+        displayTeachers(teachers, 'teacherList');
+        displayTeachers(teachers, 'parentTeacherList');
+        
+        // Vérifier s'il y a des données temporaires (inscription non finalisée)
+        const tempUser = JSON.parse(localStorage.getItem('myprof_tempUser'));
+        if (tempUser) {
+            openVerificationModal(tempUser.email);
+        }
+    };
+</script>
 </body>
 </html>
