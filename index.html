@@ -945,7 +945,7 @@
             </div>
             <nav>
                 <ul>
-                    <li><a href="#hero" class="nav-link" onclick="showSection('home')">Accueil</a></li>
+                    <li><a href="#hero" class="nav-link" onclick="showSection('hero')">Accueil</a></li>
                     <li><a href="#parents" class="nav-link" onclick="showSection('parents')">Parents</a></li>
                     <li><a href="#teachers" class="nav-link" onclick="showSection('teachers')">Enseignants</a></li>
                     <li><a href="#contact" class="nav-link" onclick="showSection('contact')">Contact</a></li>
@@ -1570,7 +1570,6 @@
         
         // Fonction pour charger les villes dans les select
         function loadCities() {
-            const parentCitySelect = document.getElementById('parentCity');
             const teacherCitySelect = document.getElementById('city');
             
             // Trier les villes par ordre alphabétique
@@ -1578,11 +1577,6 @@
             
             // Ajouter les options pour chaque ville
             frenchCities.forEach(city => {
-                const option1 = document.createElement('option');
-                option1.value = city;
-                option1.textContent = city;
-                parentCitySelect.appendChild(option1);
-                
                 const option2 = document.createElement('option');
                 option2.value = city;
                 option2.textContent = city;
@@ -1679,24 +1673,34 @@
         // Initialiser les écouteurs d'événements pour les mots de passe
         function initPasswordValidation() {
             // Pour les parents
-            document.getElementById('parentPassword').addEventListener('input', function() {
-                checkPasswordStrength(this.value, 'parent');
-                checkPasswordMatch(this.value, document.getElementById('parentConfirmPassword').value, 'parent');
-            });
-            
-            document.getElementById('parentConfirmPassword').addEventListener('input', function() {
-                checkPasswordMatch(document.getElementById('parentPassword').value, this.value, 'parent');
-            });
+            const parentPassword = document.getElementById('parentPassword');
+            const parentConfirmPassword = document.getElementById('parentConfirmPassword');
+            if (parentPassword) {
+                parentPassword.addEventListener('input', function() {
+                    checkPasswordStrength(this.value, 'parent');
+                    if (parentConfirmPassword) checkPasswordMatch(this.value, parentConfirmPassword.value, 'parent');
+                });
+            }
+            if (parentConfirmPassword) {
+                parentConfirmPassword.addEventListener('input', function() {
+                    if (parentPassword) checkPasswordMatch(parentPassword.value, this.value, 'parent');
+                });
+            }
             
             // Pour les enseignants
-            document.getElementById('teacherPassword').addEventListener('input', function() {
-                checkPasswordStrength(this.value, 'teacher');
-                checkPasswordMatch(this.value, document.getElementById('teacherConfirmPassword').value, 'teacher');
-            });
-            
-            document.getElementById('teacherConfirmPassword').addEventListener('input', function() {
-                checkPasswordMatch(document.getElementById('teacherPassword').value, this.value, 'teacher');
-            });
+            const teacherPassword = document.getElementById('teacherPassword');
+            const teacherConfirmPassword = document.getElementById('teacherConfirmPassword');
+            if (teacherPassword) {
+                teacherPassword.addEventListener('input', function() {
+                    checkPasswordStrength(this.value, 'teacher');
+                    if (teacherConfirmPassword) checkPasswordMatch(this.value, teacherConfirmPassword.value, 'teacher');
+                });
+            }
+            if (teacherConfirmPassword) {
+                teacherConfirmPassword.addEventListener('input', function() {
+                    if (teacherPassword) checkPasswordMatch(teacherPassword.value, this.value, 'teacher');
+                });
+            }
         }
     
         // Afficher les enseignants
@@ -1980,7 +1984,7 @@
                 currentUser = null;
                 showNotification('Votre compte a été supprimé avec succès.', 'success');
                 updateAuthUI();
-                showSection('home');
+                showSection('hero');
             }
         }
         
@@ -1990,7 +1994,7 @@
             currentUser = null;
             showNotification('Vous avez été déconnecté.', 'success');
             updateAuthUI();
-            showSection('home');
+            showSection('hero');
         }
         
         // Simuler la vérification du code
@@ -2059,34 +2063,9 @@
             }
         });
         
-        // Initialiser les onglets de connexion
-        function initLoginTabs() {
-            const loginTabs = document.querySelectorAll('.login-tab');
-            
-            loginTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const tabType = tab.getAttribute('data-tab');
-                    
-                    // Désactiver tous les onglets
-                    loginTabs.forEach(t => t.classList.remove('active'));
-                    // Activer l'onglet cliqué
-                    tab.classList.add('active');
-                    
-                    // Masquer tous les formulaires
-                    document.querySelectorAll('.login-form').forEach(form => {
-                        form.classList.remove('active');
-                    });
-                    
-                    // Afficher le formulaire correspondant
-                    document.getElementById(`${tabType}LoginForm`).classList.add('active');
-                });
-            });
-        }
-        
         // Afficher les enseignants au chargement initial
         window.onload = function() {
             updateAuthUI();
-            displayTeachers(teachers, 'teacherList');
             displayTeachers(teachers, 'parentTeacherList');
             initLoginTabs();
             loadCities();
