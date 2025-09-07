@@ -108,6 +108,7 @@
             background-color: white;
             color: var(--primary-color);
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid var(--primary-color);
         }
 
         .btn-secondary:hover {
@@ -717,6 +718,46 @@
             align-items: center;
         }
 
+        /* FAQ Section */
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            display: none;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        .faq-item.active .faq-toggle i {
+            transform: rotate(180deg);
+        }
+
+        .faq-toggle {
+            transition: var(--transition);
+        }
+
         /* Modals */
         .modal {
             display: none;
@@ -825,6 +866,29 @@
             opacity: 1;
             color: var(--accent-color);
             padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--accent-color);
+            transform: translateY(-3px);
         }
 
         .footer-bottom {
@@ -976,6 +1040,7 @@
                 <li><a href="#teachers">Parents</a></li>
                 <li><a href="#registration">Enseignants</a></li>
                 <li><a href="#about">À propos</a></li>
+                <li><a href="#faq">FAQ</a></li>
                 <li id="loginNavItem"><a href="#" onclick="openLoginModal()">Connexion</a></li>
                 <li id="profileNavItem" style="display: none;"><a href="#profile">Mon profil</a></li>
                 <li id="logoutNavItem" style="display: none;"><a href="#" onclick="logout()">Déconnexion</a></li>
@@ -1011,7 +1076,7 @@
             </div>
         </div>
         <div class="stats-source">
-            <p>Source: Étude nationale sur le soutien scolaire 2023 - Ministère de l'Éducation</p>
+            <p>Source: Étude nationale sur le soutien scolaire 2025 - Ministère de l'Éducation</p>
         </div>
     </div>
 </section>
@@ -1212,10 +1277,8 @@
     <div class="container">
         <h2 class="section-title">Mon Profil</h2>
         
-        <div class="profile-tabs">
-            <button class="profile-tab-btn active" data-tab="info">Informations</button>
-            <button class="profile-tab-btn" data-tab="children">Mes Enfants</button>
-            <button class="profile-tab-btn" data-tab="settings">Paramètres</button>
+        <div class="profile-tabs" id="profileTabs">
+            <!-- Tabs will be dynamically inserted based on user type -->
         </div>
         
         <div id="profileInfo" class="form-card profile-content active">
@@ -1254,6 +1317,35 @@
             <button class="btn btn-accent" onclick="openAddChildModal()">
                 <i class="fas fa-plus"></i> Ajouter un enfant
             </button>
+        </div>
+        
+        <div id="profileTeacherInfo" class="form-card profile-content">
+            <h3>Informations Enseignant</h3>
+            <form id="teacherProfileForm">
+                <div class="form-group">
+                    <label for="profileTeacherSubject">Matière(s) enseignée(s)</label>
+                    <input type="text" id="profileTeacherSubject" required>
+                </div>
+                <div class="form-group">
+                    <label for="profileTeacherCity">Ville</label>
+                    <select id="profileTeacherCity" required></select>
+                </div>
+                <div class="form-group">
+                    <label for="profileTeacherPrice">Prix par heure (€)</label>
+                    <input type="number" id="profileTeacherPrice" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="profileTeacherExperience">Années d'expérience</label>
+                    <input type="number" id="profileTeacherExperience" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="profileTeacherDescription">Description de votre profil</label>
+                    <textarea id="profileTeacherDescription" rows="4"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Enregistrer les modifications
+                </button>
+            </form>
         </div>
         
         <div id="profileSettings" class="form-card profile-content">
@@ -1298,12 +1390,66 @@
     </div>
 </section>
 
-<section id="about" style="display: none;">
+<section id="about" class="light">
     <div class="container">
         <h2 class="section-title">À propos de nous</h2>
         <div class="form-card">
             <p>MyProfEduc est une plateforme unique qui met en relation des parents d'élèves à la recherche de soutien scolaire et des enseignants qualifiés. Notre mission est de faciliter une connexion directe et transparente, sans intermédiaire, afin de rendre l'accès à l'éducation de qualité plus abordable et de permettre aux enseignants de valoriser leur travail.</p>
-            <p>Notre modèle de paiement est simple : une commission de <strong>5€</strong> est facturée au parent lors de la demande de contact, et une autre de <strong>5€</strong> à l'enseignant lorsque celui-ci accepte la mise en relation. Ce système garantit que les deux parties sont engagées et réduit les coûts pour les familles tout en augmenting les revenus des enseignants.</p>
+            <p>Notre modèle de paiement est simple : une commission de <strong>5€</strong> est facturée au parent lors de la demande de contact, et une autre de <strong>5€</strong> à l'enseignant lorsque celui-ci accepte la mise en relation. Ce système garantit que les deux parties sont engagées et réduit les coûts pour les familles tout en augmentant les revenus des enseignants.</p>
+        </div>
+    </div>
+</section>
+
+<section id="faq" class="light">
+    <div class="container">
+        <h2 class="section-title">Foire aux Questions</h2>
+        <p class="section-subtitle">Retrouvez les réponses aux questions les plus fréquemment posées.</p>
+        
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    Comment contacter un enseignant ? <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>Pour contacter un enseignant, vous devez d'abord créer un compte parent. Une fois connecté, vous pouvez parcourir la liste des enseignants, filtrer par matière, ville et prix, puis cliquer sur "Contacter" pour envoyer une demande. Un paiement de 5€ sera pré-autorisé mais ne sera débité que si l'enseignant accepte votre demande.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    Comment devenir enseignant sur MyProfEduc ? <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>Pour devenir enseignant, cliquez sur "Devenir enseignant" et remplissez le formulaire d'inscription. Vous devrez fournir vos informations personnelles, vos matières enseignées, votre ville, votre tarif horaire et une description de votre profil. Après vérification de votre compte par email, votre profil sera visible par les parents.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    Quelles sont les conditions de paiement ? <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>Lorsque vous contactez un enseignant, un paiement de 5€ est pré-autorisé sur votre carte. Ce montant n'est définitivement débité que si l'enseignant accepte votre demande. Les cours proprement dits sont payés directement à l'enseignant selon les modalités que vous convenez ensemble, sans commission supplémentaire de notre part.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    Puis-je ajouter plusieurs enfants à mon compte ? <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>Oui, vous pouvez ajouter autant d'enfants que nécessaire dans votre espace personnel. Pour chaque enfant, vous pouvez préciser son niveau scolaire et les matières pour lesquelles il a besoin de soutien. Cela nous permet de vous proposer des enseignants adaptés aux besoins spécifiques de chacun de vos enfants.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    Comment modifier mes informations ou mon tarif ? <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>Une fois connecté, rendez-vous dans votre espace profil. Les parents peuvent modifier leurs informations personnelles et gérer les profils de leurs enfants. Les enseignants peuvent mettre à jour leurs informations, leurs matières enseignées, leur tarif horaire et leur description à tout moment.</p>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -1395,6 +1541,17 @@
             <div class="footer-col">
                 <h4>MyProfEduc</h4>
                 <p>La plateforme qui connecte directement parents et enseignants pour des cours particuliers de qualité, sans intermédiaire coûteux.</p>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/profile.php?id=61580020564168" target="_blank" title="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://www.instagram.com/myprofeduc/" target="_blank" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/@myprofeduc" target="_blank" title="TikTok">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                </div>
             </div>
             <div class="footer-col">
                 <h4>Liens rapides</h4>
@@ -1403,21 +1560,20 @@
                     <a href="#teachers">Trouver un enseignant</a>
                     <a href="#registration">Devenir enseignant</a>
                     <a href="#about">À propos</a>
+                    <a href="#faq">FAQ</a>
                 </div>
             </div>
             <div class="footer-col">
                 <h4>Contact</h4>
                 <div class="footer-links">
-                    <a href="#"><i class="fas fa-envelope"></i> contact@myprofeduc.fr</a>
-                    <a href="#"><i class="fas fa-phone"></i> +33 1 23 45 67 89</a>
-                    <a href="#"><i class="fas fa-map-marker-alt"></i> Paris, France</a>
+                    <a href="mailto:myprofeduc@gmail.com"><i class="fas fa-envelope"></i> myprofeduc@gmail.com</a>
                 </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2023 MyProfEduc. Tous droits réservés.</p>
+            <p>&copy; 2025 MyProfEduc. Tous droits réservés.</p>
             <div class="stats-reference">
-                <p>Sources statistiques: Étude nationale sur le soutien scolaire 2023 - Ministère de l'Éducation</p>
+                <p>Sources statistiques: Étude nationale sur le soutien scolaire 2025 - Ministère de l'Éducation</p>
             </div>
         </div>
     </div>
@@ -1489,7 +1645,7 @@
     const loginModal = document.getElementById('loginModal');
     const contactModal = document.getElementById('contactModal');
     const addChildModal = document.getElementById('addChildModal');
-    const profileTabButtons = document.querySelectorAll('.profile-tab-btn');
+    const profileTabs = document.getElementById('profileTabs');
     const profileContents = document.querySelectorAll('.profile-content');
     const childrenList = document.getElementById('childrenList');
 
@@ -1506,7 +1662,44 @@
         
         // Check if user is logged in
         checkLoginStatus();
+        
+        // Setup navigation
+        setupNavigation();
     });
+
+    // Setup navigation
+    function setupNavigation() {
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const sectionId = link.getAttribute('href').substring(1);
+                showSection(sectionId);
+                
+                // Update active nav link
+                document.querySelectorAll('nav a').forEach(navLink => {
+                    navLink.classList.remove('active');
+                });
+                link.classList.add('active');
+            });
+        });
+    }
+
+    // Show specific section
+    function showSection(sectionId) {
+        document.querySelectorAll('section').forEach(section => {
+            section.style.display = 'none';
+        });
+        
+        if (sectionId === 'home') {
+            document.getElementById('home').style.display = 'block';
+            document.getElementById('hero').style.display = 'block';
+        } else {
+            document.getElementById(sectionId).style.display = 'block';
+        }
+        
+        // Scroll to section
+        document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+    }
 
     // Display teachers in the list
     function displayTeachers(teachersArray) {
@@ -1585,11 +1778,34 @@
 
     // Populate cities dropdown
     function populateCities() {
+        // Clear existing options
+        teacherCitySelect.innerHTML = '';
+        const profileTeacherCity = document.getElementById('profileTeacherCity');
+        if (profileTeacherCity) {
+            profileTeacherCity.innerHTML = '';
+        }
+        
+        // Add options
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = 'Sélectionnez une ville';
+        teacherCitySelect.appendChild(option);
+        
+        if (profileTeacherCity) {
+            const profileOption = option.cloneNode(true);
+            profileTeacherCity.appendChild(profileOption);
+        }
+        
         frenchCities.sort().forEach(city => {
             const option = document.createElement('option');
             option.value = city;
             option.textContent = city;
             teacherCitySelect.appendChild(option);
+            
+            if (profileTeacherCity) {
+                const profileOption = option.cloneNode(true);
+                profileTeacherCity.appendChild(profileOption);
+            }
         });
     }
 
@@ -1646,21 +1862,6 @@
             });
         });
         
-        // Tab switching for profile
-        profileTabButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const tab = this.dataset.tab;
-                
-                // Update active tab button
-                profileTabButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                
-                // Show the corresponding content
-                profileContents.forEach(content => content.classList.remove('active'));
-                document.getElementById(`profile${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
-            });
-        });
-        
         // Password validation for parent form
         const parentPassword = document.getElementById('parentPassword');
         parentPassword.addEventListener('input', function() {
@@ -1707,6 +1908,11 @@
         document.getElementById('profileForm').addEventListener('submit', function(e) {
             e.preventDefault();
             updateProfile();
+        });
+        
+        document.getElementById('teacherProfileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            updateTeacherProfile();
         });
     }
 
@@ -1839,6 +2045,9 @@
             document.getElementById('profileName').value = currentUser.name;
             document.getElementById('profileEmail').value = currentUser.email;
             
+            // Setup profile tabs based on user type
+            setupProfileTabs();
+            
             // Update navigation
             updateNavigation();
             
@@ -1846,9 +2055,53 @@
             if (currentUser.type === 'parent') {
                 displayChildren();
             }
+            
+            // Populate teacher info if teacher
+            if (currentUser.type === 'teacher') {
+                document.getElementById('profileTeacherSubject').value = document.getElementById('teacherSubject').value;
+                document.getElementById('profileTeacherCity').value = document.getElementById('teacherCity').value;
+                document.getElementById('profileTeacherPrice').value = document.getElementById('teacherPrice').value;
+                document.getElementById('profileTeacherExperience').value = document.getElementById('teacherExperience').value;
+                document.getElementById('profileTeacherDescription').value = document.getElementById('teacherDescription').value;
+            }
         } else {
             alert('Code de vérification incorrect. Veuillez réessayer.');
         }
+    }
+
+    // Setup profile tabs based on user type
+    function setupProfileTabs() {
+        profileTabs.innerHTML = '';
+        
+        if (currentUser.type === 'parent') {
+            profileTabs.innerHTML = `
+                <button class="profile-tab-btn active" data-tab="info">Informations</button>
+                <button class="profile-tab-btn" data-tab="children">Mes Enfants</button>
+                <button class="profile-tab-btn" data-tab="settings">Paramètres</button>
+            `;
+        } else if (currentUser.type === 'teacher') {
+            profileTabs.innerHTML = `
+                <button class="profile-tab-btn active" data-tab="info">Informations</button>
+                <button class="profile-tab-btn" data-tab="teacherInfo">Informations Enseignant</button>
+                <button class="profile-tab-btn" data-tab="settings">Paramètres</button>
+            `;
+        }
+        
+        // Add event listeners to new tabs
+        const newTabButtons = profileTabs.querySelectorAll('.profile-tab-btn');
+        newTabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const tab = this.dataset.tab;
+                
+                // Update active tab button
+                newTabButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show the corresponding content
+                profileContents.forEach(content => content.classList.remove('active'));
+                document.getElementById(`profile${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
+            });
+        });
     }
 
     // Resend verification code
@@ -1884,6 +2137,9 @@
             // Update profile form
             document.getElementById('profileName').value = currentUser.name;
             document.getElementById('profileEmail').value = currentUser.email;
+            
+            // Setup profile tabs based on user type
+            setupProfileTabs();
             
             // Update navigation
             updateNavigation();
@@ -1937,6 +2193,7 @@
             section.style.display = 'none';
         });
         document.getElementById('home').style.display = 'block';
+        document.getElementById('hero').style.display = 'block';
         
         // Update navigation
         updateNavigation();
@@ -2032,6 +2289,24 @@
         currentUser.email = email;
         
         alert('Profil mis à jour avec succès !');
+    }
+
+    // Update teacher profile
+    function updateTeacherProfile() {
+        const subject = document.getElementById('profileTeacherSubject').value;
+        const city = document.getElementById('profileTeacherCity').value;
+        const price = document.getElementById('profileTeacherPrice').value;
+        const experience = document.getElementById('profileTeacherExperience').value;
+        const description = document.getElementById('profileTeacherDescription').value;
+        
+        // In a real app, this would update the database
+        alert('Informations enseignant mises à jour avec succès !');
+    }
+
+    // Toggle FAQ item
+    function toggleFaq(element) {
+        const faqItem = element.parentElement;
+        faqItem.classList.toggle('active');
     }
 
     // Modal functions
