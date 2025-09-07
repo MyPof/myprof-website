@@ -3,8 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyProfEduc - Inscription</title>
+    <title>MyProfEduc - Trouvez le professeur idéal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #4a6fc7;
+            --secondary: #ff7e5f;
+            --accent: #2ecc71;
+            --light: #f5f7fb;
+            --dark: #2c3e50;
+            --gray: #7f8c8d;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -13,8 +25,8 @@
         }
         
         body {
-            background-color: #f5f7fb;
-            color: #333;
+            background-color: var(--light);
+            color: var(--dark);
             line-height: 1.6;
         }
         
@@ -27,10 +39,13 @@
         
         /* Header */
         header {
-            background-color: #4a6fc7;
+            background: linear-gradient(135deg, var(--primary) 0%, #3b5aa6 100%);
             color: white;
             padding: 15px 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
         nav {
@@ -40,8 +55,15 @@
         }
         
         .logo {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            color: var(--secondary);
         }
         
         .nav-links {
@@ -56,37 +78,59 @@
         .nav-links a {
             color: white;
             text-decoration: none;
-            transition: opacity 0.3s;
+            transition: var(--transition);
+            font-weight: 500;
+            position: relative;
+            padding: 5px 0;
         }
         
-        .nav-links a:hover {
-            opacity: 0.8;
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--secondary);
+            transition: var(--transition);
+        }
+        
+        .nav-links a:hover:after {
+            width: 100%;
         }
         
         .login-btn {
-            background-color: #ff7e5f;
-            padding: 8px 15px;
-            border-radius: 4px;
+            background-color: var(--secondary);
+            padding: 10px 20px;
+            border-radius: 50px;
             font-weight: bold;
+            transition: var(--transition);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         
         /* Hero Section */
         .hero {
+            background: linear-gradient(rgba(74, 111, 199, 0.9), rgba(59, 90, 166, 0.9)), url('https://images.unsplash.com/photo-1522881193457-37ae97c905bf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') no-repeat center center/cover;
+            color: white;
             text-align: center;
-            padding: 50px 0 30px;
+            padding: 80px 0 60px;
         }
         
         .hero h1 {
-            font-size: 32px;
+            font-size: 42px;
             margin-bottom: 20px;
-            color: #2c3e50;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
         }
         
         .hero p {
-            font-size: 18px;
-            color: #555;
+            font-size: 20px;
             max-width: 700px;
-            margin: 0 auto 30px;
+            margin: 0 auto 40px;
         }
         
         /* Tabs */
@@ -94,49 +138,70 @@
             display: flex;
             justify-content: center;
             margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 5px;
+            width: fit-content;
+            margin: 0 auto;
+            backdrop-filter: blur(10px);
         }
         
         .tab-btn {
-            padding: 12px 30px;
-            background-color: #e0e6f0;
+            padding: 15px 40px;
+            background: transparent;
             border: none;
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
-            transition: all 0.3s;
-            border-radius: 5px 5px 0 0;
+            transition: var(--transition);
+            border-radius: 50px;
+            color: white;
             margin: 0 5px;
         }
         
         .tab-btn.active {
-            background-color: #4a6fc7;
-            color: white;
+            background-color: white;
+            color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+        
+        .tab-btn i {
+            margin-right: 10px;
         }
         
         /* Form Container */
         .form-container {
             background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            padding: 40px;
             max-width: 800px;
-            margin: 0 auto 50px;
+            margin: -50px auto 50px;
+            position: relative;
+            z-index: 2;
         }
         
         .form-title {
             text-align: center;
-            margin-bottom: 25px;
-            color: #2c3e50;
+            margin-bottom: 30px;
+            color: var(--primary);
+            font-size: 28px;
+        }
+        
+        .form-title i {
+            margin-right: 10px;
+            color: var(--secondary);
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 600;
+            color: var(--dark);
         }
         
         input[type="text"],
@@ -146,95 +211,183 @@
         select,
         textarea {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 15px 20px;
+            border: 2px solid #e6e9ef;
+            border-radius: 10px;
             font-size: 16px;
+            transition: var(--transition);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 111, 199, 0.2);
         }
         
         textarea {
-            min-height: 100px;
+            min-height: 120px;
             resize: vertical;
         }
         
         .file-upload {
             border: 2px dashed #ddd;
-            padding: 20px;
+            padding: 30px;
             text-align: center;
-            border-radius: 4px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: border-color 0.3s;
+            transition: var(--transition);
+            background: #fafafa;
         }
         
         .file-upload:hover {
-            border-color: #4a6fc7;
+            border-color: var(--primary);
+            background: #f0f4ff;
+        }
+        
+        .file-upload i {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 15px;
         }
         
         .file-upload p {
-            color: #666;
+            color: var(--gray);
             margin-bottom: 10px;
         }
         
+        .file-upload span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
         .submit-btn {
-            background-color: #4a6fc7;
+            background: linear-gradient(135deg, var(--primary) 0%, #3b5aa6 100%);
             color: white;
             border: none;
-            padding: 12px 25px;
-            font-size: 16px;
-            border-radius: 4px;
+            padding: 16px 40px;
+            font-size: 18px;
+            border-radius: 50px;
             cursor: pointer;
             display: block;
-            margin: 30px auto 0;
-            transition: background-color 0.3s;
+            margin: 40px auto 0;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(74, 111, 199, 0.4);
+            font-weight: 600;
         }
         
         .submit-btn:hover {
-            background-color: #3b5aa6;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(74, 111, 199, 0.6);
+        }
+        
+        .submit-btn i {
+            margin-left: 10px;
         }
         
         /* Contact Form */
         .contact-form {
             display: none;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            padding: 30px;
-            max-width: 800px;
-            margin: 0 auto 50px;
         }
         
-        .contact-title {
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .section-title {
             text-align: center;
-            margin-bottom: 25px;
-            color: #2c3e50;
+            margin-bottom: 60px;
+            color: var(--primary);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: var(--light);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-card i {
+            font-size: 50px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 15px;
+            color: var(--dark);
         }
         
         /* Footer */
         footer {
-            background-color: #2c3e50;
+            background: var(--dark);
             color: white;
-            padding: 30px 0;
-            text-align: center;
+            padding: 60px 0 30px;
         }
         
-        .footer-links {
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
             display: flex;
-            justify-content: center;
+            align-items: center;
+        }
+        
+        .footer-logo i {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+        
+        .footer-links h4 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: var(--secondary);
+        }
+        
+        .footer-links ul {
             list-style: none;
-            margin: 20px 0;
         }
         
         .footer-links li {
-            margin: 0 15px;
+            margin-bottom: 12px;
         }
         
         .footer-links a {
-            color: white;
+            color: #ecf0f1;
             text-decoration: none;
+            transition: var(--transition);
         }
         
         .footer-links a:hover {
-            text-decoration: underline;
+            color: var(--secondary);
+            padding-left: 5px;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bdc3c7;
         }
         
         /* Responsive */
@@ -243,15 +396,27 @@
                 display: none;
             }
             
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
             .tabs {
                 flex-direction: column;
-                align-items: center;
+                width: 100%;
             }
             
             .tab-btn {
                 width: 100%;
-                margin-bottom: 5px;
-                border-radius: 5px;
+                margin-bottom: 10px;
+            }
+            
+            .form-container {
+                padding: 25px;
+                margin: -30px auto 30px;
             }
         }
     </style>
@@ -260,7 +425,10 @@
     <header>
         <div class="container">
             <nav>
-                <div class="logo">MyProfEduc</div>
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    MyProfEduc
+                </div>
                 <ul class="nav-links">
                     <li><a href="#">Accueil</a></li>
                     <li><a href="#">Parents</a></li>
@@ -279,35 +447,41 @@
             <p>Inscrivez-vous en tant que parent pour trouver le professeur idéal, ou comme enseignant pour proposer vos services.</p>
             
             <div class="tabs">
-                <button class="tab-btn active" onclick="showForm('parent')">Inscription Parents</button>
-                <button class="tab-btn" onclick="showForm('teacher')">Inscription Enseignants</button>
-                <button class="tab-btn" onclick="showForm('contact')">Contact</button>
+                <button class="tab-btn active" onclick="showForm('parent')">
+                    <i class="fas fa-user-circle"></i>Inscription Parents
+                </button>
+                <button class="tab-btn" onclick="showForm('teacher')">
+                    <i class="fas fa-chalkboard-teacher"></i>Inscription Enseignants
+                </button>
+                <button class="tab-btn" onclick="showForm('contact')">
+                    <i class="fas fa-envelope"></i>Contact
+                </button>
             </div>
         </div>
     </section>
 
     <!-- Parent Form -->
     <div class="form-container" id="parent-form">
-        <h2 class="form-title">Inscription Parent</h2>
+        <h2 class="form-title"><i class="fas fa-user-circle"></i>Inscription Parent</h2>
         <form>
             <div class="form-group">
                 <label for="parent-name">Nom & Prénom</label>
-                <input type="text" id="parent-name" required>
+                <input type="text" id="parent-name" required placeholder="Votre nom complet">
             </div>
             
             <div class="form-group">
                 <label for="parent-email">Email</label>
-                <input type="email" id="parent-email" required>
+                <input type="email" id="parent-email" required placeholder="votre@email.com">
             </div>
             
             <div class="form-group">
                 <label for="parent-phone">Téléphone</label>
-                <input type="tel" id="parent-phone">
+                <input type="tel" id="parent-phone" placeholder="Votre numéro de téléphone">
             </div>
             
             <div class="form-group">
                 <label for="child-name">Nom & Prénom de l'enfant</label>
-                <input type="text" id="child-name" required>
+                <input type="text" id="child-name" required placeholder="Nom complet de votre enfant">
             </div>
             
             <div class="form-group">
@@ -329,30 +503,30 @@
             
             <div class="form-group">
                 <label for="parent-password">Mot de passe</label>
-                <input type="password" id="parent-password" required>
+                <input type="password" id="parent-password" required placeholder="Créez un mot de passe sécurisé">
             </div>
             
-            <button type="submit" class="submit-btn">S'inscrire</button>
+            <button type="submit" class="submit-btn">S'inscrire <i class="fas fa-arrow-right"></i></button>
         </form>
     </div>
 
     <!-- Teacher Form -->
     <div class="form-container" id="teacher-form" style="display: none;">
-        <h2 class="form-title">Inscription Enseignant</h2>
+        <h2 class="form-title"><i class="fas fa-chalkboard-teacher"></i>Inscription Enseignant</h2>
         <form>
             <div class="form-group">
                 <label for="teacher-name">Nom & Prénom</label>
-                <input type="text" id="teacher-name" required>
+                <input type="text" id="teacher-name" required placeholder="Votre nom complet">
             </div>
             
             <div class="form-group">
                 <label for="teacher-email">Email</label>
-                <input type="email" id="teacher-email" required>
+                <input type="email" id="teacher-email" required placeholder="votre@email.com">
             </div>
             
             <div class="form-group">
                 <label for="teacher-phone">Téléphone</label>
-                <input type="tel" id="teacher-phone">
+                <input type="tel" id="teacher-phone" placeholder="Votre numéro de téléphone">
             </div>
             
             <div class="form-group">
@@ -362,46 +536,48 @@
             
             <div class="form-group">
                 <label for="experience">Années d'expérience</label>
-                <input type="text" id="experience" required>
+                <input type="text" id="experience" required placeholder="Nombre d'années d'expérience">
             </div>
             
             <div class="form-group">
                 <label>Photo de profil</label>
                 <div class="file-upload">
-                    <p>Cliquez pour télécharger votre photo</p>
-                    <input type="file" accept="image/*">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Glissez-déposez votre photo ou <span>parcourir</span></p>
+                    <input type="file" accept="image/*" style="display: none;">
                 </div>
             </div>
             
             <div class="form-group">
                 <label>Diplômes et certifications</label>
                 <div class="file-upload">
-                    <p>Cliquez pour télécharger vos diplômes (PDF, JPEG, PNG)</p>
-                    <input type="file" accept=".pdf,.jpg,.jpeg,.png" multiple>
+                    <i class="fas fa-file-pdf"></i>
+                    <p>Glissez-déposez vos diplômes ou <span>parcourir</span></p>
+                    <input type="file" accept=".pdf,.jpg,.jpeg,.png" multiple style="display: none;">
                 </div>
             </div>
             
             <div class="form-group">
                 <label for="teacher-password">Mot de passe</label>
-                <input type="password" id="teacher-password" required>
+                <input type="password" id="teacher-password" required placeholder="Créez un mot de passe sécurisé">
             </div>
             
-            <button type="submit" class="submit-btn">S'inscrire</button>
+            <button type="submit" class="submit-btn">S'inscrire <i class="fas fa-arrow-right"></i></button>
         </form>
     </div>
 
     <!-- Contact Form -->
-    <div class="contact-form" id="contact-form">
-        <h2 class="contact-title">Contactez-nous</h2>
+    <div class="form-container" id="contact-form" style="display: none;">
+        <h2 class="form-title"><i class="fas fa-envelope"></i>Contactez-nous</h2>
         <form>
             <div class="form-group">
                 <label for="contact-name">Nom & Prénom</label>
-                <input type="text" id="contact-name" required>
+                <input type="text" id="contact-name" required placeholder="Votre nom complet">
             </div>
             
             <div class="form-group">
                 <label for="contact-email">Email</label>
-                <input type="email" id="contact-email" required>
+                <input type="email" id="contact-email" required placeholder="votre@email.com">
             </div>
             
             <div class="form-group">
@@ -416,21 +592,76 @@
             
             <div class="form-group">
                 <label for="contact-message">Message</label>
-                <textarea id="contact-message" required></textarea>
+                <textarea id="contact-message" required placeholder="Votre message..."></textarea>
             </div>
             
-            <button type="submit" class="submit-btn">Envoyer</button>
+            <button type="submit" class="submit-btn">Envoyer <i class="fas fa-paper-plane"></i></button>
         </form>
     </div>
 
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Pourquoi choisir MyProfEduc ?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-search"></i>
+                    <h3>Recherche simplifiée</h3>
+                    <p>Trouvez le professeur idéal en quelques clics grâce à notre système de recherche avancé.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Enseignants vérifiés</h3>
+                    <p>Tous nos enseignants sont qualifiés et leurs diplômes vérifiés pour votre tranquillité d'esprit.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-comments"></i>
+                    <h3>Communication facile</h3>
+                    <p>Échangez directement avec les enseignants via notre messagerie sécurisée.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <footer>
         <div class="container">
-            <p>© 2023 MyProfEduc - Tous droits réservés</p>
-            <ul class="footer-links">
-                <li><a href="#">Confidentialité</a></li>
-                <li><a href="#">Conditions d'utilisation</a></li>
-                <li><a href="#">Mentions légales</a></li>
-            </ul>
+            <div class="footer-content">
+                <div>
+                    <div class="footer-logo">
+                        <i class="fas fa-graduation-cap"></i>
+                        MyProfEduc
+                    </div>
+                    <p>La plateforme qui connecte les parents avec les meilleurs enseignants pour des cours particuliers sur mesure.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Liens rapides</h4>
+                    <ul>
+                        <li><a href="#">Accueil</a></li>
+                        <li><a href="#">Parents</a></li>
+                        <li><a href="#">Enseignants</a></li>
+                        <li><a href="#">À propos</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Légal</h4>
+                    <ul>
+                        <li><a href="#">Conditions d'utilisation</a></li>
+                        <li><a href="#">Politique de confidentialité</a></li>
+                        <li><a href="#">Mentions légales</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="mailto:contact@myprofeduc.fr">contact@myprofeduc.fr</a></li>
+                        <li><a href="tel:+33123456789">+33 1 23 45 67 89</a></li>
+                        <li><a href="#">Formulaire de contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 MyProfEduc - Tous droits réservés</p>
+            </div>
         </div>
     </footer>
 
