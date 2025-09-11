@@ -1160,7 +1160,7 @@
                         <i class="fas fa-euro-sign"></i>
                     </div>
                     <h3>Économies garanties</h3>
-                    <p>En supprimant les intermédiaires, nous réduisons les coûts de 30% en moyenne pour les familles, tout en augmentant les revenus des enseignants.</p>
+                    <p>En supprimant les intermédiaires, nous réduisons les coûts de 30% en moyenne pour les familles, tout en augmenting les revenus des enseignants.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
@@ -1568,7 +1568,7 @@
                     <h4>Liens rapides</h4>
                     <div class="footer-links">
                         <a href="#home">Accueil</a>
-                        <a href="#teachers">Trouver un enseignant</a>
+                        <a href#teachers">Trouver un enseignant</a>
                         <a href="#registration">Devenir enseignant</a>
                         <a href="#about">À propos</a>
                         <a href="#faq">FAQ</a>
@@ -1593,7 +1593,7 @@
 
     <script>
         // Données des enseignants
-        const teachers = [
+        let teachers = [
             {
                 id: 1,
                 name: "Sophie Martin",
@@ -1903,6 +1903,26 @@
                 return;
             }
             
+            // Créer un nouvel enseignant
+            const newTeacher = {
+                id: teachers.length + 1,
+                name: name,
+                subject: subjects[0], // Prendre la première matière
+                city: city,
+                experience: parseInt(experience),
+                rate: parseInt(rate),
+                rating: 4.5, // Note par défaut pour les nouveaux enseignants
+                reviews: 0, // Aucun avis au début
+                photo: document.getElementById('teacherPhotoPreview').src,
+                bio: bio
+            };
+            
+            // Ajouter le nouvel enseignant à la liste
+            teachers.push(newTeacher);
+            
+            // Mettre à jour l'affichage des enseignants
+            renderTeachers(teachers);
+            
             // Simulation d'enregistrement réussi
             document.getElementById('registration').style.display = 'none';
             document.getElementById('verification').style.display = 'block';
@@ -1912,6 +1932,9 @@
             document.getElementById('teacherSubjects').innerHTML = '';
             document.getElementById('teacherDegrees').innerHTML = '';
             document.getElementById('teacherPhotoPreview').src = 'https://via.placeholder.com/150';
+            
+            // Mettre à jour le compteur d'enseignants
+            document.getElementById('teacherCount').textContent = (parseInt(document.getElementById('teacherCount').textContent.replace(/,/g, '')) + 1).toLocaleString();
         }
 
         // Fonction pour enregistrer un parent
@@ -1947,6 +1970,9 @@
             
             // Réinitialiser le formulaire
             document.getElementById('parent-register').reset();
+            
+            // Mettre à jour le compteur de parents
+            document.getElementById('parentCount').textContent = (parseInt(document.getElementById('parentCount').textContent.replace(/,/g, '')) + 1).toLocaleString();
         }
 
         // Fonction pour ouvrir la modal de connexion
@@ -2129,4 +2155,3 @@
     </script>
 </body>
 </html>
-
