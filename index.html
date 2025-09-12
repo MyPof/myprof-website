@@ -1008,8 +1008,27 @@
         }
 
         /* Styles pour l'édition de profil */
-        .edit-profile-modal { max-width: 600px; }
-        .edit-profile-form { text-align: left; }
+        .edit-profile-modal { 
+            max-width: 600px;
+        }
+        .edit-profile-form { 
+            text-align: left; 
+        }
+
+        .profile-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        .profile-photo-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary-color);
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -1262,6 +1281,14 @@
                         </select>
                 </div>
                 <div class="form-group">
+                    <label for="teacherPhoto">Photo de profil</label>
+                    <input type="file" id="teacherPhoto" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label for="teacherDiplomas">Diplômes (PDF)</label>
+                    <input type="file" id="teacherDiplomas" accept="application/pdf" multiple>
+                </div>
+                <div class="form-group">
                     <label for="teacherBio">Présentez-vous</label>
                     <textarea id="teacherBio" rows="5" placeholder="Décrivez votre expérience, votre méthode d'enseignement..."></textarea>
                 </div>
@@ -1297,6 +1324,11 @@
                 <div class="form-card">
                     <h3>Mon Profil</h3>
                     <div id="profileContent"></div>
+                    <div class="profile-actions">
+                        <button class="btn btn-secondary" onclick="openEditProfileModal()">
+                            <i class="fas fa-edit"></i> Modifier mon profil
+                        </button>
+                    </div>
                 </div>
             </div>
             
@@ -1335,6 +1367,76 @@
             <p style="margin-top: 1rem;">Pas encore inscrit ?
                 <a href="#registration" onclick="closeLoginModal()">Créer un compte</a>
             </p>
+        </div>
+    </div>
+
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content edit-profile-modal">
+            <button class="modal-close" onclick="closeEditProfileModal()">&times;</button>
+            <h3>Modifier mon profil</h3>
+            <div id="editParentForm" class="edit-profile-form" style="display: none;">
+                <div class="form-group">
+                    <label for="editParentName">Nom & Prénom</label>
+                    <input type="text" id="editParentName" placeholder="Votre nom et prénom">
+                </div>
+                <div class="form-group">
+                    <label for="editParentEmail">Email</label>
+                    <input type="email" id="editParentEmail" placeholder="Votre adresse email" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="editParentCity">Ville</label>
+                    <select id="editParentCity">
+                        <option value="">Sélectionnez votre ville</option>
+                        </select>
+                </div>
+                <button class="btn btn-primary" onclick="saveProfileChanges()">
+                    <i class="fas fa-save"></i> Enregistrer les modifications
+                </button>
+            </div>
+            <div id="editTeacherForm" class="edit-profile-form" style="display: none;">
+                <div class="form-group">
+                    <label for="editTeacherName">Nom & Prénom</label>
+                    <input type="text" id="editTeacherName" placeholder="Votre nom et prénom">
+                </div>
+                <div class="form-group">
+                    <label for="editTeacherEmail">Email</label>
+                    <input type="email" id="editTeacherEmail" placeholder="Votre adresse email" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="editTeacherSubject">Matière enseignée</label>
+                    <select id="editTeacherSubject">
+                        <option value="">Sélectionnez une matière</option>
+                        <option value="Mathématiques">Mathématiques</option>
+                        <option value="Français">Français</option>
+                        <option value="Physique-Chimie">Physique-Chimie</option>
+                        <option value="Anglais">Anglais</option>
+                        <option value="Histoire-Géographie">Histoire-Géographie</option>
+                        <option value="SVT">SVT</option>
+                        <option value="Philosophie">Philosophie</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editTeacherCity">Ville</label>
+                    <select id="editTeacherCity">
+                        <option value="">Sélectionnez votre ville</option>
+                        </select>
+                </div>
+                <div class="form-group">
+                    <label for="editTeacherPhoto">Photo de profil</label>
+                    <input type="file" id="editTeacherPhoto" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label for="editTeacherDiplomas">Diplômes (PDF)</label>
+                    <input type="file" id="editTeacherDiplomas" accept="application/pdf" multiple>
+                </div>
+                <div class="form-group">
+                    <label for="editTeacherBio">Présentez-vous</label>
+                    <textarea id="editTeacherBio" rows="5" placeholder="Décrivez votre expérience, votre méthode d'enseignement..."></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="saveProfileChanges()">
+                    <i class="fas fa-save"></i> Enregistrer les modifications
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1495,6 +1597,8 @@
             }
         ];
 
+        let currentUser = null; // Simule l'utilisateur actuellement connecté
+
         document.addEventListener('DOMContentLoaded', function() {
             // Initialisation des onglets de profil et de formulaire
             window.showForm = function(formId) {
@@ -1517,6 +1621,10 @@
                     btn.classList.remove('active');
                 });
                 document.querySelector(`[onclick="showProfileTab('${tabId}')"]`).classList.add('active');
+
+                if (tabId === 'profile-info') {
+                    displayUserProfile();
+                }
             }
 
             // Gestion de l'affichage des modals
@@ -1526,6 +1634,12 @@
             window.closeAddChildModal = () => document.getElementById('addChildModal').style.display = 'none';
             window.openContactTeacherModal = () => document.getElementById('contactTeacherModal').style.display = 'flex';
             window.closeContactTeacherModal = () => document.getElementById('contactTeacherModal').style.display = 'none';
+            window.openEditProfileModal = function() {
+                if (!currentUser) return;
+                loadProfileForEdit(currentUser.userType);
+                document.getElementById('editProfileModal').style.display = 'flex';
+            }
+            window.closeEditProfileModal = () => document.getElementById('editProfileModal').style.display = 'none';
 
             // Fonction de validation du mot de passe
             window.validatePassword = function(password, formType) {
@@ -1610,8 +1724,14 @@
                     return;
                 }
 
-                // Ici, vous ajouteriez la logique pour envoyer les données au serveur
-                // Pour l'instant, nous affichons un message de succès
+                currentUser = {
+                    userType: 'parent',
+                    name: name,
+                    email: email,
+                    city: city,
+                    children: [{ name: childName, age: childAge, grade: childGrade }]
+                };
+
                 alert("Inscription parent réussie ! Redirection vers la page de vérification.");
                 document.getElementById('registration').style.display = 'none';
                 document.getElementById('verification').style.display = 'block';
@@ -1625,6 +1745,8 @@
                 const subject = document.getElementById('teacherSubject').value;
                 const city = document.getElementById('teacherCity').value;
                 const bio = document.getElementById('teacherBio').value;
+                const photoFile = document.getElementById('teacherPhoto').files[0];
+                const diplomaFiles = document.getElementById('teacherDiplomas').files;
 
                 if (!name || !email || !password || !confirmPassword || !subject || !city || !bio) {
                     alert("Veuillez remplir tous les champs du formulaire.");
@@ -1639,7 +1761,27 @@
                     return;
                 }
 
-                // Ici, vous ajouteriez la logique pour envoyer les données au serveur
+                let photoURL = '';
+                if (photoFile) {
+                    photoURL = URL.createObjectURL(photoFile);
+                    alert(`Photo de profil "${photoFile.name}" uploadée.`);
+                }
+                if (diplomaFiles.length > 0) {
+                    let diplomaNames = Array.from(diplomaFiles).map(file => file.name);
+                    alert(`Diplômes uploadés : ${diplomaNames.join(', ')}.`);
+                }
+
+                currentUser = {
+                    userType: 'teacher',
+                    name: name,
+                    email: email,
+                    subject: subject,
+                    city: city,
+                    bio: bio,
+                    photo: photoURL,
+                    diplomas: Array.from(diplomaFiles).map(file => ({ name: file.name, url: URL.createObjectURL(file) }))
+                };
+
                 alert("Inscription enseignant réussie ! Redirection vers la page de vérification.");
                 document.getElementById('registration').style.display = 'none';
                 document.getElementById('verification').style.display = 'block';
@@ -1649,21 +1791,30 @@
                 const email = document.getElementById('loginEmail').value;
                 const password = document.getElementById('loginPassword').value;
                 if (email && password) {
-                    // Logique de connexion (simulée)
+                    // Simulation d'une connexion réussie avec des données d'utilisateur par défaut
+                    currentUser = {
+                        userType: 'parent',
+                        name: "Marie Dupond",
+                        email: "marie.dupond@example.com",
+                        city: "Paris",
+                        children: [{ name: "Léa", age: 10, grade: "CM2" }]
+                    };
                     alert("Connexion réussie !");
                     closeLoginModal();
                     updateNavigation(true);
-                    showProfileTab('profile-info');
                     document.getElementById('profile').style.display = 'block';
+                    displayUserProfile();
                 } else {
                     alert("Veuillez entrer votre email et mot de passe.");
                 }
             }
 
             window.logout = function() {
+                currentUser = null;
                 alert("Déconnexion réussie !");
                 updateNavigation(false);
                 document.getElementById('profile').style.display = 'none';
+                window.location.hash = '#home';
             }
 
             window.resendVerification = function() {
@@ -1675,9 +1826,13 @@
                 const age = document.getElementById('newChildAge').value;
                 const grade = document.getElementById('newChildGrade').value;
                 if (name && age && grade) {
-                    alert(`Enfant ${name} ajouté !`);
-                    closeAddChildModal();
-                    // Logique pour afficher l'enfant dans la liste
+                    if (currentUser && currentUser.userType === 'parent') {
+                        if (!currentUser.children) currentUser.children = [];
+                        currentUser.children.push({ name, age, grade });
+                        displayUserProfile();
+                        alert(`Enfant ${name} ajouté !`);
+                        closeAddChildModal();
+                    }
                 } else {
                     alert("Veuillez remplir tous les champs.");
                 }
@@ -1689,6 +1844,105 @@
                 document.getElementById('contactTeacherStep2').style.display = 'block';
             }
             
+            // Fonctions pour gérer le profil utilisateur et son édition
+            function displayUserProfile() {
+                const profileContentDiv = document.getElementById('profileContent');
+                if (!currentUser) return;
+                
+                let contentHTML = `<p><strong>Nom :</strong> ${currentUser.name}</p>
+                                   <p><strong>Email :</strong> ${currentUser.email}</p>
+                                   <p><strong>Ville :</strong> ${currentUser.city}</p>`;
+
+                if (currentUser.userType === 'teacher') {
+                    contentHTML = `<div class="photo-upload">
+                                    <img src="${currentUser.photo || 'https://via.placeholder.com/150'}" alt="Photo de profil" class="profile-photo">
+                                   </div>
+                                   <p><strong>Nom :</strong> ${currentUser.name}</p>
+                                   <p><strong>Email :</strong> ${currentUser.email}</p>
+                                   <p><strong>Matière :</strong> ${currentUser.subject}</p>
+                                   <p><strong>Ville :</strong> ${currentUser.city}</p>
+                                   <p><strong>Bio :</strong> ${currentUser.bio}</p>`;
+                    if (currentUser.diplomas && currentUser.diplomas.length > 0) {
+                        contentHTML += `<h4>Mes diplômes :</h4><ul>`;
+                        currentUser.diplomas.forEach(diploma => {
+                            contentHTML += `<li><a href="${diploma.url}" target="_blank">${diploma.name}</a></li>`;
+                        });
+                        contentHTML += `</ul>`;
+                    }
+                } else if (currentUser.userType === 'parent') {
+                    contentHTML = `<p><strong>Nom :</strong> ${currentUser.name}</p>
+                                   <p><strong>Email :</strong> ${currentUser.email}</p>
+                                   <p><strong>Ville :</strong> ${currentUser.city}</p>`;
+                    if (currentUser.children && currentUser.children.length > 0) {
+                        const childrenList = document.getElementById('childrenList');
+                        childrenList.innerHTML = '';
+                        currentUser.children.forEach(child => {
+                            const childItem = document.createElement('div');
+                            childItem.className = 'child-item';
+                            childItem.innerHTML = `<p>${child.name}, ${child.age} ans, ${child.grade}</p>`;
+                            childrenList.appendChild(childItem);
+                        });
+                    } else {
+                         document.getElementById('childrenList').innerHTML = '<p>Aucun enfant ajouté pour le moment.</p>';
+                    }
+                }
+                
+                profileContentDiv.innerHTML = contentHTML;
+            }
+
+            window.loadProfileForEdit = function(userType) {
+                document.getElementById('editParentForm').style.display = 'none';
+                document.getElementById('editTeacherForm').style.display = 'none';
+
+                if (userType === 'parent') {
+                    document.getElementById('editParentForm').style.display = 'block';
+                    document.getElementById('editParentName').value = currentUser.name;
+                    document.getElementById('editParentEmail').value = currentUser.email;
+                    // Charger la liste des villes pour l'édition si nécessaire
+                } else if (userType === 'teacher') {
+                    document.getElementById('editTeacherForm').style.display = 'block';
+                    document.getElementById('editTeacherName').value = currentUser.name;
+                    document.getElementById('editTeacherEmail').value = currentUser.email;
+                    document.getElementById('editTeacherSubject').value = currentUser.subject;
+                    document.getElementById('editTeacherBio').value = currentUser.bio;
+                    // Charger la liste des villes pour l'édition si nécessaire
+                }
+            }
+
+            window.saveProfileChanges = function() {
+                if (!currentUser) return;
+
+                if (currentUser.userType === 'parent') {
+                    const newName = document.getElementById('editParentName').value;
+                    const newCity = document.getElementById('editParentCity').value;
+                    currentUser.name = newName;
+                    if (newCity) currentUser.city = newCity;
+                    
+                } else if (currentUser.userType === 'teacher') {
+                    const newName = document.getElementById('editTeacherName').value;
+                    const newSubject = document.getElementById('editTeacherSubject').value;
+                    const newCity = document.getElementById('editTeacherCity').value;
+                    const newBio = document.getElementById('editTeacherBio').value;
+                    const newPhotoFile = document.getElementById('editTeacherPhoto').files[0];
+                    const newDiplomaFiles = document.getElementById('editTeacherDiplomas').files;
+
+                    currentUser.name = newName;
+                    currentUser.subject = newSubject;
+                    if (newCity) currentUser.city = newCity;
+                    currentUser.bio = newBio;
+                    if (newPhotoFile) {
+                        currentUser.photo = URL.createObjectURL(newPhotoFile);
+                    }
+                    if (newDiplomaFiles.length > 0) {
+                        currentUser.diplomas = Array.from(newDiplomaFiles).map(file => ({ name: file.name, url: URL.createObjectURL(file) }));
+                    }
+                }
+                
+                alert("Profil mis à jour avec succès !");
+                closeEditProfileModal();
+                displayUserProfile(); // Rafraîchir l'affichage du profil
+            }
+
             // Animation des statistiques
             animateValue('teacherCount', 0, 20025, 2000);
             animateValue('parentCount', 0, 45120, 2000);
