@@ -727,21 +727,46 @@
             margin-bottom: 1rem;
         }
 
-        .photo-upload-btn {
-            background-color: var(--light-bg);
-            color: var(--text-color);
-            border: 1px dashed var(--primary-color);
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .photo-upload-input {
+            display: none;
         }
 
-        .photo-upload-btn:hover {
-            background-color: rgba(74, 108, 247, 0.1);
+        .photo-upload-label {
+            display: block;
+            width: 150px;
+            height: 150px;
+            border: 2px dashed var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            margin-bottom: 1rem;
+        }
+
+        .photo-upload-label:hover {
+            border-color: var(--primary-dark);
+            background-color: rgba(74, 108, 247, 0.05);
+        }
+
+        .photo-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            position: relative;
+            z-index: 2;
         }
 
         .faq-container {
@@ -1162,11 +1187,11 @@
             <h2 class="section-title">Rejoignez-nous !</h2>
             <p class="section-subtitle">Inscrivez-vous en tant que parent pour trouver l'aide parfaite ou en tant qu'enseignant pour partager votre savoir.</p>
             <div class="tabs">
-                <button class="tab-btn active" onclick="showForm('parentForm')">Je suis un parent</button>
-                <button class="tab-btn" onclick="showForm('teacherForm')">Je suis un enseignant</button>
+                <button class="tab-btn active" data-target="parentForm">Je suis un parent</button>
+                <button class="tab-btn" data-target="teacherForm">Je suis un enseignant</button>
             </div>
             
-            <div id="parentForm" class="form-card active">
+            <div id="parentForm" class="form-card active-form">
                 <h3>Inscription Parent</h3>
                 <div class="form-group">
                     <label for="parentName">Nom & Prénom</label>
@@ -1281,8 +1306,13 @@
                         </select>
                 </div>
                 <div class="form-group">
-                    <label for="teacherPhoto">Photo de profil</label>
-                    <input type="file" id="teacherPhoto" accept="image/*">
+                    <label>Photo de profil</label>
+                    <input type="file" id="teacherPhoto" accept="image/*" class="photo-upload-input">
+                    <label for="teacherPhoto" class="photo-upload-label">
+                        <img id="teacherPhotoPreview" src="#" alt="Aperçu de la photo" class="photo-preview" style="display:none;">
+                        <span class="upload-icon"><i class="fas fa-camera"></i></span>
+                    </label>
+                    <p class="text-center" id="teacherPhotoText">Ajouter une photo de profil</p>
                 </div>
                 <div class="form-group">
                     <label for="teacherDiplomas">Diplômes (PDF)</label>
@@ -1315,9 +1345,9 @@
     <section id="profile">
         <div class="container">
             <div class="profile-tabs">
-                <button class="profile-tab-btn active" onclick="showProfileTab('profile-info')">Informations</button>
-                <button class="profile-tab-btn" onclick="showProfileTab('profile-children')">Mes enfants</button>
-                <button class="profile-tab-btn" onclick="showProfileTab('profile-bookings')">Réservations</button>
+                <button class="profile-tab-btn active" data-target="profile-info">Informations</button>
+                <button class="profile-tab-btn" data-target="profile-children">Mes enfants</button>
+                <button class="profile-tab-btn" data-target="profile-bookings">Réservations</button>
             </div>
             
             <div id="profile-info" class="profile-content active">
@@ -1422,8 +1452,13 @@
                         </select>
                 </div>
                 <div class="form-group">
-                    <label for="editTeacherPhoto">Photo de profil</label>
-                    <input type="file" id="editTeacherPhoto" accept="image/*">
+                    <label>Photo de profil</label>
+                    <input type="file" id="editTeacherPhoto" accept="image/*" class="photo-upload-input">
+                    <label for="editTeacherPhoto" class="photo-upload-label">
+                        <img id="editTeacherPhotoPreview" src="#" alt="Aperçu de la photo" class="photo-preview" style="display:none;">
+                        <span class="upload-icon"><i class="fas fa-camera"></i></span>
+                    </label>
+                    <p class="text-center" id="editTeacherPhotoText">Ajouter une photo de profil</p>
                 </div>
                 <div class="form-group">
                     <label for="editTeacherDiplomas">Diplômes (PDF)</label>
@@ -1600,32 +1635,30 @@
         let currentUser = null; // Simule l'utilisateur actuellement connecté
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialisation des onglets de profil et de formulaire
-            window.showForm = function(formId) {
-                document.querySelectorAll('.form-card').forEach(form => {
-                    form.style.display = 'none';
+            // Initialisation des onglets de formulaire d'inscription
+            document.querySelectorAll('.tabs .tab-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('.form-card').forEach(form => form.style.display = 'none');
+                    const targetForm = this.getAttribute('data-target');
+                    document.getElementById(targetForm).style.display = 'block';
                 });
-                document.getElementById(formId).style.display = 'block';
-                document.querySelectorAll('.tab-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                document.querySelector(`[onclick="showForm('${formId}')"]`).classList.add('active');
-            }
+            });
 
-            window.showProfileTab = function(tabId) {
-                document.querySelectorAll('.profile-content').forEach(tab => {
-                    tab.classList.remove('active');
+            // Initialisation des onglets de profil
+            document.querySelectorAll('.profile-tabs .profile-tab-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.profile-tabs .profile-tab-btn').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('.profile-content').forEach(content => content.classList.remove('active'));
+                    const targetContent = this.getAttribute('data-target');
+                    document.getElementById(targetContent).classList.add('active');
+                    if (targetContent === 'profile-info') {
+                        displayUserProfile();
+                    }
                 });
-                document.getElementById(tabId).classList.add('active');
-                document.querySelectorAll('.profile-tab-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                document.querySelector(`[onclick="showProfileTab('${tabId}')"]`).classList.add('active');
-
-                if (tabId === 'profile-info') {
-                    displayUserProfile();
-                }
-            }
+            });
 
             // Gestion de l'affichage des modals
             window.openLoginModal = () => document.getElementById('loginModal').style.display = 'flex';
@@ -1890,6 +1923,21 @@
                 profileContentDiv.innerHTML = contentHTML;
             }
 
+            window.onload = function() {
+                // Initialisation des onglets
+                const forms = document.querySelectorAll('.form-card');
+                if (forms.length > 0) {
+                    forms.forEach((form, index) => {
+                        if (index === 0) {
+                            form.style.display = 'block';
+                        } else {
+                            form.style.display = 'none';
+                        }
+                    });
+                }
+            };
+
+
             window.loadProfileForEdit = function(userType) {
                 document.getElementById('editParentForm').style.display = 'none';
                 document.getElementById('editTeacherForm').style.display = 'none';
@@ -1906,6 +1954,20 @@
                     document.getElementById('editTeacherSubject').value = currentUser.subject;
                     document.getElementById('editTeacherBio').value = currentUser.bio;
                     // Charger la liste des villes pour l'édition si nécessaire
+                    
+                    const editPhotoPreview = document.getElementById('editTeacherPhotoPreview');
+                    const editPhotoIcon = document.querySelector('#editTeacherForm .upload-icon');
+                    const editPhotoText = document.getElementById('editTeacherPhotoText');
+                    if (currentUser.photo) {
+                        editPhotoPreview.src = currentUser.photo;
+                        editPhotoPreview.style.display = 'block';
+                        editPhotoIcon.style.display = 'none';
+                        editPhotoText.textContent = 'Changer la photo';
+                    } else {
+                        editPhotoPreview.style.display = 'none';
+                        editPhotoIcon.style.display = 'block';
+                        editPhotoText.textContent = 'Ajouter une photo de profil';
+                    }
                 }
             }
 
@@ -1942,6 +2004,34 @@
                 closeEditProfileModal();
                 displayUserProfile(); // Rafraîchir l'affichage du profil
             }
+            
+            // Gestion de l'aperçu de la photo de profil
+            function handlePhotoUpload(input, preview, textElement) {
+                const file = input.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                        textElement.textContent = 'Changer la photo';
+                        document.querySelector(`label[for="${input.id}"] .upload-icon`).style.display = 'none';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.src = '#';
+                    preview.style.display = 'none';
+                    textElement.textContent = 'Ajouter une photo de profil';
+                    document.querySelector(`label[for="${input.id}"] .upload-icon`).style.display = 'block';
+                }
+            }
+
+            document.getElementById('teacherPhoto').addEventListener('change', function() {
+                handlePhotoUpload(this, document.getElementById('teacherPhotoPreview'), document.getElementById('teacherPhotoText'));
+            });
+
+            document.getElementById('editTeacherPhoto').addEventListener('change', function() {
+                handlePhotoUpload(this, document.getElementById('editTeacherPhotoPreview'), document.getElementById('editTeacherPhotoText'));
+            });
 
             // Animation des statistiques
             animateValue('teacherCount', 0, 20025, 2000);
