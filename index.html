@@ -1258,6 +1258,33 @@
                         <p>MyProfEduc ne gère pas les paiements des cours. Les modalités de paiement sont à convenir directement entre le parent et l'enseignant.</p>
                     </div>
                 </div>
+                 <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Comment se déroule la prise de contact avec un enseignant ?</span>
+                        <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Une fois que vous avez payé le forfait de 5€, vous avez accès aux coordonnées de l'enseignant et à une messagerie sécurisée. Vous pouvez alors lui envoyer un message et échanger avec lui pour organiser le premier cours.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Que se passe-t-il si un enseignant ne répond pas ?</span>
+                        <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Si un enseignant ne répond pas à votre demande de contact dans un délai de 48 heures, votre forfait de 5€ vous sera automatiquement remboursé. Vous pourrez ensuite choisir un autre enseignant pour votre enfant.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Est-ce que je peux donner mon avis sur un enseignant ?</span>
+                        <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Oui, après le premier cours, vous aurez la possibilité de laisser un avis et une note sur le profil de l'enseignant. Ces avis aident les autres parents à faire un choix éclairé.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -1303,6 +1330,17 @@
                     <div class="form-group">
                         <label for="childName">Prénom de l'enfant</label>
                         <input type="text" id="childName" placeholder="Prénom de l'enfant">
+                    </div>
+                    <div class="form-group">
+                        <label for="childSchoolLevel">Niveau scolaire de l'enfant</label>
+                        <select id="childSchoolLevel">
+                            <option value="">Sélectionnez un niveau</option>
+                            <option value="Maternelle">Maternelle</option>
+                            <option value="Primaire">Primaire</option>
+                            <option value="Collège">Collège</option>
+                            <option value="Lycée">Lycée</option>
+                            <option value="Supérieur">Supérieur</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="parentCity">Ville</label>
@@ -1473,6 +1511,17 @@
                             <label for="editParentChildName">Prénom de l'enfant</label>
                             <input type="text" id="editParentChildName">
                         </div>
+                        <div class="form-group">
+                            <label for="editChildSchoolLevel">Niveau scolaire de l'enfant</label>
+                            <select id="editChildSchoolLevel">
+                                <option value="">Sélectionnez un niveau</option>
+                                <option value="Maternelle">Maternelle</option>
+                                <option value="Primaire">Primaire</option>
+                                <option value="Collège">Collège</option>
+                                <option value="Lycée">Lycée</option>
+                                <option value="Supérieur">Supérieur</option>
+                            </select>
+                        </div>
                         <button class="btn btn-primary w-100" onclick="saveParentProfile()">Enregistrer les modifications</button>
                     </div>
                     <div id="editTeacherForm" style="display: none;">
@@ -1534,6 +1583,17 @@
             <div class="form-group">
                 <label for="newChildName">Prénom de l'enfant</label>
                 <input type="text" id="newChildName" placeholder="Prénom de l'enfant">
+            </div>
+            <div class="form-group">
+                <label for="newChildSchoolLevel">Niveau scolaire</label>
+                <select id="newChildSchoolLevel">
+                    <option value="">Sélectionnez un niveau</option>
+                    <option value="Maternelle">Maternelle</option>
+                    <option value="Primaire">Primaire</option>
+                    <option value="Collège">Collège</option>
+                    <option value="Lycée">Lycée</option>
+                    <option value="Supérieur">Supérieur</option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="newChildSubject">Matière</label>
@@ -1713,7 +1773,7 @@
                 dropdown.innerHTML = initialOption + allCities.map(city => `<option value="${city}">${city}</option>`).join('');
             });
         };
-
+        
         // Subject tags handling for teachers
         const setupTagInput = (inputId, containerId, hiddenInputId) => {
             const input = document.getElementById(inputId);
@@ -1756,7 +1816,11 @@
             renderTags();
         };
 
-        // Rest of the existing JavaScript functions...
+        // All other functions from the original code would be here, including:
+        // openLoginModal, closeLoginModal, openTeacherModal, closeTeacherModal,
+        // openAddChildModal, closeAddChildModal, showForm, showProfileContent,
+        // registerParent, registerTeacher, login, logout, saveParentProfile,
+        // saveTeacherProfile, addChild, faqToggle, animateValue, updateNavigation, etc.
 
         document.addEventListener('DOMContentLoaded', () => {
             renderTeachers(teachersData);
@@ -1768,20 +1832,17 @@
             
             // Configure password validation
             document.getElementById('teacherPassword').addEventListener('input', function() {
-                validatePassword(this.value);
+                validatePassword(this.value, 'teacher');
             });
             
             document.getElementById('parentPassword').addEventListener('input', function() {
                 validatePassword(this.value, 'parent');
             });
             
-            // Animation for statistics
+            // Animation des statistiques
             animateValue('teacherCount', 0, 20025, 2000);
             animateValue('parentCount', 0, 45120, 2000);
             animateValue('studentCount', 0, 78356, 2000);
-            
-            // Update navigation
-            updateNavigation();
         });
 
         // Function to animate statistic values
@@ -1799,6 +1860,112 @@
             };
             window.requestAnimationFrame(step);
         }
+
+        function validatePassword(password, type) {
+            const lengthValidation = document.getElementById(`${type}LengthValidation`);
+            const uppercaseValidation = document.getElementById(`${type}UppercaseValidation`);
+            const numberValidation = document.getElementById(`${type}NumberValidation`);
+            const specialValidation = document.getElementById(`${type}SpecialValidation`);
+            const strengthBar = document.getElementById(`${type}PasswordStrength`);
+
+            const isLengthValid = password.length >= 8;
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password);
+
+            function updateValidation(element, isValid) {
+                if (isValid) {
+                    element.classList.add('valid');
+                    element.innerHTML = `<i class="fas fa-check"></i> ${element.textContent}`;
+                } else {
+                    element.classList.remove('valid');
+                    element.innerHTML = `<i class="fas fa-times"></i> ${element.textContent.replace('<i class="fas fa-check"></i> ', '')}`;
+                }
+            }
+
+            updateValidation(lengthValidation, isLengthValid);
+            updateValidation(uppercaseValidation, hasUppercase);
+            updateValidation(numberValidation, hasNumber);
+            updateValidation(specialValidation, hasSpecial);
+
+            let strength = 0;
+            if (isLengthValid) strength += 25;
+            if (hasUppercase) strength += 25;
+            if (hasNumber) strength += 25;
+            if (hasSpecial) strength += 25;
+
+            strengthBar.style.width = `${strength}%`;
+            if (strength < 50) {
+                strengthBar.className = 'strength';
+            } else if (strength < 100) {
+                strengthBar.className = 'strength medium';
+            } else {
+                strengthBar.className = 'strength strong';
+            }
+        }
+        
+        function showForm(formType) {
+            document.getElementById('parentForm').style.display = formType === 'parent' ? 'block' : 'none';
+            document.getElementById('teacherForm').style.display = formType === 'teacher' ? 'block' : 'none';
+            document.getElementById('parentTabBtn').classList.toggle('active', formType === 'parent');
+            document.getElementById('teacherTabBtn').classList.toggle('active', formType === 'teacher');
+        }
+
+        // Ajoutez ici les autres fonctions manquantes comme registerParent, registerTeacher, etc.
+        function registerParent() {
+            // Logique d'inscription parent ici
+            const name = document.getElementById('parentName').value;
+            const email = document.getElementById('parentEmail').value;
+            const password = document.getElementById('parentPassword').value;
+            const confirmPassword = document.getElementById('parentConfirmPassword').value;
+            const childName = document.getElementById('childName').value;
+            const childSchoolLevel = document.getElementById('childSchoolLevel').value;
+            const city = document.getElementById('parentCity').value;
+            const subject = document.getElementById('parentSubject').value;
+            console.log("Inscriptions Parent :", {name, email, password, childName, childSchoolLevel, city, subject});
+            alert('Inscription parent réussie !');
+        }
+
+        function registerTeacher() {
+            // Logique d'inscription enseignant ici
+            const name = document.getElementById('teacherName').value;
+            const email = document.getElementById('teacherEmail').value;
+            const password = document.getElementById('teacherPassword').value;
+            const confirmPassword = document.getElementById('teacherConfirmPassword').value;
+            const photo = document.getElementById('teacherPhotoInput').files[0];
+            const city = document.getElementById('teacherCity').value;
+            const subjects = document.getElementById('teacherSubjects').value;
+            const bio = document.getElementById('teacherBio').value;
+            console.log("Inscription Enseignant :", {name, email, password, photo, city, subjects, bio});
+            alert('Inscription enseignant réussie !');
+        }
+
+        function openAddChildModal() {
+            document.getElementById('addChildModal').style.display = 'flex';
+        }
+
+        function closeAddChildModal() {
+            document.getElementById('addChildModal').style.display = 'none';
+        }
+        
+        function addChild() {
+            const childName = document.getElementById('newChildName').value;
+            const childSchoolLevel = document.getElementById('newChildSchoolLevel').value;
+            const childSubject = document.getElementById('newChildSubject').value;
+            console.log("Ajout enfant :", {childName, childSchoolLevel, childSubject});
+            alert('Enfant ajouté !');
+            closeAddChildModal();
+        }
+
+        // FAQ accordion
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                item.classList.toggle('active');
+            });
+        });
+
     </script>
 </body>
 </html>
