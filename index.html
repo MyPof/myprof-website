@@ -534,7 +534,7 @@
         .modal {
             display: none;
             position: fixed;
-            z-index: 1;
+            z-index: 1050;
             left: 0;
             top: 0;
             width: 100%;
@@ -546,10 +546,10 @@
 
         .modal-content {
             background-color: #fff;
-            margin: 10% auto;
+            margin: 5% auto;
             padding: 2rem;
             border-radius: var(--border-radius);
-            max-width: 450px;
+            max-width: 500px;
             box-shadow: var(--hover-shadow);
             position: relative;
             text-align: center;
@@ -605,6 +605,32 @@
         .modal-footer .btn-primary {
             width: 100%;
         }
+        
+        /* Edit Profile Modal */
+        .edit-profile-form {
+            text-align: left;
+        }
+
+        .profile-photo-edit-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .profile-photo-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .photo-actions {
+            display: flex;
+            gap: 1rem;
+        }
 
         /* Password validation styles */
         .password-validation {
@@ -649,8 +675,9 @@
         }
         
         /* Profile styles */
-        #profile-section {
+        #profile {
             padding: 5rem 0;
+            display: none; /* Masqué par défaut */
         }
 
         .profile-content {
@@ -987,7 +1014,7 @@
                     <li><a href="#faq">FAQ</a></li>
                     <li id="loginNavItem"><a href="#" onclick="openLoginModal()">Connexion</a></li>
                     <li id="profileNavItem" style="display: none;"><a href="#profile">Mon profil</a></li>
-                    <li id="logoutNavItem" style="display: none;"><a href="#" onclick="logout()">Déconnexion</a></li>
+                    <li id="logoutNavItem" style="display: none;"><a href="#" onclick="logoutUser()">Déconnexion</a></li>
                 </ul>
             </nav>
         </div>
@@ -1265,6 +1292,28 @@
         </div>
     </section>
 
+    <section id="profile">
+        <div class="container">
+            <h2 class="section-title">Mon Profil</h2>
+            <div class="profile-content">
+                <div class="profile-header">
+                    <div class="profile-photo-container">
+                        <img src="" alt="Photo de profil" class="profile-photo" id="profilePhoto">
+                    </div>
+                    <h3 class="profile-name" id="profileName"></h3>
+                    <p class="profile-bio" id="profileBio"></p>
+                </div>
+                <div class="profile-info" id="profileInfo">
+                    </div>
+                <div class="profile-actions">
+                    <button class="btn btn-primary" onclick="openEditProfileModal()">
+                        <i class="fas fa-edit"></i> Modifier le profil
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <div id="loginModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeLoginModal()">&times;</span>
@@ -1303,6 +1352,89 @@
         </div>
     </div>
     
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeEditProfileModal()">&times;</span>
+            <div class="modal-icon"><i class="fas fa-edit"></i></div>
+            <div class="modal-title">Modifier le profil</div>
+            <div class="modal-body">
+                <form id="editProfileForm" class="edit-profile-form" onsubmit="return saveProfileChanges(event)">
+                    <div class="profile-photo-edit-container">
+                        <img id="editProfilePhotoPreview" class="profile-photo-preview" src="" alt="Photo de profil">
+                        <div class="photo-actions">
+                            <input type="file" id="editProfilePhotoInput" accept="image/*" style="display: none;">
+                            <label for="editProfilePhotoInput" class="btn btn-secondary btn-sm"><i class="fas fa-upload"></i> Changer</label>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removeProfilePhoto()"><i class="fas fa-trash"></i> Supprimer</button>
+                        </div>
+                    </div>
+
+                    <div id="teacherEditFields" style="display:none;">
+                        <div class="form-group">
+                            <label for="editTeacherName">Nom & Prénom</label>
+                            <input type="text" id="editTeacherName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTeacherCity">Ville</label>
+                            <input type="text" id="editTeacherCity" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTeacherSubject">Matière principale</label>
+                            <select id="editTeacherSubject" required>
+                                <option value="Mathématiques">Mathématiques</option>
+                                <option value="Français">Français</option>
+                                <option value="Physique-Chimie">Physique-Chimie</option>
+                                <option value="Anglais">Anglais</option>
+                                <option value="Histoire-Géographie">Histoire-Géographie</option>
+                                <option value="SVT">SVT</option>
+                                <option value="Philosophie">Philosophie</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTeacherBio">Présentation (Bio)</label>
+                            <textarea id="editTeacherBio" rows="4" required></textarea>
+                        </div>
+                    </div>
+
+                    <div id="parentEditFields" style="display:none;">
+                        <div class="form-group">
+                            <label for="editParentName">Nom & Prénom</label>
+                            <input type="text" id="editParentName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editChildName">Nom de l'enfant</label>
+                            <input type="text" id="editChildName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editChildAge">Âge de l'enfant</label>
+                            <input type="number" id="editChildAge" min="5" max="18" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editChildGrade">Niveau scolaire</label>
+                            <select id="editChildGrade" required>
+                                <option value="CP">CP</option>
+                                <option value="CE1">CE1</option>
+                                <option value="CE2">CE2</option>
+                                <option value="CM1">CM1</option>
+                                <option value="CM2">CM2</option>
+                                <option value="6ème">6ème</option>
+                                <option value="5ème">5ème</option>
+                                <option value="4ème">4ème</option>
+                                <option value="3ème">3ème</option>
+                                <option value="2nde">2nde</option>
+                                <option value="1ère">1ère</option>
+                                <option value="Terminale">Terminale</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <section id="faq" class="light">
         <div class="container">
             <h2 class="section-title">Foire aux questions</h2>
@@ -1466,6 +1598,9 @@
                 bio: "Professeur agrégé d'histoire-géographie, j'enseigne depuis 12 ans. Ma méthode aide les élèves à retenir les dates et concepts clés."
             }
         ];
+        
+        // Default profile picture
+        const defaultProfilePhoto = 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=761&q=80';
 
         // Liste des villes françaises (sélection des plus grandes)
         const frenchCities = [
@@ -1532,7 +1667,7 @@
 
         // Fonction pour remplir les listes déroulantes des villes
         function populateCityDropdowns() {
-            const cityDropdowns = document.querySelectorAll('#searchCity');
+            const cityDropdowns = document.querySelectorAll('#searchCity, #editTeacherCity, #editParentCity');
             cityDropdowns.forEach(dropdown => {
                 frenchCities.forEach(city => {
                     const option = document.createElement('option');
@@ -1615,111 +1750,297 @@
         
         function closeSuccessModal() {
             document.getElementById('successModal').style.display = 'none';
-            // Simuler une connexion réussie
-            loginUser();
+        }
+
+        function openEditProfileModal() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user) {
+                alert("Veuillez vous connecter pour modifier votre profil.");
+                return;
+            }
+
+            // Populate the form fields based on user type
+            document.getElementById('teacherEditFields').style.display = 'none';
+            document.getElementById('parentEditFields').style.display = 'none';
+
+            if (user.role === 'teacher') {
+                document.getElementById('teacherEditFields').style.display = 'block';
+                document.getElementById('editTeacherName').value = user.name;
+                document.getElementById('editTeacherCity').value = user.city;
+                document.getElementById('editTeacherSubject').value = user.subject;
+                document.getElementById('editTeacherBio').value = user.bio;
+            } else if (user.role === 'parent') {
+                document.getElementById('parentEditFields').style.display = 'block';
+                document.getElementById('editParentName').value = user.name;
+                document.getElementById('editChildName').value = user.childName;
+                document.getElementById('editChildAge').value = user.childAge;
+                document.getElementById('editChildGrade').value = user.childGrade;
+            }
+
+            document.getElementById('editProfilePhotoPreview').src = user.photo || defaultProfilePhoto;
+            document.getElementById('editProfileModal').style.display = 'block';
+        }
+
+        function closeEditProfileModal() {
+            document.getElementById('editProfileModal').style.display = 'none';
         }
 
         // Fonction pour simuler la connexion
-        function loginUser() {
-            // Dans une vraie application, on stockerait les infos de l'utilisateur
-            // Pour la démo, on utilise le localStorage
-            localStorage.setItem('currentUser', 'true');
-            localStorage.setItem('userName', 'Utilisateur');
+        function loginUser(user) {
+            localStorage.setItem('currentUser', JSON.stringify(user));
             updateNavigation();
+            renderProfile();
         }
 
         // Fonction pour simuler la déconnexion
-        function logout() {
+        function logoutUser() {
             localStorage.removeItem('currentUser');
-            localStorage.removeItem('userName');
             updateNavigation();
-            // Optionnel: rediriger vers la page d'accueil ou recharger la page
+            // Optionnel: rediriger vers la page d'accueil
             window.location.href = "#home";
             alert("Vous avez été déconnecté.");
+        }
+        
+        // Fonction pour simuler l'authentification
+        function login(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // Simuler la recherche d'un utilisateur
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                loginUser(user);
+                closeLoginModal();
+                window.location.href = "#profile";
+                alert(`Connexion réussie pour ${user.name} !`);
+            } else {
+                alert("Email ou mot de passe incorrect.");
+            }
+            return false;
         }
 
         // Fonction pour obtenir l'utilisateur actuel (simulation)
         function getCurrentUser() {
-            return localStorage.getItem('currentUser');
+            return JSON.parse(localStorage.getItem('currentUser'));
         }
 
         // Fonction pour mettre à jour la navigation
         function updateNavigation() {
+            const user = getCurrentUser();
             const loginNavItem = document.getElementById('loginNavItem');
             const profileNavItem = document.getElementById('profileNavItem');
             const logoutNavItem = document.getElementById('logoutNavItem');
 
-            if (getCurrentUser()) {
+            if (user) {
                 loginNavItem.style.display = 'none';
                 profileNavItem.style.display = 'list-item';
                 logoutNavItem.style.display = 'list-item';
+                document.getElementById('profile').style.display = 'block';
             } else {
                 loginNavItem.style.display = 'list-item';
                 profileNavItem.style.display = 'none';
                 logoutNavItem.style.display = 'none';
+                document.getElementById('profile').style.display = 'none';
             }
         }
         
         // Nouvelle fonction pour gérer l'inscription d'un enseignant
         function registerTeacher(event) {
-            event.preventDefault(); // Empêche l'envoi du formulaire par défaut
-            
+            event.preventDefault();
             const form = document.getElementById('teacherRegistrationForm');
             const password = form.teacherPassword.value;
             const confirmPassword = form.teacherConfirmPassword.value;
             
-            // Validation simple
             if (password !== confirmPassword) {
                 alert("Les mots de passe ne correspondent pas.");
                 return false;
             }
             
-            // Vérifier la force du mot de passe
-            const lengthValid = password.length >= 8;
-            const uppercaseValid = /[A-Z]/.test(password);
-            const numberValid = /[0-9]/.test(password);
-            const specialValid = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password);
+            const hasLength = password.length >= 8;
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password);
             
-            if (!lengthValid || !uppercaseValid || !numberValid || !specialValid) {
+            if (!hasLength || !hasUppercase || !hasNumber || !hasSpecial) {
                 alert("Le mot de passe ne respecte pas tous les critères de sécurité.");
                 return false;
             }
             
-            // Simuler une inscription réussie
+            const newTeacher = {
+                id: Date.now(), // Simuler un ID unique
+                name: form.teacherName.value,
+                email: form.teacherEmail.value,
+                password: password,
+                role: 'teacher',
+                photo: defaultProfilePhoto,
+                subject: form.teacherSubject.value,
+                city: form.teacherCity.value,
+                bio: form.teacherBio.value
+            };
+
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            users.push(newTeacher);
+            localStorage.setItem('users', JSON.stringify(users));
+
             openSuccessModal();
             return true;
         }
 
         // Nouvelle fonction pour gérer l'inscription d'un parent
         function registerParent(event) {
-            event.preventDefault(); // Empêche l'envoi du formulaire par défaut
-            
+            event.preventDefault();
             const form = document.getElementById('parentRegistrationForm');
             const password = form.parentPassword.value;
             const confirmPassword = form.parentConfirmPassword.value;
             
-            // Validation simple
             if (password !== confirmPassword) {
                 alert("Les mots de passe ne correspondent pas.");
                 return false;
             }
             
-            // Vérifier la force du mot de passe
-            const lengthValid = password.length >= 8;
-            const uppercaseValid = /[A-Z]/.test(password);
-            const numberValid = /[0-9]/.test(password);
-            const specialValid = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password);
+            const hasLength = password.length >= 8;
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password);
             
-            if (!lengthValid || !uppercaseValid || !numberValid || !specialValid) {
+            if (!hasLength || !hasUppercase || !hasNumber || !hasSpecial) {
                 alert("Le mot de passe ne respecte pas tous les critères de sécurité.");
                 return false;
             }
 
-            // Simuler une inscription réussie
+            const newParent = {
+                id: Date.now(),
+                name: form.parentName.value,
+                email: form.parentEmail.value,
+                password: password,
+                role: 'parent',
+                photo: defaultProfilePhoto,
+                childName: form.childName.value,
+                childAge: form.childAge.value,
+                childGrade: form.childGrade.value
+            };
+
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            users.push(newParent);
+            localStorage.setItem('users', JSON.stringify(users));
+
             openSuccessModal();
             return true;
         }
 
+        // Fonction pour afficher le profil de l'utilisateur
+        function renderProfile() {
+            const user = getCurrentUser();
+            const profileSection = document.getElementById('profile');
+            if (!user) {
+                profileSection.style.display = 'none';
+                return;
+            }
+
+            profileSection.style.display = 'block';
+            document.getElementById('profileName').textContent = user.name;
+            document.getElementById('profilePhoto').src = user.photo || defaultProfilePhoto;
+            
+            const profileInfo = document.getElementById('profileInfo');
+            profileInfo.innerHTML = '';
+            
+            if (user.role === 'teacher') {
+                document.getElementById('profileBio').textContent = user.bio;
+                profileInfo.innerHTML = `
+                    <div class="info-item">
+                        <h4>Matière principale</h4>
+                        <p>${user.subject}</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>Ville</h4>
+                        <p>${user.city}</p>
+                    </div>
+                `;
+            } else if (user.role === 'parent') {
+                document.getElementById('profileBio').textContent = 'Parent d\'élève';
+                profileInfo.innerHTML = `
+                    <div class="info-item">
+                        <h4>Nom de l'enfant</h4>
+                        <p>${user.childName}</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>Âge de l'enfant</h4>
+                        <p>${user.childAge} ans</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>Niveau scolaire</h4>
+                        <p>${user.childGrade}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Fonction pour sauvegarder les changements de profil
+        function saveProfileChanges(event) {
+            event.preventDefault();
+            let user = getCurrentUser();
+            if (!user) {
+                alert("Erreur: Utilisateur non connecté.");
+                return;
+            }
+            
+            if (user.role === 'teacher') {
+                user.name = document.getElementById('editTeacherName').value;
+                user.city = document.getElementById('editTeacherCity').value;
+                user.subject = document.getElementById('editTeacherSubject').value;
+                user.bio = document.getElementById('editTeacherBio').value;
+            } else if (user.role === 'parent') {
+                user.name = document.getElementById('editParentName').value;
+                user.childName = document.getElementById('editChildName').value;
+                user.childAge = document.getElementById('editChildAge').value;
+                user.childGrade = document.getElementById('editChildGrade').value;
+            }
+
+            // Save the updated photo URL if one was selected
+            const newPhotoURL = document.getElementById('editProfilePhotoInput').dataset.url;
+            if (newPhotoURL) {
+                user.photo = newPhotoURL;
+            }
+            
+            // Update the user in localStorage
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            
+            // Update the users array as well (for login to work later)
+            const allUsers = JSON.parse(localStorage.getItem('users'));
+            const userIndex = allUsers.findIndex(u => u.email === user.email);
+            if (userIndex !== -1) {
+                allUsers[userIndex] = user;
+                localStorage.setItem('users', JSON.stringify(allUsers));
+            }
+
+            closeEditProfileModal();
+            renderProfile();
+            alert("Votre profil a été mis à jour avec succès !");
+            return false;
+        }
+
+        // Handle profile photo upload
+        document.getElementById('editProfilePhotoInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const newPhotoURL = e.target.result;
+                    document.getElementById('editProfilePhotoPreview').src = newPhotoURL;
+                    document.getElementById('editProfilePhotoInput').dataset.url = newPhotoURL; // Store URL for saving
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function removeProfilePhoto() {
+            document.getElementById('editProfilePhotoPreview').src = defaultProfilePhoto;
+            document.getElementById('editProfilePhotoInput').dataset.url = defaultProfilePhoto;
+        }
+        
         // Gestion de l'upload de fichiers pour l'enseignant
         const diplomaUpload = document.getElementById('diplomaUpload');
         const diplomaList = document.getElementById('diplomaList');
@@ -1758,13 +2079,11 @@
                 validatePassword(this.value, 'parent');
             });
             
-            // Vérifier si l'utilisateur est déjà connecté
-            const user = getCurrentUser();
-            if (user) {
-                document.getElementById('loginNavItem').style.display = 'none';
-                document.getElementById('profileNavItem').style.display = 'list-item';
-                document.getElementById('logoutNavItem').style.display = 'list-item';
-            }
+            // Mettre à jour la navigation
+            updateNavigation();
+            
+            // Afficher le profil si l'utilisateur est connecté
+            renderProfile();
             
             // Animation des statistiques
             animateValue('teacherCount', 0, 20025, 2000);
