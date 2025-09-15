@@ -1023,9 +1023,30 @@
             max-width: 500px;
             margin: 0 auto;
         }
+
+        /* Local mode indicator */
+        .local-mode {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 50px;
+            font-size: 14px;
+            z-index: 9999;
+            box-shadow: 0 4px 12px rgba(74, 108, 247, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
     </style>
 </head>
 <body>
+    <div class="local-mode">
+        <i class="fas fa-laptop-house"></i> Mode local actif
+    </div>
+
     <header id="header">
         <div class="container header-content">
             <a href="#" class="logo">
@@ -1133,7 +1154,6 @@
                     <label for="searchCity">Ville</label>
                     <select id="searchCity">
                         <option value="">Toutes les villes</option>
-                        <!-- Les villes seront ajoutées dynamiquement -->
                     </select>
                 </div>
                 <div class="filter-group">
@@ -1147,7 +1167,6 @@
                 </div>
             </div>
             <div class="teacher-list" id="teacherList">
-                <!-- Les enseignants seront chargés ici -->
             </div>
         </div>
     </section>
@@ -1162,7 +1181,7 @@
                         <i class="fas fa-euro-sign"></i>
                     </div>
                     <h3>Économies garanties</h3>
-                    <p>En supprimant les intermédiaires, nous réduisons les coûts de 30% en moyenne pour les familles, tout en augmentant les revenus des enseignants.</p>
+                    <p>En supprimant les intermédiaires, nous réduisons les coûts de 30% en moyenne pour les familles, tout en augmenting les revenus des enseignants.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
@@ -1350,7 +1369,6 @@
                     <label for="teacherCity">Ville</label>
                     <select id="teacherCity">
                         <option value="">Sélectionnez votre ville</option>
-                        <!-- Les villes seront ajoutées dynamiquement -->
                     </select>
                 </div>
                 
@@ -1441,7 +1459,6 @@
                     <label for="parentCity">Ville</label>
                     <select id="parentCity">
                         <option value="">Sélectionnez votre ville</option>
-                        <!-- Les villes seront ajoutées dynamiquement -->
                     </select>
                 </div>
                 
@@ -1561,9 +1578,9 @@
                     <h4>MyProfEduc</h4>
                     <p>La plateforme qui connecte directement les familles avec les meilleurs enseignants pour un soutien scolaire personnalisé et abordable.</p>
                     <div class="social-links">
-                        <a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://www.instagram.com/myprofeduc/" target="_blank"><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.tiktok.com/" target="_blank"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" onclick="showLocalMessage('Facebook')"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" onclick="showLocalMessage('Instagram')"><i class="fab fa-instagram"></i></a>
+                        <a href="#" onclick="showLocalMessage('TikTok')"><i class="fab fa-tiktok"></i></a>
                     </div>
                 </div>
                 <div class="footer-col">
@@ -1580,9 +1597,9 @@
                     <h4>Support</h4>
                     <div class="footer-links">
                         <a href="#contact">Contact</a>
-                        <a href="#">Centre d'aide</a>
-                        <a href="#">Conditions d'utilisation</a>
-                        <a href="#">Politique de confidentialité</a>
+                        <a href="#" onclick="showLocalMessage('Centre d\\'aide')">Centre d'aide</a>
+                        <a href="#" onclick="showLocalMessage('Conditions d\\'utilisation')">Conditions d'utilisation</a>
+                        <a href="#" onclick="showLocalMessage('Politique de confidentialité')">Politique de confidentialité</a>
                     </div>
                 </div>
             </div>
@@ -1699,7 +1716,7 @@
                         <img src="${teacher.photo}" alt="${teacher.name}" class="teacher-photo">
                         <div class="teacher-overlay">
                             <h3 class="teacher-name">${teacher.name}</h3>
-                            <p class="teacher-subject">${teacher.subject}</p>
+                            <p class="teacher-subsubject">${teacher.subject}</p>
                         </div>
                     </div>
                     <div class="teacher-info">
@@ -1757,6 +1774,12 @@
             
             citySelects.forEach(select => {
                 if (select) {
+                    // Vider les options existantes (sauf la première)
+                    while (select.options.length > 1) {
+                        select.remove(1);
+                    }
+                    
+                    // Ajouter les villes
                     frenchCities.forEach(city => {
                         const option = document.createElement('option');
                         option.value = city;
@@ -2088,6 +2111,11 @@
         // Fonction pour renvoyer l'email de vérification
         function resendVerification() {
             alert('Email de vérification renvoyé !');
+        }
+
+        // Fonction pour afficher un message en mode local
+        function showLocalMessage(service) {
+            alert(`Fonctionnalité ${service} en mode local. En production, cela redirigerait vers le service approprié.`);
         }
 
         // Initialisation au chargement de la page
