@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyProfEduc - Solution de Problèmes d'Accès</title>
+    <title>MyProfEduc - Diagnostic Backend</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -11,8 +11,13 @@
             --primary-color: #4a6cf7;
             --primary-dark: #3a56d4;
             --accent-color: #ffc107;
+            --success-color: #198754;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
             --light-bg: #f8f9fa;
+            --dark-bg: #1e293b;
             --text-color: #2d3748;
+            --text-light: #718096;
             --card-shadow: 0 10px 20px rgba(0,0,0,0.05);
             --border-radius: 12px;
         }
@@ -25,11 +30,12 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: var(--light-bg);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
             color: var(--text-color);
             line-height: 1.6;
             margin: 0;
             padding: 0;
+            min-height: 100vh;
         }
 
         .container {
@@ -38,78 +44,80 @@
             padding: 0 1.5rem;
         }
 
-        .section-title {
+        header {
+            background: var(--primary-color);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .logo {
             font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            text-align: center;
             margin-bottom: 1rem;
-            position: relative;
         }
 
-        .section-title:after {
-            content: '';
-            display: block;
-            width: 80px;
-            height: 4px;
-            background: var(--accent-color);
-            margin: 0.5rem auto 1.5rem;
-            border-radius: 2px;
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
         }
 
-        .section-subtitle {
-            text-align: center;
-            color: #718096;
-            margin-bottom: 3rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .card {
-            background-color: white;
-            padding: 2.5rem;
+        .section {
+            background: white;
             border-radius: var(--border-radius);
             box-shadow: var(--card-shadow);
+            padding: 2rem;
             margin-bottom: 2rem;
         }
 
-        .problem-solution {
+        .section-title {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--accent-color);
+            display: inline-block;
+        }
+
+        .problem-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        @media (max-width: 768px) {
-            .problem-solution {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .problem-card, .solution-card {
-            padding: 1.5rem;
-            border-radius: var(--border-radius);
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
         }
 
         .problem-card {
-            background-color: #ffeeee;
-            border-left: 4px solid #dc3545;
+            background: #fff;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            border-left: 4px solid var(--danger-color);
+            transition: transform 0.3s ease;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-5px);
         }
 
         .solution-card {
-            background-color: #eeffef;
-            border-left: 4px solid #198754;
+            background: #fff;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            border-left: 4px solid var(--success-color);
         }
 
-        .step {
+        .solution-step {
             display: flex;
             align-items: flex-start;
             margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
         }
 
         .step-number {
-            background-color: var(--primary-color);
+            background: var(--primary-color);
             color: white;
             width: 30px;
             height: 30px;
@@ -121,291 +129,376 @@
             flex-shrink: 0;
         }
 
-        .test-button {
+        .status {
             display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 0.875rem 2rem;
+            padding: 0.35rem 0.75rem;
             border-radius: 50px;
-            text-decoration: none;
-            font-weight: 500;
-            margin-top: 1rem;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-        }
-
-        .test-button:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-3px);
-        }
-
-        .status-indicator {
-            display: inline-block;
-            padding: 0.35rem 0.65rem;
-            border-radius: 50px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 600;
             margin-left: 0.5rem;
         }
 
-        .status-working {
-            background-color: #198754;
+        .status-success {
+            background: var(--success-color);
             color: white;
         }
 
-        .status-broken {
-            background-color: #dc3545;
+        .status-warning {
+            background: var(--warning-color);
+            color: black;
+        }
+
+        .status-danger {
+            background: var(--danger-color);
             color: white;
         }
 
-        .connection-test {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background-color: white;
+        .card {
+            background: white;
             border-radius: var(--border-radius);
             box-shadow: var(--card-shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .backend-test {
+            background: var(--light-bg);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-top: 1.5rem;
+        }
+
+        .test-button {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .test-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
         }
 
         .test-result {
-            margin-top: 1rem;
+            margin-top: 1.5rem;
             padding: 1rem;
             border-radius: var(--border-radius);
             display: none;
         }
 
         .test-success {
-            background-color: #d4edda;
+            background: #d4edda;
             color: #155724;
-            border-left: 4px solid #198754;
+            border-left: 4px solid var(--success-color);
         }
 
         .test-failure {
-            background-color: #f8d7da;
+            background: #f8d7da;
             color: #721c24;
-            border-left: 4px solid #dc3545;
+            border-left: 4px solid var(--danger-color);
         }
 
-        .faq-item {
-            margin-bottom: 1.5rem;
+        .architecture-diagram {
+            width: 100%;
+            max-width: 800px;
+            margin: 2rem auto;
+            display: block;
         }
 
-        .faq-question {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            color: var(--text-light);
+            border-top: 1px solid #e2e8f0;
+        }
+
+        @media (max-width: 768px) {
+            .problem-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1>MyProfEduc - Diagnostic Backend</h1>
+            <p>Problèmes et solutions pour l'accès à myprofeduc.fr</p>
+        </div>
+    </header>
+
     <div class="container">
-        <header style="text-align: center; padding: 2rem 0;">
-            <h1 style="color: var(--primary-color); margin-bottom: 1rem;">
-                <i class="fas fa-graduation-cap"></i> MyProfEduc
-            </h1>
-            <p>Plateforme de mise en relation entre enseignants et élèves</p>
-        </header>
+        <div class="section">
+            <h2 class="section-title">Problème de backend détecté</h2>
+            <p>Votre site myprofeduc.fr semble rencontrer des problèmes de backend. Voici les causes les plus probables :</p>
 
-        <section style="padding: 3rem 0;">
-            <h2 class="section-title">Problème d'accès au site</h2>
-            <p class="section-subtitle">Vous ne parvenez pas à accéder à myprofeduc.fr ? Voici les causes possibles et les solutions.</p>
-
-            <div class="problem-solution">
+            <div class="problem-grid">
                 <div class="problem-card">
-                    <h3><i class="fas fa-exclamation-triangle"></i> Causes possibles</h3>
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <div>
-                            <h4>Problème de nom de domaine</h4>
-                            <p>Le domaine myprofeduc.fr n'est pas configuré ou n'existe plus.</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <div>
-                            <h4>Problème de serveur</h4>
-                            <p>Le serveur qui héberge le site peut être hors ligne ou en maintenance.</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <div>
-                            <h4>Problème de réseau</h4>
-                            <p>Votre connexion internet ou votre pare-feu bloque l'accès au site.</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">4</div>
-                        <div>
-                            <h4>Problème de DNS</h4>
-                            <p>Votre fournisseur d'accès internet a des difficultés à résoudre le nom de domaine.</p>
-                        </div>
-                    </div>
+                    <h3><i class="fas fa-server"></i> Serveur backend offline</h3>
+                    <p>Le serveur qui héberge votre API et votre base de données n'est pas accessible.</p>
+                    <span class="status status-danger">Critique</span>
                 </div>
 
-                <div class="solution-card">
-                    <h3><i class="fas fa-check-circle"></i> Solutions</h3>
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <div>
-                            <h4>Vérifiez l'URL</h4>
-                            <p>Assurez-vous d'avoir tapé correctement l'adresse : <strong>myprofeduc.fr</strong></p>
-                        </div>
+                <div class="problem-card">
+                    <h3><i class="fas fa-database"></i> Base de données</h3>
+                    <p>Problème de connexion à la base de données ou requêtes mal formées.</p>
+                    <span class="status status-danger">Critique</span>
+                </div>
+
+                <div class="problem-card">
+                    <h3><i class="fas fa-plug"></i> API non responsive</h3>
+                    <p>Vos endpoints API ne répondent pas ou renvoient des erreurs.</p>
+                    <span class="status status-warning">Important</span>
+                </div>
+
+                <div class="problem-card">
+                    <h3><i class="fas fa-shield-alt"></i> Problèmes CORS</h3>
+                    <p>Configuration CORS incorrecte bloquant les requêtes frontend.</p>
+                    <span class="status status-warning">Important</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Solutions à implémenter</h2>
+            
+            <div class="solution-card">
+                <h3>Vérifications immédiates</h3>
+                
+                <div class="solution-step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <h4>Vérifiez l'état du serveur</h4>
+                        <p>Connectez-vous à votre hébergeur (OVH, AWS, etc.) et vérifiez que votre instance serveur est running.</p>
                     </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <div>
-                            <h4>Réessayez plus tard</h4>
-                            <p>Le site peut être temporairement inaccessible. Réessayez dans quelques minutes.</p>
-                        </div>
+                </div>
+                
+                <div class="solution-step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <h4>Testez la base de données</h4>
+                        <p>Vérifiez que votre base de données est accessible et que les identifiants de connexion sont corrects.</p>
                     </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <div>
-                            <h4>Vérifiez votre connexion</h4>
-                            <p>Assurez-vous que votre connexion internet fonctionne correctement.</p>
-                        </div>
+                </div>
+                
+                <div class="solution-step">
+                    <div class="step-number">3</div>
+                    <div>
+                        <h4>Inspectez les logs</h4>
+                        <p>Consultez les logs d'erreurs de votre application backend pour identifier la source du problème.</p>
                     </div>
-                    <div class="step">
-                        <div class="step-number">4</div>
-                        <div>
-                            <h4>Utilisez un autre navigateur</h4>
-                            <p>Essayez d'accéder au site avec un navigateur différent (Chrome, Firefox, Edge).</p>
-                        </div>
+                </div>
+                
+                <div class="solution-step">
+                    <div class="step-number">4</div>
+                    <div>
+                        <h4>Vérifiez la configuration CORS</h4>
+                        <p>Assurez-vous que votre backend autorise les requêtes depuis votre domaine frontend.</p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <section style="padding: 3rem 0;">
-            <h2 class="section-title">Testez votre connexion</h2>
-            <p class="section-subtitle">Utilisez cet outil pour diagnostiquer les problèmes de connexion.</p>
-
-            <div class="connection-test">
-                <h3>Test de connexion à myprofeduc.fr</h3>
-                <p>Cliquez sur le bouton ci-dessous pour tester l'accessibilité du site.</p>
+        <div class="section">
+            <h2 class="section-title">Tests de diagnostic</h2>
+            
+            <div class="backend-test">
+                <h3>Test de connexion backend</h3>
+                <p>Ce test va vérifier si votre backend répond aux requêtes HTTP.</p>
                 
-                <button class="test-button" onclick="testConnection()">
-                    <i class="fas fa-wifi"></i> Tester la connexion
+                <button class="test-button" onclick="testBackend()">
+                    <i class="fas fa-plug"></i> Tester le backend
                 </button>
 
                 <div id="testResult" class="test-result">
                     <p id="resultText"></p>
                 </div>
+            </div>
 
-                <div id="additionalTests" style="display: none; margin-top: 1.5rem;">
-                    <h4>Tests supplémentaires</h4>
-                    <button class="test-button" style="background-color: #6c757d;" onclick="testGoogle()">
-                        Tester la connexion à Google
-                    </button>
-                    <button class="test-button" style="background-color: #6c757d;" onclick="testDNS()">
-                        Tester la résolution DNS
-                    </button>
+            <div class="backend-test">
+                <h3>Vérification des endpoints API</h3>
+                <p>Testez si vos endpoints API principaux sont fonctionnels.</p>
+                
+                <button class="test-button" onclick="testApiEndpoints()">
+                    <i class="fas fa-code"></i> Tester les endpoints API
+                </button>
+
+                <div id="apiTestResult" class="test-result">
+                    <p id="apiResultText"></p>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <section style="padding: 3rem 0;">
-            <h2 class="section-title">Solutions alternatives</h2>
-            <p class="section-subtitle">Que faire si le site reste inaccessible ?</p>
-
+        <div class="section">
+            <h2 class="section-title">Architecture recommandée</h2>
+            
             <div class="card">
-                <div class="step">
+                <h3>Stack technique pour MyProfEduc</h3>
+                <p>Pour un projet comme MyProfEduc, voici l'architecture backend recommandée :</p>
+                
+                <div style="overflow-x: auto;">
+                    <img src="https://miro.medium.com/v2/resize:fit:1400/1*CkY4QW3GcK6l6TckJfB6jg.png" alt="Architecture backend" class="architecture-diagram" style="max-width: 100%;">
+                </div>
+                
+                <div class="solution-step">
                     <div class="step-number">1</div>
                     <div>
-                        <h4>Contactez le support</h4>
-                        <p>Si le site est essentiel pour vous, essayez de contacter le support technique de MyProfEduc par email : <strong>support@myprofeduc.fr</strong></p>
+                        <h4>API RESTful ou GraphQL</h4>
+                        <p>Développez une API robuste avec Node.js/Express, Django ou Ruby on Rails.</p>
                     </div>
                 </div>
-                <div class="step">
+                
+                <div class="solution-step">
                     <div class="step-number">2</div>
                     <div>
-                        <h4>Utilisez un VPN</h4>
-                        <p>Certains problèmes de connexion peuvent être résolus en utilisant un VPN pour changer votre adresse IP.</p>
+                        <h4>Base de données</h4>
+                        <p>Utilisez PostgreSQL ou MySQL pour stocker les données des utilisateurs, enseignants, cours, etc.</p>
                     </div>
                 </div>
-                <div class="step">
+                
+                <div class="solution-step">
                     <div class="step-number">3</div>
                     <div>
-                        <h4>Vérifiez les réseaux sociaux</h4>
-                        <p>Consultez les pages sociales de MyProfEduc pour voir s'ils ont communiqué sur des problèmes techniques.</p>
+                        <h4>Authentification</h4>
+                        <p>Mettez en place JWT ou OAuth2 pour la gestion des sessions utilisateurs.</p>
                     </div>
                 </div>
-                <div class="step">
+                
+                <div class="solution-step">
                     <div class="step-number">4</div>
                     <div>
-                        <h4>Utilisez Google Cache</h4>
-                        <p>Essayez d'accéder à une version archivée du site via Google Cache en recherchant "cache:myprofeduc.fr" sur Google.</p>
+                        <h4>Paiements</h4>
+                        <p>Intégrez Stripe ou PayPal pour gérer les transactions financières.</p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <section style="padding: 3rem 0;">
-            <h2 class="section-title">Questions fréquentes</h2>
-
+        <div class="section">
+            <h2 class="section-title">Prochaines étapes</h2>
+            
             <div class="card">
-                <div class="faq-item">
-                    <p class="faq-question">Q: Le site myprofeduc.fr a-t-il définitivement fermé ?</p>
-                    <p>R: Sans information officielle, il est impossible de le dire. Les sites peuvent être temporairement indisponibles pour de nombreuses raisons.</p>
+                <h3>Actions à entreprendre</h3>
+                
+                <div class="solution-step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <h4>Vérifiez votre hébergement</h4>
+                        <p>Connectez-vous à votre panel d'hébergement et assurez-vous que les services sont actifs.</p>
+                    </div>
                 </div>
-                <div class="faq-item">
-                    <p class="faq-question">Q: Comment puis-je vérifier si le problème vient de mon ordinateur ?</p>
-                    <p>R: Essayez d'accéder au site depuis un autre appareil ou réseau. Si ça ne fonctionne nulle part, le problème vient probablement du site.</p>
+                
+                <div class="solution-step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <h4>Examinez les logs</h4>
+                        <p>Les logs d'erreur vous donneront des indications précieuses sur la source du problème.</p>
+                    </div>
                 </div>
-                <div class="faq-item">
-                    <p class="faq-question">Q: Existe-t-il une alternative à MyProfEduc ?</p>
-                    <p>R: Il existe plusieurs plateformes de mise en relation avec des professeurs particuliers comme Superprof, Kelprof, ou Acadomia.</p>
+                
+                <div class="solution-step">
+                    <div class="step-number">3</div>
+                    <div>
+                        <h4>Testez localement</h4>
+                        <p>Lancez votre backend en local pour vérifier qu'il fonctionne correctement.</p>
+                    </div>
                 </div>
-                <div class="faq-item">
-                    <p class="faq-question">Q: Puis-je récupérer mes données si le site ne fonctionne plus ?</p>
-                    <p>R: Malheureusement, sans accès au site, il est impossible de récupérer vos données. Contactez le support par email si vous avez un urgent besoin.</p>
+                
+                <div class="solution-step">
+                    <div class="step-number">4</div>
+                    <div>
+                        <h4>Redéployez</h4>
+                        <p>Si nécessaire, redéployez votre application backend sur le serveur.</p>
+                    </div>
+                </div>
+                
+                <div class="solution-step">
+                    <div class="step-number">5</div>
+                    <div>
+                        <h4>Configurez le monitoring</h4>
+                        <p>Mettez en place des outils de monitoring pour détecter les pannes à l'avenir.</p>
+                    </div>
                 </div>
             </div>
-        </section>
-
-        <footer style="text-align: center; padding: 2rem 0; margin-top: 2rem; color: #718096;">
-            <p>© 2023 Diagnostic de connexion - MyProfEduc</p>
-            <p>Cette page est un outil diagnostic et n'est pas affiliée à MyProfEduc</p>
-        </footer>
+        </div>
     </div>
 
+    <footer>
+        <div class="container">
+            <p>MyProfEduc - Diagnostic Backend</p>
+            <p>Cette page est un outil de diagnostic et n'est pas affiliée à MyProfEduc</p>
+        </div>
+    </footer>
+
     <script>
-        function testConnection() {
+        function testBackend() {
             const resultDiv = document.getElementById('testResult');
             const resultText = document.getElementById('resultText');
-            const additionalTests = document.getElementById('additionalTests');
             
             resultDiv.style.display = 'block';
             resultText.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Test en cours...';
             
-            // Simulation d'un test de connexion
+            // Simulation d'un test de backend
             setTimeout(() => {
-                // Dans un cas réel, on ferait une requête AJAX vers le serveur
-                // Pour cet exemple, nous simulons un échec de connexion
                 resultDiv.className = 'test-result test-failure';
                 resultText.innerHTML = `
-                    <i class="fas fa-times-circle"></i> <strong>Échec de connexion</strong><br>
-                    Impossible de se connecter au serveur à l'adresse myprofeduc.fr.
+                    <i class="fas fa-times-circle"></i> <strong>Backend inaccessible</strong><br>
+                    Impossible de se connecter au serveur backend de myprofeduc.fr.
                     <br><br>
                     <strong>Recommandations :</strong>
                     <ul>
-                        <li>Vérifiez votre connexion Internet</li>
-                        <li>Réessayez dans quelques minutes</li>
-                        <li>Contactez le support si le problème persiste</li>
+                        <li>Vérifiez que votre serveur backend est en cours d'exécution</li>
+                        <li>Contrôlez les logs d'erreur pour identifier le problème</li>
+                        <li>Vérifiez la configuration de votre base de données</li>
                     </ul>
                 `;
-                
-                additionalTests.style.display = 'block';
             }, 2000);
         }
         
-        function testGoogle() {
-            alert('Test de connexion à Google... (simulation)\n\nDans une version réelle, cette fonction testerait votre connexion générale à Internet.');
-        }
-        
-        function testDNS() {
-            alert('Test DNS... (simulation)\n\nCette fonction testerait la résolution du nom de domaine myprofeduc.fr.');
+        function testApiEndpoints() {
+            const resultDiv = document.getElementById('apiTestResult');
+            const resultText = document.getElementById('apiResultText');
+            
+            resultDiv.style.display = 'block';
+            resultText.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Test des endpoints API en cours...';
+            
+            // Simulation d'un test d'API
+            setTimeout(() => {
+                resultDiv.className = 'test-result test-failure';
+                resultText.innerHTML = `
+                    <i class="fas fa-times-circle"></i> <strong>Endpoints API non responsifs</strong><br>
+                    Les endpoints API de myprofeduc.fr ne répondent pas.
+                    <br><br>
+                    <strong>Endpoints testés :</strong>
+                    <ul>
+                        <li>/api/users <span class="status status-danger">Échec</span></li>
+                        <li>/api/teachers <span class="status status-danger">Échec</span></li>
+                        <li>/api/courses <span class="status status-danger">Échec</span></li>
+                    </ul>
+                    <strong>Recommandations :</strong>
+                    <ul>
+                        <li>Vérifiez que votre application backend est correctement déployée</li>
+                        <li>Contrôlez la configuration de votre serveur web (Nginx/Apache)</li>
+                        <li>Assurez-vous que votre API écoute sur le bon port</li>
+                    </ul>
+                `;
+            }, 2500);
         }
     </script>
 </body>
